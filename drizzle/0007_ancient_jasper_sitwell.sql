@@ -1,0 +1,1 @@
+ALTER TABLE `classrooms` ADD `unit` text DEFAULT '4-5' NOT NULL;

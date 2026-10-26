@@ -1,0 +1,7 @@
+// Disposable localhost-only peers for browser/TV QA. Tokens stay in an ignored file.
+import fs from 'node:fs';
+const origin='http://127.0.0.1:8767';
+async function api(path,data,headers={}){const r=await fetch(origin+path,{method:data===undefined?'GET':'POST',headers:{'content-type':'application/json',...headers},...(data===undefined?{}:{body:JSON.stringify(data)})});const b=await r.json();if(!r.ok)throw Error(path+' '+r.status+' '+b.error);return b}
+const file='.sites-runtime/race-preview-peers.json';
+if(process.argv[2]==='join'){const {race}=await api('/api/race/current');const peers=await Promise.all(Array.from({length:7},(_,i)=>api('/api/race/join',{raceId:race.id,label:String(i+1)})));fs.mkdirSync('.sites-runtime',{recursive:true});fs.writeFileSync(file,JSON.stringify(peers));console.log('Joined seven disposable local peers.');}
+else{const peers=JSON.parse(fs.readFileSync(file,'utf8')),vocab=JSON.parse(fs.readFileSync('public/vocabulary.js','utf8').split('=')[1].split(';')[0]);await Promise.all(peers.map(async(p,i)=>{const auth={authorization:'Bearer '+p.token};let s=await api('/api/race/me',undefined,auth);while(s.self.index<(i%4+1)*4){const t=s.self.task,w=vocab.find(w=>w.word===t.audio.split('/').at(-1).replace('.wav',''));const correct=t.mode==='text'?w.meaning:w.word;const wrong=t.mode==='spelling'?'x'.repeat(t.length):t.options.find(o=>o.value!==correct).value;s=await api('/api/race/answer',{questionId:t.id,answer:s.self.index===0&&i%2?wrong:correct},auth)}}));console.log('Advanced local peers to varied checkpoints.');}

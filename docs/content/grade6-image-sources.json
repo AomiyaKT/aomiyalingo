@@ -1,0 +1,1663 @@
+{
+  "capturedOn": "2026-10-24",
+  "count": 184,
+  "note": "Reference originals remain outside public/. App includes only the individual word illustrations.",
+  "items": [
+    {
+      "unit": 1,
+      "word": "like",
+      "image": "/assets/vocabulary/g6-unit1/01_like.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "1c57b49bf004d2621c1db3e9e6344b2e1dccd9b70d1f493464869c26065d6fea",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "have",
+      "image": "/assets/vocabulary/g6-unit1/02_have.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "c3f46e157b4245f85261366ab705766850be8708d191f46bfd0fe39a8578df0a",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "want",
+      "image": "/assets/vocabulary/g6-unit1/03_want.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "5f7a9475fad3338c9d6710e2deae7b5d0d6f2e9dc938917339db872aec57ab87",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "math",
+      "image": "/assets/vocabulary/g6-unit1/04_math.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "85e3c72aa0003536ed6da0e12b578e4dcfa7dd1d9a43ddff18af94bb035773e2",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "English",
+      "image": "/assets/vocabulary/g6-unit1/05_english.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "ab38ace6a643ee425641710fbcc8fba9812eceafba69782b65af6ce56db82196",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "music",
+      "image": "/assets/vocabulary/g6-unit1/06_music.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "432132182085719cd9d67da687193aa40e974e28df609aadd95306a4f7a79586",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "a cat",
+      "image": "/assets/vocabulary/g6-unit1/07_a_cat.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "8eec477c88fabf58bfd141c37aea688d763f683fffdf6f1ff4ddcdae88d718ec",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "cats",
+      "image": "/assets/vocabulary/g6-unit1/08_cats.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "d90bb9f816991544f5a87d298953934f3087c74523888d2f3e117fd1bbfc6710",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "a dog",
+      "image": "/assets/vocabulary/g6-unit1/09_a_dog.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "6a82c65bc380bf368c4846d5d605f031499ec1c4a31d1ac9a7df64937e4a160a",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "dogs",
+      "image": "/assets/vocabulary/g6-unit1/10_dogs.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "7fcb3114f9644866054ab5d333e872e5b54756fbd2e50a346130a20cfbce4b61",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "swimming",
+      "image": "/assets/vocabulary/g6-unit1/11_swimming.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "78499aa006abef876d11c396d896e8bdd51d596ed42773e08156e8e1daec0211",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "surfing",
+      "image": "/assets/vocabulary/g6-unit1/12_surfing.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "93d9aae27aa06dddfdcab34218c07628d1f07fbbe272f58d63505ccc867fce5b",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "dancing",
+      "image": "/assets/vocabulary/g6-unit1/13_dancing.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "2e39758ab9f5a15251df006c57153ab5a6511cb700115878c0a2735e1e30eee8",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "cooking",
+      "image": "/assets/vocabulary/g6-unit1/14_cooking.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "84655ac158bfa1c2e35125c8ada1d839ae510008e44a91c47a0a90cac7d3a405",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "skiing",
+      "image": "/assets/vocabulary/g6-unit1/15_skiing.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "19d875ec83b721a857b47392ad5794c64d57ccaa4ea6116d5698e786d9838d38",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "skating",
+      "image": "/assets/vocabulary/g6-unit1/16_skating.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "0503c0db9579add59a38d9a9a611d6d336bfe9974a56b39d1369fba28502faef",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "running",
+      "image": "/assets/vocabulary/g6-unit1/17_running.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "249cd3cc8f0c020f4300618dafc3453c734baf12bd1ba5906a191cb97d667ec3",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "singing",
+      "image": "/assets/vocabulary/g6-unit1/18_singing.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "d7c5a96901afde61393892fcd4556ecf2815b93d8f6f2905e0ddfdbc375becc4",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "drawing",
+      "image": "/assets/vocabulary/g6-unit1/19_drawing.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "9b87046ad7290f1c43dd999d2bf424603da8fb76f93e725a02a7afa410fd5b96",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "speaking English",
+      "image": "/assets/vocabulary/g6-unit1/20_speaking_english.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "9df87ffdd379c858796313435da65eb9365109aa8e4313dc81f30c03d73394ad",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "playing soccer",
+      "image": "/assets/vocabulary/g6-unit1/21_playing_soccer.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "63281264808f308283a4cde5cf2557258115da172958f8b299fb16c49643eae9",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "playing the piano",
+      "image": "/assets/vocabulary/g6-unit1/22_playing_the_piano.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "94e1e480ec1731d63a8bb8b3ff57e2c48a2ef0039df4a76547c7db277969ac53",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "food",
+      "image": "/assets/vocabulary/g6-unit1/23_food.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "31f01e6214cd409e42a668e28eacea389e757ce166d52b5e2d2232b6c1643943",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "sport",
+      "image": "/assets/vocabulary/g6-unit1/24_sport.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "ea83cc934a1e43aa742cb1eb2f1a8a5aeedc4cdbc278dbc5eeaa96a7d9cd0452",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "color",
+      "image": "/assets/vocabulary/g6-unit1/25_color.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "5051272fba8112b13295977b919e2d4bcfb58fc1aa9c259000ee3b6be6e73b11",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "subject",
+      "image": "/assets/vocabulary/g6-unit1/26_subject.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "3056ea76f9e2587dd81f650aee4424b67ba09531d5d9bb67f4f4b9e0a29761a4",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 1,
+      "word": "animal",
+      "image": "/assets/vocabulary/g6-unit1/27_animal.png",
+      "sourcePage": 1,
+      "sourceImageSha256": "eb8924d296795e2e444592021a01b0700b6e4fdf895f5b2404489422f925b063",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of user-provided screenshot, no upscaling"
+    },
+    {
+      "unit": 2,
+      "word": "shrine",
+      "image": "/assets/vocabulary/g6-unit2/01_shrine.png",
+      "sourcePage": 3,
+      "sourceImageSha256": "a5ed798810647d06b9e5c8f97517b8be144fd02abb38fffe1362756fb123681d",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 2,
+      "word": "temple",
+      "image": "/assets/vocabulary/g6-unit2/02_temple.png",
+      "sourcePage": 3,
+      "sourceImageSha256": "05ea3a1202d5291a0633755ab0dcc93198aed465aa6f0f090f35160756b3de1a",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 2,
+      "word": "garden",
+      "image": "/assets/vocabulary/g6-unit2/03_garden.png",
+      "sourcePage": 3,
+      "sourceImageSha256": "11d37bb2029e2172ee84330b36f10cea6fbf02a629c2fed9160c74781ae10843",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 2,
+      "word": "festival",
+      "image": "/assets/vocabulary/g6-unit2/04_festival.png",
+      "sourcePage": 3,
+      "sourceImageSha256": "ac2013275174c3b18747fd98e885facf8fac2aede5996070bf581a386d7177d0",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 2,
+      "word": "hot springs",
+      "image": "/assets/vocabulary/g6-unit2/05_hot_springs.png",
+      "sourcePage": 3,
+      "sourceImageSha256": "5f318153a122d13c9c2418e6ac4db6d86bc8d4bc087fd7c536f87353cd4ba55d",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 2,
+      "word": "castle",
+      "image": "/assets/vocabulary/g6-unit2/06_castle.png",
+      "sourcePage": 3,
+      "sourceImageSha256": "39c34c0d88caee9814d0dc8145b3eaa3e35832d18f6937e522d6d851e8296aed",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 2,
+      "word": "mountain",
+      "image": "/assets/vocabulary/g6-unit2/07_mountain.png",
+      "sourcePage": 3,
+      "sourceImageSha256": "ef17b4d03d98fc1903b9b3bbe64c9915fdaaf2cb385c223ce287d473aaaaed11",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 2,
+      "word": "bridge",
+      "image": "/assets/vocabulary/g6-unit2/08_bridge.png",
+      "sourcePage": 3,
+      "sourceImageSha256": "aa988be53d12f13685fcb2d9289f95b72e50d3ce0c9e267c84f1179671caee52",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 2,
+      "word": "spring",
+      "image": "/assets/vocabulary/g6-unit2/09_spring.png",
+      "sourcePage": 3,
+      "sourceImageSha256": "662c2bb361500e62aaa98abd6d3d25cda79ba98d1552363deb64d33be06cebd7",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 2,
+      "word": "summer",
+      "image": "/assets/vocabulary/g6-unit2/10_summer.png",
+      "sourcePage": 3,
+      "sourceImageSha256": "44d9c83881c2ccc02cf0420e9b2a0308fafc975b6203f375bf01eb86efbe7fed",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 2,
+      "word": "fall",
+      "image": "/assets/vocabulary/g6-unit2/11_fall.png",
+      "sourcePage": 3,
+      "sourceImageSha256": "e9b7b521f8319407eccf1d74ccb12c7adc6184eb1d33f8e1685bf0f481ff28fa",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 2,
+      "word": "winter",
+      "image": "/assets/vocabulary/g6-unit2/12_winter.png",
+      "sourcePage": 3,
+      "sourceImageSha256": "bdd3b2b5f891ba72346a4b2f6882ba668a5a4df4822bf9e753c001c1c5048f5b",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 2,
+      "word": "beautiful",
+      "image": "/assets/vocabulary/g6-unit2/13_beautiful.png",
+      "sourcePage": 3,
+      "sourceImageSha256": "8de8e34d4f8ba4c7c0ac4699fe6f212a70d818f2a89e067a8dca9f2faa980791",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 2,
+      "word": "exciting",
+      "image": "/assets/vocabulary/g6-unit2/14_exciting.png",
+      "sourcePage": 3,
+      "sourceImageSha256": "1bff86fdfb9581a63dd63b0b445191957d579b19064d2c7bd57afcef88a355df",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 2,
+      "word": "relaxing",
+      "image": "/assets/vocabulary/g6-unit2/15_relaxing.png",
+      "sourcePage": 3,
+      "sourceImageSha256": "79d1ae979e074f6f6642e15661970b0e6df0df7823d143cd418b6c6d32401e6f",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 2,
+      "word": "fun",
+      "image": "/assets/vocabulary/g6-unit2/16_fun.png",
+      "sourcePage": 3,
+      "sourceImageSha256": "0d2657dc0b8d9bc4ccf0cc03092285b9d231c4e53fb1b32d9fcbe54b93f3ca43",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 2,
+      "word": "delicious",
+      "image": "/assets/vocabulary/g6-unit2/17_delicious.png",
+      "sourcePage": 3,
+      "sourceImageSha256": "e8a8aa89dcd188ecd50c30ae10669b2629422672ced2cac9506edd4edb91db00",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 2,
+      "word": "see",
+      "image": "/assets/vocabulary/g6-unit2/18_see.png",
+      "sourcePage": 3,
+      "sourceImageSha256": "dbbccf23637543e8456009b60c22d40e736dbf97359eae6819eecde7f9565d92",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 2,
+      "word": "eat",
+      "image": "/assets/vocabulary/g6-unit2/19_eat.png",
+      "sourcePage": 3,
+      "sourceImageSha256": "7bbf10be346e44b8f3bde83718aa6f2ee5a307fa6bdbce33a6be1ccad9eadb66",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 2,
+      "word": "visit",
+      "image": "/assets/vocabulary/g6-unit2/20_visit.png",
+      "sourcePage": 3,
+      "sourceImageSha256": "c2f556fea2168b2bbbbbe921dd8a8ef980530c1aa31877d58ab18066ee54700d",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 2,
+      "word": "drink",
+      "image": "/assets/vocabulary/g6-unit2/21_drink.png",
+      "sourcePage": 3,
+      "sourceImageSha256": "316e630cfa8f2356df1a88f4279dc2f0404abe709ec4b1328b49be014c2ca2c7",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 3,
+      "word": "park",
+      "image": "/assets/vocabulary/g6-unit3/01_park.png",
+      "sourcePage": 5,
+      "sourceImageSha256": "3c6112a7def64720613212f251cfe0356921ac70840bdf5a7caa5a555af1736a",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 3,
+      "word": "gym",
+      "image": "/assets/vocabulary/g6-unit3/02_gym.png",
+      "sourcePage": 5,
+      "sourceImageSha256": "7ba9d20bff3ff57ae4ddda23f233b93041c8749b0a656214945ee2019cff02a6",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 3,
+      "word": "swimming pool",
+      "image": "/assets/vocabulary/g6-unit3/03_swimming_pool.png",
+      "sourcePage": 5,
+      "sourceImageSha256": "f6738fea923a4c1e474f7623470391c1aaf06a9e4af6ea4cd5a328dae452e19f",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 3,
+      "word": "stadium",
+      "image": "/assets/vocabulary/g6-unit3/04_stadium.png",
+      "sourcePage": 5,
+      "sourceImageSha256": "a0d3cdee1dd9cd3c54ae74126a3a1a5072b985e2c9dbb551e3cb4fcdc38ba24c",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 3,
+      "word": "science museum",
+      "image": "/assets/vocabulary/g6-unit3/05_science_museum.png",
+      "sourcePage": 5,
+      "sourceImageSha256": "a61ce7ce0dd795f0981128d00ee192da3c387bd89a3b3d95b1a432a3aaca4707",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 3,
+      "word": "aquarium",
+      "image": "/assets/vocabulary/g6-unit3/06_aquarium.png",
+      "sourcePage": 5,
+      "sourceImageSha256": "dd701b8c5aad77fc6917b78fbf488609a61966cd98043ee0fb85e459e3f9c172",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 3,
+      "word": "zoo",
+      "image": "/assets/vocabulary/g6-unit3/07_zoo.png",
+      "sourcePage": 5,
+      "sourceImageSha256": "31bc91fce3ab527b26b0605d47582fc30b3f8452cfc36fa5f91d632d168c51e3",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 3,
+      "word": "library",
+      "image": "/assets/vocabulary/g6-unit3/08_library.png",
+      "sourcePage": 5,
+      "sourceImageSha256": "5fc0c870eddbf17ea87eaa289db98738f915ee003ce32cccd3c98aee8a6377a6",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 3,
+      "word": "shopping mall",
+      "image": "/assets/vocabulary/g6-unit3/09_shopping_mall.png",
+      "sourcePage": 5,
+      "sourceImageSha256": "de4d0d340d5153ce01a1ed9dc9ee99bf507d475f1f177546d1d1d57f8acfc61c",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 3,
+      "word": "movie theater",
+      "image": "/assets/vocabulary/g6-unit3/10_movie_theater.png",
+      "sourcePage": 5,
+      "sourceImageSha256": "49b82e7352065586afe58721dd0646b0e78dbbada940cda9e210a00f23ad37d4",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 3,
+      "word": "amusement park",
+      "image": "/assets/vocabulary/g6-unit3/11_amusement_park.png",
+      "sourcePage": 5,
+      "sourceImageSha256": "f8121adf4f68cd18050251167abb7f4a56d1b3f222db55c07e48fbd26d40f6fd",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 3,
+      "word": "sidewalk",
+      "image": "/assets/vocabulary/g6-unit3/12_sidewalk.png",
+      "sourcePage": 5,
+      "sourceImageSha256": "1e2a65515b4f35bd5dd0d04034b56bef70fda252a3b9ab7d22619374ae6a6841",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 3,
+      "word": "skate park",
+      "image": "/assets/vocabulary/g6-unit3/13_skate_park.png",
+      "sourcePage": 5,
+      "sourceImageSha256": "29093288421548af76bd4231b82a4f758deebed11aada62721a7604e6901f274",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 3,
+      "word": "bench",
+      "image": "/assets/vocabulary/g6-unit3/14_bench.png",
+      "sourcePage": 5,
+      "sourceImageSha256": "0c6774fd8bb87bdb66ffb9af088e70203cad1789aa3c0d7bf31858bbccab8953",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 3,
+      "word": "campsite",
+      "image": "/assets/vocabulary/g6-unit3/15_campsite.png",
+      "sourcePage": 5,
+      "sourceImageSha256": "47238958401ef582e1e6585684a06de21e0f15b2586f5f71e32f8eb7adb0640d",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 3,
+      "word": "street light",
+      "image": "/assets/vocabulary/g6-unit3/16_street_light.png",
+      "sourcePage": 5,
+      "sourceImageSha256": "42c5aba85e7b3bca325c3f6169cee5eb942a77884b93dca2582a22ef3e6666ad",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 3,
+      "word": "free Wi-Fi",
+      "image": "/assets/vocabulary/g6-unit3/17_free_wi_fi.png",
+      "sourcePage": 5,
+      "sourceImageSha256": "7dc929ef0833f9a6e4c7f3fe0bd501d7ee1e45dd1dc7ac39a417649060f2405a",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 3,
+      "word": "ramp",
+      "image": "/assets/vocabulary/g6-unit3/18_ramp.png",
+      "sourcePage": 5,
+      "sourceImageSha256": "3163a9193753e4d2163c66cf6a63dc26c229cb51645bb12dafb922d8a9a26165",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 3,
+      "word": "elevator",
+      "image": "/assets/vocabulary/g6-unit3/19_elevator.png",
+      "sourcePage": 5,
+      "sourceImageSha256": "b0f74070648ffc7ef88efeec5bdff112f34cecb65d27d2ae4003757acbfc52dd",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "great",
+      "image": "/assets/vocabulary/g6-unit4/01_great.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "53abee6ab54918bff72d44a3803f4fcde327c94e7175ccb3ef708dc0a3cf728d",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "fun",
+      "image": "/assets/vocabulary/g6-unit4/02_fun.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "bcdfc0177f2df98542bb7ef66cbcac16e617473fc110b3da904be60d40e9d373",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "good",
+      "image": "/assets/vocabulary/g6-unit4/03_good.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "f3078cf6510bf4dfd2e0cb64d44f82d1060a9e7c6b3c067864593410203abad8",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "exciting",
+      "image": "/assets/vocabulary/g6-unit4/04_exciting.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "2bcd9049da9e1c08ad57db7758b005514037e618142c8bc69b0aa0800e516594",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "beach",
+      "image": "/assets/vocabulary/g6-unit4/05_beach.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "3f6da6b1e486ffdb492cdddbbfb4c99e63f3668e199ac91f277effdd963a1245",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "swimming",
+      "image": "/assets/vocabulary/g6-unit4/06_swimming.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "d1116603b54e5206acaf0be68b31fff1402a23154f18858d65f5259e2256e0ef",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "watermelon",
+      "image": "/assets/vocabulary/g6-unit4/07_watermelon.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "8d3f289d9e4e22f83cd88effc75c4a9b58547ec3f663c694ea4ec9041bf518d1",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "park",
+      "image": "/assets/vocabulary/g6-unit4/08_park.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "bb284647af8b1ddc0b5ad3642bdf62206f76023332b7bd76fd2a42c48b2909a8",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "badminton",
+      "image": "/assets/vocabulary/g6-unit4/09_badminton.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "80e3159dd9c11666b58237e2b9e48ccbb652c07f200ebebc0406276abde2fc32",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "rainbow",
+      "image": "/assets/vocabulary/g6-unit4/10_rainbow.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "ae683598717a44a861dff4fbd3f69df79fc029b087ec008d5630f67b43c694dd",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "river",
+      "image": "/assets/vocabulary/g6-unit4/11_river.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "cff27203c7c32599e78eb524fa6880c4397da255ae602e3513164bd67ef42872",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "fishing",
+      "image": "/assets/vocabulary/g6-unit4/12_fishing.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "812383cf6be97b3740784b2c1144aeae0e8929bc90794e5c563877608c26af04",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "grilled fish",
+      "image": "/assets/vocabulary/g6-unit4/13_grilled_fish.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "86b86bb1ff93afcf9d848c959130c1d1a1b76fd776afa3e05ac2f7f170848d30",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "my grandparents' house",
+      "image": "/assets/vocabulary/g6-unit4/14_my_grandparents_house.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "0ea39da1a7aba53fc93d3556a77e882ec51d31002a1472b0b5649fe550746960",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "movie",
+      "image": "/assets/vocabulary/g6-unit4/15_movie.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "8e700d1a271f48456deecab94c804be68c10b5a02a91a8e5c67dc2f25bfa3a6d",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "curry and rice",
+      "image": "/assets/vocabulary/g6-unit4/16_curry_and_rice.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "174b58c5be330249cb331e1b1f36b4105f0cd1f90861bf1e180e7902a913e39e",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "piano",
+      "image": "/assets/vocabulary/g6-unit4/17_piano.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "6520080883de2671a49f8158eb3108643a3b2e280a383718409971c177e94e6a",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "model ship",
+      "image": "/assets/vocabulary/g6-unit4/18_model_ship.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "a8349b0a1bab138343e0ee3326a9f9359051ce4c40534f5f63a229cf81909bf2",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "book",
+      "image": "/assets/vocabulary/g6-unit4/19_book.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "d908292d6e03c909adf29f2b4875dd77ef24c9e31b72be11c07e9ac277032469",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "mountain",
+      "image": "/assets/vocabulary/g6-unit4/20_mountain.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "5bf683370cc25d0ecd3febcccd95d1549d63f3d804f7ddb6eb2cde98d3bb0cfc",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "hiking",
+      "image": "/assets/vocabulary/g6-unit4/21_hiking.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "ea88e7f801f9deed98ea98d5cd4ad4a94b5e7816fbf5069e2454295a08815864",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "beetle",
+      "image": "/assets/vocabulary/g6-unit4/22_beetle.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "3477498110fafd2a5970271cbb89caafa8f24daff9eba030ee3320a151fef796",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "lake",
+      "image": "/assets/vocabulary/g6-unit4/23_lake.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "38da44f9d56db059176ac5da8f6043c4c3aae2054cc413018017ab2d3c1fc0b7",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "camping",
+      "image": "/assets/vocabulary/g6-unit4/24_camping.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "9fb4b52d5f6c5f04edf5b55001a4dfa0fffb67241f315b6d2dc8c5448e5fde6b",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "fireworks",
+      "image": "/assets/vocabulary/g6-unit4/25_fireworks.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "aa935deec03970bea8316b046c3e32edbdedd3c15f862a0d41c3b78932e234f2",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "stadium",
+      "image": "/assets/vocabulary/g6-unit4/26_stadium.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "e61d14b060b0942021a3b0de8fc99244366225ffcc25b8fa3567dfb2abc4a495",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "soccer uniform",
+      "image": "/assets/vocabulary/g6-unit4/27_soccer_uniform.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "c6555bdd6f65a0a1209c5668c90e93809d7b5eebb7f4e1c184434af870efe189",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "soccer game",
+      "image": "/assets/vocabulary/g6-unit4/28_soccer_game.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "50aff523ab1d45ffba98aa88646e4eb96b20ac93da1144667aed376d37a99b86",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "went to",
+      "image": "/assets/vocabulary/g6-unit4/29_went_to.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "8bb43e13bd0782ba9f49f09296a1830ef770e7ffe087f5a3c34518c129572f2a",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 4,
+      "word": "saw",
+      "image": "/assets/vocabulary/g6-unit4/30_saw.png",
+      "sourcePage": 7,
+      "sourceImageSha256": "b31aa56128b3f7e1573cffaeecacaac2651e936a357bae5fac74264776c15000",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 5,
+      "word": "ate",
+      "image": "/assets/vocabulary/g6-unit5/01_ate.png",
+      "sourcePage": 9,
+      "sourceImageSha256": "9927309bb8b2659518daf1f5b738f78e33d8f8f0f9520d0accf0e09c45a4e5fb",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 5,
+      "word": "enjoyed",
+      "image": "/assets/vocabulary/g6-unit5/02_enjoyed.png",
+      "sourcePage": 9,
+      "sourceImageSha256": "e6874ffc9cdcb3c28462124fbfc3a80923d778b9bfc30c6d683759cb130c314d",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 5,
+      "word": "watched",
+      "image": "/assets/vocabulary/g6-unit5/03_watched.png",
+      "sourcePage": 9,
+      "sourceImageSha256": "dd5590dc466bc11d2a173181ad6eb3538c319d3ad5291d2d880067f49ab40efc",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 5,
+      "word": "bought",
+      "image": "/assets/vocabulary/g6-unit5/04_bought.png",
+      "sourcePage": 9,
+      "sourceImageSha256": "0991c1b2c5d94005738df90bd1f36fc35c14cd640f82ccf1aef612a897b6cf50",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 5,
+      "word": "played",
+      "image": "/assets/vocabulary/g6-unit5/05_played.png",
+      "sourcePage": 9,
+      "sourceImageSha256": "023bc3eb10a899b4c688bd97098932fdd9ebc7031a697e40a591a474fc89c749",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 5,
+      "word": "made",
+      "image": "/assets/vocabulary/g6-unit5/06_made.png",
+      "sourcePage": 9,
+      "sourceImageSha256": "3017da5867f0e5e7b05c7b42c1dbac451485eb169d91d24d88ec7585bdb63008",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 5,
+      "word": "read",
+      "image": "/assets/vocabulary/g6-unit5/07_read.png",
+      "sourcePage": 9,
+      "sourceImageSha256": "efec28192c2ee90433cbaa441d0ab6318dea3c6f65507aa56624080b02d6d90c",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 5,
+      "word": "smart",
+      "image": "/assets/vocabulary/g6-unit5/08_smart.png",
+      "sourcePage": 9,
+      "sourceImageSha256": "a50e86781c29a542a2324c3f8a99bfd1dc1572bce45bcfe3034e73b4d5396db7",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 5,
+      "word": "kind",
+      "image": "/assets/vocabulary/g6-unit5/09_kind.png",
+      "sourcePage": 9,
+      "sourceImageSha256": "374e64736a00f29caf907027847d0ed9f867555af961c913ddea963138b11203",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 5,
+      "word": "funny",
+      "image": "/assets/vocabulary/g6-unit5/10_funny.png",
+      "sourcePage": 9,
+      "sourceImageSha256": "a1bc00911fee314be3fc2a80ed4a267469bb745f1095f9af78b5b328e54af712",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 5,
+      "word": "gentle",
+      "image": "/assets/vocabulary/g6-unit5/11_gentle.png",
+      "sourcePage": 9,
+      "sourceImageSha256": "76bf2e4a5de610755419376bab08fb0efcab8fa032dd4236c2811ca2a1f1d701",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 5,
+      "word": "creative",
+      "image": "/assets/vocabulary/g6-unit5/12_creative.png",
+      "sourcePage": 9,
+      "sourceImageSha256": "633c5a7b122d7397fc37e4fa5a5c5305da184ddc33ac18b518c1e6b17da3438b",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 5,
+      "word": "famous",
+      "image": "/assets/vocabulary/g6-unit5/13_famous.png",
+      "sourcePage": 9,
+      "sourceImageSha256": "4527965b239e5d46341e012c42e3b84dd332421c55a1c8273b892d36244f870e",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 5,
+      "word": "popular",
+      "image": "/assets/vocabulary/g6-unit5/14_popular.png",
+      "sourcePage": 9,
+      "sourceImageSha256": "dc892a6a5dbed1a7ce3c5bdf46ff95468f4c828e1bbcf28ef641f8be4af2980b",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 5,
+      "word": "cool",
+      "image": "/assets/vocabulary/g6-unit5/15_cool.png",
+      "sourcePage": 9,
+      "sourceImageSha256": "23695e62bb645e82ba1e570d7d2e302b4ede2abf96780620306c8277c4e8dde5",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 5,
+      "word": "created",
+      "image": "/assets/vocabulary/g6-unit5/16_created.png",
+      "sourcePage": 9,
+      "sourceImageSha256": "4ef0ae0b9b1789e8440eeee0850fb8d588dae8080df939e92e7153f9428e3480",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 5,
+      "word": "wrote",
+      "image": "/assets/vocabulary/g6-unit5/17_wrote.png",
+      "sourcePage": 9,
+      "sourceImageSha256": "32681a95053f8e8a0b7b091300284f8b2f0b6bd744da2bec3c59753f73085ea0",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 5,
+      "word": "saved",
+      "image": "/assets/vocabulary/g6-unit5/18_saved.png",
+      "sourcePage": 9,
+      "sourceImageSha256": "2dfcdde64775f7a4ca139f16e4267c3cc37e9130ebe34945c124065850ef7d64",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 5,
+      "word": "won",
+      "image": "/assets/vocabulary/g6-unit5/19_won.png",
+      "sourcePage": 9,
+      "sourceImageSha256": "0db67115ee422ff6fba952830b9f22f397d06adfa570e6f1ed8a66cea136d8da",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 6,
+      "word": "entrance ceremony",
+      "image": "/assets/vocabulary/g6-unit6/01_entrance_ceremony.png",
+      "sourcePage": 11,
+      "sourceImageSha256": "ee2333805ad0b547642311517a72dfaa93985dd93723e9bc47fae82ed0f51df6",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 6,
+      "word": "field trip",
+      "image": "/assets/vocabulary/g6-unit6/02_field_trip.png",
+      "sourcePage": 11,
+      "sourceImageSha256": "6254a95895ce826b7c23811118bd07e4a4b2b4ec3f4e6b49e742c07bbe600651",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 6,
+      "word": "sports festival",
+      "image": "/assets/vocabulary/g6-unit6/03_sports_festival.png",
+      "sourcePage": 11,
+      "sourceImageSha256": "f366f5c89d6bfefc17c440f3880ff5e3a63ec4ef895d92da49b26e9695d8d4e9",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 6,
+      "word": "school camp",
+      "image": "/assets/vocabulary/g6-unit6/04_school_camp.png",
+      "sourcePage": 11,
+      "sourceImageSha256": "43c6f828f9cd402e3e0573fe33fd2c94ed273448913cec5ec9107d340b7dc1c6",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 6,
+      "word": "swimming meet",
+      "image": "/assets/vocabulary/g6-unit6/05_swimming_meet.png",
+      "sourcePage": 11,
+      "sourceImageSha256": "400fdf505bc47d3652927b69b8edb8906d32eb98aab931893a759fede7e5f3e4",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 6,
+      "word": "school trip",
+      "image": "/assets/vocabulary/g6-unit6/06_school_trip.png",
+      "sourcePage": 11,
+      "sourceImageSha256": "0da1dea4a2ab418caffd10053b723835db90f658479fcc8186643db36f04ae68",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 6,
+      "word": "drama festival",
+      "image": "/assets/vocabulary/g6-unit6/07_drama_festival.png",
+      "sourcePage": 11,
+      "sourceImageSha256": "f8a283afc6223b154a9e447f8dd3af202cf4fec5eecc24fe281211434827809c",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 6,
+      "word": "school marathon",
+      "image": "/assets/vocabulary/g6-unit6/08_school_marathon.png",
+      "sourcePage": 11,
+      "sourceImageSha256": "01f3c18d899ef9be6909858f95b0e26a4b695e802bacdceed2019a886b2084da",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 6,
+      "word": "music festival",
+      "image": "/assets/vocabulary/g6-unit6/09_music_festival.png",
+      "sourcePage": 11,
+      "sourceImageSha256": "64abe147c8c540889aaaafaf43263234e669877ddd44b54a86bd07ac43dd1ce8",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 6,
+      "word": "graduation ceremony",
+      "image": "/assets/vocabulary/g6-unit6/10_graduation_ceremony.png",
+      "sourcePage": 11,
+      "sourceImageSha256": "7d2b143ea45d5724c682a8c6f79f41e047db30f986e25c47acc0658488984b06",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 6,
+      "word": "saw many animals",
+      "image": "/assets/vocabulary/g6-unit6/11_saw_many_animals.png",
+      "sourcePage": 11,
+      "sourceImageSha256": "2f9ea2aa6b5fe421fa1df39dddccdde6b75230c37c7a78882d72476da3ca0966",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 6,
+      "word": "ate lunch",
+      "image": "/assets/vocabulary/g6-unit6/12_ate_lunch.png",
+      "sourcePage": 11,
+      "sourceImageSha256": "4b6c74465a7ec072eb9abaeedbf4973deba210e9d984f2950fbd9e9951e2ed32",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 6,
+      "word": "ran fast",
+      "image": "/assets/vocabulary/g6-unit6/13_ran_fast.png",
+      "sourcePage": 11,
+      "sourceImageSha256": "649fc2b7304ec78473fe5f97e7926d2f91d3f8b82a88fe9e7a0f6669f44053cb",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 6,
+      "word": "won first place",
+      "image": "/assets/vocabulary/g6-unit6/14_won_first_place.png",
+      "sourcePage": 11,
+      "sourceImageSha256": "7439f223de058fa8cb7bbc59f57384a0e1fa9df762615568486e2cb2fb465bc8",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 6,
+      "word": "made curry and rice",
+      "image": "/assets/vocabulary/g6-unit6/15_made_curry_and_rice.png",
+      "sourcePage": 11,
+      "sourceImageSha256": "04c679ec3f824c6a8421872ae7232d66247c6693765b5a625e9e738c3cad499b",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 6,
+      "word": "enjoyed the campfire",
+      "image": "/assets/vocabulary/g6-unit6/16_enjoyed_the_campfire.png",
+      "sourcePage": 11,
+      "sourceImageSha256": "fffbcb693175f81be2f9425dfc7790d0f0eb219956984999f46bb9a7694fb53b",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 6,
+      "word": "saw Tokyo Skytree",
+      "image": "/assets/vocabulary/g6-unit6/17_saw_tokyo_skytree.png",
+      "sourcePage": 11,
+      "sourceImageSha256": "7cd8ae42f1724a1ab175640e7691cdea24ffe070834d75f0cbb0deb33a056de3",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 6,
+      "word": "bought souvenirs",
+      "image": "/assets/vocabulary/g6-unit6/18_bought_souvenirs.png",
+      "sourcePage": 11,
+      "sourceImageSha256": "e0461050f242b345377ff6a4a24792063166323f393e0a8b2e325295c36524d5",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 6,
+      "word": "made a costume",
+      "image": "/assets/vocabulary/g6-unit6/19_made_a_costume.png",
+      "sourcePage": 11,
+      "sourceImageSha256": "0a7f5960441ba236f04bdf0f160f02e5600b593cf339ee3ca3747af52f6e1b21",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 6,
+      "word": "played Cinderella",
+      "image": "/assets/vocabulary/g6-unit6/20_played_cinderella.png",
+      "sourcePage": 11,
+      "sourceImageSha256": "303116f1fe5ab6d1031acd451aabbcbc1ecdd438f2bfe21e6362af89292a8546",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 6,
+      "word": "enjoyed singing",
+      "image": "/assets/vocabulary/g6-unit6/21_enjoyed_singing.png",
+      "sourcePage": 11,
+      "sourceImageSha256": "02824235111ce1cf9b46b4eb7cf139885ac06ec9820270e0dee973b492f6d712",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 6,
+      "word": "played the recorder",
+      "image": "/assets/vocabulary/g6-unit6/22_played_the_recorder.png",
+      "sourcePage": 11,
+      "sourceImageSha256": "010836b83bcebcbf44de1ceddea8310dfe13d083e2db814f4b759b31094b54e3",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "actor",
+      "image": "/assets/vocabulary/g6-unit7/01_actor.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "05567aeb706252dfbd090207416806081a279f88f258ad58e30eba41bebc2072",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "teacher",
+      "image": "/assets/vocabulary/g6-unit7/02_teacher.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "4556d14db39e1027902d32e3f3047d0154c84a09690179668edf2b452207e4c5",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "police officer",
+      "image": "/assets/vocabulary/g6-unit7/03_police_officer.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "b996618a535810329fd5215d44060df3f5c8b62e5be515c20836ab91ecccf42b",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "illustrator",
+      "image": "/assets/vocabulary/g6-unit7/04_illustrator.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "37902757b5645d0367ed53bdce07dbb20423f70912a928b2a164b52a54967f93",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "comedian",
+      "image": "/assets/vocabulary/g6-unit7/05_comedian.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "d29fae317ca8fdde7594318efe14c986aababb204d74072e63bb51c1b2125a5e",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "soccer player",
+      "image": "/assets/vocabulary/g6-unit7/06_soccer_player.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "889d8641d77532a87a3b4a191b37612f89510b50cbd74ce6452b73cf5b7b148c",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "pastry chef",
+      "image": "/assets/vocabulary/g6-unit7/07_pastry_chef.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "527a480e9a055c8653afc9cfc7968c110366463e4ded7858a51b168fbe2e58f5",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "pilot",
+      "image": "/assets/vocabulary/g6-unit7/08_pilot.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "13f40c38798b30f7da530f75d293508f99a9f35327a4d6d12b8253ae8d7e7d61",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "farmer",
+      "image": "/assets/vocabulary/g6-unit7/09_farmer.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "758bd09ca0312160a9c3149f5c7c39b7d65a59513ba95a913b7f02a02044f9aa",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "voice actor",
+      "image": "/assets/vocabulary/g6-unit7/10_voice_actor.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "f232273a6e0f7f4c94626881a2bc3fee925fa7357ce0518d825335676519589c",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "game creator",
+      "image": "/assets/vocabulary/g6-unit7/11_game_creator.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "e525faac3f7272aa5c1c437ea60422325d556bb72648f96554f9db479ac598ef",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "fire fighter",
+      "image": "/assets/vocabulary/g6-unit7/12_fire_fighter.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "1fecb425e1b0ab3e1c4f2450b78a9afc762752c4a08f6c6aeaf85eb8d60de8f5",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "scientist",
+      "image": "/assets/vocabulary/g6-unit7/13_scientist.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "5f027fa9beedc18e4534c431c304a5785524491e5d5637dbb91075eeb454f308",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "doctor",
+      "image": "/assets/vocabulary/g6-unit7/14_doctor.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "b46cc114e2117cfaa7f70133baebf3240794c750a6433199a50f75931ec2901b",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "astronaut",
+      "image": "/assets/vocabulary/g6-unit7/15_astronaut.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "ddee0fdd79cdf4df023c17faa7a73c6354014cf8397b37bfae7e48501193affe",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "baker",
+      "image": "/assets/vocabulary/g6-unit7/16_baker.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "83866500ab5238bb7a691ed1b39b6fe80d36496a7827416a47d6aac1d62f3cca",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "flight attendant",
+      "image": "/assets/vocabulary/g6-unit7/17_flight_attendant.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "b87d62db8c12c936588dc349deffb005bed56157b47624a77dcd421e58fd5086",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "dentist",
+      "image": "/assets/vocabulary/g6-unit7/18_dentist.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "282ca4ad37d3fe3dfc834f5aaa9d5fd042a8d1905d5e6b3239494bee524283ef",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "hairdresser",
+      "image": "/assets/vocabulary/g6-unit7/19_hairdresser.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "76eb97d2110b0b65acc9d50298bdb8283b2b55c74ea16e1ef089bb85f836c22b",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "nursery school teacher",
+      "image": "/assets/vocabulary/g6-unit7/20_nursery_school_teacher.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "724f8edb632c7347988ab1e0bc610428ed1f745fbae2d822d78814d82a6edc31",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "nurse",
+      "image": "/assets/vocabulary/g6-unit7/21_nurse.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "1fb5812fd9eb77193211e44fdc276c38e756337d8b6134dcceef2b9c167ed70d",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "musician",
+      "image": "/assets/vocabulary/g6-unit7/22_musician.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "94720990f61172cc51f76611523b8b840bcd13c6c8a72e518a2c14e71bb95210",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "vet",
+      "image": "/assets/vocabulary/g6-unit7/23_vet.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "391da07a7b782537bf9f79aff1a4e1b57d8d36cd38ffef1d2939efc01efad272",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 7,
+      "word": "fashion designer",
+      "image": "/assets/vocabulary/g6-unit7/24_fashion_designer.png",
+      "sourcePage": 13,
+      "sourceImageSha256": "69e19a5e30bfa3f00eb5846d3db17ac62669812d5f6b5a4931fb39ba4880027a",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 8,
+      "word": "baseball team",
+      "image": "/assets/vocabulary/g6-unit8/01_baseball_team.png",
+      "sourcePage": 15,
+      "sourceImageSha256": "19d8612ccb5d67c63d032c081a02062e00f2a473f72681ec59d7facd8e12d27e",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 8,
+      "word": "swimming team",
+      "image": "/assets/vocabulary/g6-unit8/02_swimming_team.png",
+      "sourcePage": 15,
+      "sourceImageSha256": "373dde1ffceaed0f44a95b5be994e81809c8e09406f355781946d8fbb284a3d7",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 8,
+      "word": "tennis team",
+      "image": "/assets/vocabulary/g6-unit8/03_tennis_team.png",
+      "sourcePage": 15,
+      "sourceImageSha256": "588a7a591abcb9aa281448d3940350119d0e2a84d9b0cb5322c65fe842874f4d",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 8,
+      "word": "track and field team",
+      "image": "/assets/vocabulary/g6-unit8/04_track_and_field_team.png",
+      "sourcePage": 15,
+      "sourceImageSha256": "7b176450ddfb96714ebc038c8c4351b9a54ef744e3481e9393b7b4fc9d44a207",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 8,
+      "word": "soccer team",
+      "image": "/assets/vocabulary/g6-unit8/05_soccer_team.png",
+      "sourcePage": 15,
+      "sourceImageSha256": "d2befae5ad35caca9da40e2c761c4cf09385ca13c44a35147fb8d2aec58fce42",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 8,
+      "word": "chorus",
+      "image": "/assets/vocabulary/g6-unit8/06_chorus.png",
+      "sourcePage": 15,
+      "sourceImageSha256": "708bfd1486a8091d807add262f039f5d6eadbaec74833ce37355df272d002ac5",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 8,
+      "word": "brass band",
+      "image": "/assets/vocabulary/g6-unit8/07_brass_band.png",
+      "sourcePage": 15,
+      "sourceImageSha256": "6a3c6569e7cbb22dbf84362e12f121e535238b932c3069e0ab7f3eae49d3b87f",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 8,
+      "word": "art club",
+      "image": "/assets/vocabulary/g6-unit8/08_art_club.png",
+      "sourcePage": 15,
+      "sourceImageSha256": "e5b7a7cf51f04adcba70449caf41117df7bdf6d6e6fbaf7edb90bdd461672c98",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 8,
+      "word": "science club",
+      "image": "/assets/vocabulary/g6-unit8/09_science_club.png",
+      "sourcePage": 15,
+      "sourceImageSha256": "245e60c8dc3f2c395870b1fb6e32f449e283e8caa1f639067237ab1152185b00",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 8,
+      "word": "judo club",
+      "image": "/assets/vocabulary/g6-unit8/10_judo_club.png",
+      "sourcePage": 15,
+      "sourceImageSha256": "dbd517665308bb8fdbe85a289ffba86e63f23ff2d7cdf0cbef05228d2520beee",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 8,
+      "word": "computer club",
+      "image": "/assets/vocabulary/g6-unit8/11_computer_club.png",
+      "sourcePage": 15,
+      "sourceImageSha256": "e949c7d549fcdfa3cc4e4ada47a51e34f6872fb55f099414554f9440008cea0d",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 8,
+      "word": "English club",
+      "image": "/assets/vocabulary/g6-unit8/12_english_club.png",
+      "sourcePage": 15,
+      "sourceImageSha256": "fba75ee7e382d65d7a1da39afcd88160fc194a17b4384464b9073382440664b4",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 8,
+      "word": "dance club",
+      "image": "/assets/vocabulary/g6-unit8/13_dance_club.png",
+      "sourcePage": 15,
+      "sourceImageSha256": "55a80c95dcea518bce91db0a61267a39d9c93c7eeafc4904ef3ca55c10ddc316",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 8,
+      "word": "basketball team",
+      "image": "/assets/vocabulary/g6-unit8/14_basketball_team.png",
+      "sourcePage": 15,
+      "sourceImageSha256": "2bce8ea3bed71a6266f24c97d4e33b380e71b835eca51c123d1c7707a8eb36fb",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 8,
+      "word": "table tennis team",
+      "image": "/assets/vocabulary/g6-unit8/15_table_tennis_team.png",
+      "sourcePage": 15,
+      "sourceImageSha256": "5bb1c5f18b70fabd5d2c901db6df637c0e988851e3c5f063ac3a7eec66d473b5",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 8,
+      "word": "go on a field trip",
+      "image": "/assets/vocabulary/g6-unit8/16_go_on_a_field_trip.png",
+      "sourcePage": 15,
+      "sourceImageSha256": "ed5595e23333c485ece9637a1e6e8a295f967d5bbc44cb22c8bc0154e5739168",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 8,
+      "word": "sing in the chorus contest",
+      "image": "/assets/vocabulary/g6-unit8/17_sing_in_the_chorus_contest.png",
+      "sourcePage": 15,
+      "sourceImageSha256": "409a6bee2afaa771a8aa3bbfd8b95ceaccca72ed9792d23f6cf72cdb91c9dcea",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 8,
+      "word": "wear the school uniform",
+      "image": "/assets/vocabulary/g6-unit8/18_wear_the_school_uniform.png",
+      "sourcePage": 15,
+      "sourceImageSha256": "ac86c163228c846a62a5c9cfcba2de9373bd9cc1c902b0adcf8764625df70f8b",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 8,
+      "word": "attend Career Day",
+      "image": "/assets/vocabulary/g6-unit8/19_attend_career_day.png",
+      "sourcePage": 15,
+      "sourceImageSha256": "2ecff68b460814e8eb8cf52422e37e730de9eb7cac1e2a532c9d8a6caea9cb5f",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 8,
+      "word": "make many friends",
+      "image": "/assets/vocabulary/g6-unit8/20_make_many_friends.png",
+      "sourcePage": 15,
+      "sourceImageSha256": "d942f6bd3d12784b0ed12298de24598660d903d0cad846556db9fa690127cd83",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 8,
+      "word": "study English hard",
+      "image": "/assets/vocabulary/g6-unit8/21_study_english_hard.png",
+      "sourcePage": 15,
+      "sourceImageSha256": "84b66798f4cfd207e5e7d93c47b2db58d9254e35e658dd9fd61868dd502bea30",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    },
+    {
+      "unit": 8,
+      "word": "do volunteer work",
+      "image": "/assets/vocabulary/g6-unit8/22_do_volunteer_work.png",
+      "sourcePage": 15,
+      "sourceImageSha256": "a9fb95b3b5526ef7fe29a642ae4023ec35b809b4808d15137631005c9b252182",
+      "source": "Blue Sky elementary 6 vocabulary appendix",
+      "acquisition": "native-pixel crop of reader zoom capture, no upscaling"
+    }
+  ]
+}

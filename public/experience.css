@@ -1,0 +1,551 @@
+/* Page flows and state-specific feedback. Shared controls live in components.css. */
+.connection-banner {
+  position: fixed;
+  z-index: 1000;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: calc(100% - 32px);
+  box-sizing: border-box;
+  border: 2px solid #b8f28b;
+  border-radius: 14px;
+  background: #f3fbe9;
+  color: #4b4b4b;
+  padding: 12px 20px;
+  font-weight: 800;
+  box-shadow: 0 4px 14px #0001;
+}
+.connection-banner.connection-lost {
+  background: #fff8dd;
+  border-color: #ffe18a;
+}
+.connection-banner[hidden] {
+  display: none;
+}
+.quiz-footer {
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+}
+body.student main {
+  padding-bottom: calc(var(--action-height) + 32px);
+}
+.student .answer-text {
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+.student .letter-tile,
+.student .letter-slot {
+  min-height: 48px;
+}
+.spelling-word {
+  max-width: 100%;
+}
+.settings-dialog {
+  max-height: calc(100dvh - 32px);
+  overflow-y: auto;
+}
+.settings-dialog input[type='range'] {
+  min-height: 36px;
+}
+.teacher-page .control-button,
+.teacher-page .submit,
+.race-teacher .race-controls button {
+  min-height: 60px;
+  font-size: calc(20px * var(--font-scale, 1));
+}
+.teacher-next-step {
+  border-left: 5px solid #58cc02;
+  background: #f3fbe9;
+  padding: 16px 20px;
+  border-radius: 0 14px 14px 0;
+  font-size: calc(19px * var(--font-scale, 1));
+  line-height: 1.65;
+  margin: 20px 0;
+  color: #4b4b4b;
+}
+.race-controls {
+  align-items: center;
+}
+.race-controls :is(#race-start, #race-again, #race-pause) {
+  min-width: 200px;
+  padding: 16px 28px;
+}
+.race-controls #race-pause {
+  color: #1cb0f6;
+  border-color: #84d8ff;
+  background: #e5f7ff;
+}
+.race-teacher .race-history-row {
+  background: #f7f7f7;
+  border-radius: 16px;
+  padding: 14px 18px;
+}
+.race-teacher .race-history-row select {
+  flex: 1;
+  font-size: 18px;
+  min-height: 52px;
+}
+.race-teacher .race-qr-panel {
+  position: sticky;
+  top: 20px;
+}
+.race-teacher .race-qr-panel > img {
+  width: min(100%, 240px);
+  height: auto;
+  aspect-ratio: 1;
+}
+.race-student .race-main {
+  max-width: 920px;
+}
+.race-student[data-race-phase='question']
+  :is(.course-banner, .team-goal, #mini-track, #race-accuracy-note) {
+  display: none;
+}
+.race-student[data-race-phase='question'] .race-moment:empty {
+  display: none;
+}
+.race-student[data-race-phase='question'] .race-topline {
+  margin-bottom: 12px;
+}
+.race-student .race-question {
+  scroll-margin-top: 20px;
+  padding: 24px;
+  border-radius: 24px;
+}
+.course-progress {
+  display: block;
+  width: 100%;
+  height: 14px;
+  border: 0;
+  margin: 16px 0 24px;
+  accent-color: #58cc02;
+  border-radius: 14px;
+  overflow: hidden;
+}
+.course-progress::-webkit-progress-bar {
+  background: #e5e5e5;
+  border-radius: 14px;
+}
+.course-progress::-webkit-progress-value {
+  background: #58cc02;
+  border-radius: 14px;
+  transition: width 0.3s;
+}
+.race-prompt {
+  gap: 20px;
+}
+.race-prompt h1 {
+  overflow-wrap: anywhere;
+  font-size: calc(34px * var(--font-scale, 1));
+}
+#race-slow {
+  min-height: 48px;
+  min-width: 68px;
+  padding: 10px;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.race-choice {
+  min-height: 92px;
+  font-size: calc(23px * var(--font-scale, 1));
+  line-height: 1.5;
+  overflow-wrap: anywhere;
+  padding: 16px;
+}
+.race-choice.chosen {
+  color: #1899d6;
+  background: #ddf4ff;
+  border-color: #84d8ff;
+}
+.spelling-tools {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin: 16px 0;
+}
+.spelling-tools button {
+  min-height: 48px;
+  padding: 10px 18px;
+  font-size: 16px;
+}
+.race-letters {
+  gap: 10px;
+  margin: 20px 0;
+}
+.race-spelling .letter-slot,
+.race-letters .letter-tile {
+  min-width: 44px;
+  min-height: 54px;
+}
+.race-student .race-submit-row {
+  position: sticky;
+  bottom: 0;
+  z-index: 3;
+  background: #fff;
+  border-top: 2px solid #e5e5e5;
+  padding: 16px 0 max(16px, env(safe-area-inset-bottom));
+  margin-top: 20px;
+}
+.race-student .race-submit-row p {
+  flex: 1;
+  margin: 0;
+  font-size: 18px;
+}
+.race-student .race-submit-row .submit {
+  min-height: 60px;
+  min-width: 180px;
+}
+.race-item-line {
+  flex-wrap: wrap;
+  align-items: center;
+}
+.item-description {
+  max-width: 100%;
+  line-height: 1.6;
+}
+.course-summary,
+.waiting-review {
+  text-align: center;
+  border: 2px solid #e5e5e5;
+  background: #fff;
+  border-radius: 20px;
+  padding: 24px;
+  margin: 24px 0;
+}
+.course-summary h2,
+.waiting-review h2 {
+  font-size: 22px;
+  margin-top: 0;
+}
+.course-summary-stats {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+}
+.course-summary-stats strong {
+  display: block;
+  color: #58a700;
+  font-size: 26px;
+}
+.course-summary-stats small {
+  display: block;
+  color: #777;
+  margin-top: 8px;
+}
+.waiting-review {
+  background: #f7fcff;
+  border-color: #ddf4ff;
+}
+#waiting-review-card {
+  border-radius: 16px;
+  background: white;
+  padding: 20px;
+  margin: 16px 0;
+  min-height: 100px;
+}
+#waiting-review-card h3 {
+  font-size: 24px;
+  margin: 12px;
+}
+#waiting-review-card strong {
+  font-size: 30px;
+  color: #1899d6;
+}
+.review-controls {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.review-controls button {
+  padding: 12px 18px;
+  min-height: 48px;
+  font-size: 16px;
+}
+.race-page[data-race-phase='ready'] .race-avatar-options {
+  opacity: 0.65;
+}
+@media (max-width: 900px) {
+  .race-student .app-header {
+    padding-inline: 20px;
+    gap: 12px;
+  }
+  .race-student .brand {
+    font-size: 25px;
+  }
+  .race-student .race-main {
+    margin-top: 20px;
+  }
+}
+@media (max-width: 650px) {
+  .race-student .race-question {
+    padding: 18px 14px;
+  }
+  .race-prompt {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .race-prompt h1 {
+    flex: 1;
+    font-size: calc(27px * var(--font-scale, 1));
+  }
+  .race-choice {
+    font-size: calc(19px * var(--font-scale, 1));
+    min-height: 76px;
+  }
+  .race-student .race-submit-row {
+    align-items: stretch;
+    padding-bottom: max(12px, env(safe-area-inset-bottom));
+  }
+  .race-student .race-submit-row .submit {
+    width: 100%;
+  }
+  .course-summary-stats {
+    gap: 8px;
+  }
+  .course-summary-stats strong {
+    font-size: 22px;
+  }
+  .race-teacher .race-qr-panel {
+    position: static;
+  }
+  .header-actions {
+    gap: 8px;
+  }
+  .race-student .brand > span:last-child {
+    font-size: 21px;
+  }
+  .race-page .header-actions .home-button {
+    padding: 10px 12px;
+    font-size: 14px;
+  }
+  .race-teacher .race-controls {
+    width: 100%;
+  }
+  .race-teacher .race-controls > button {
+    flex: 1;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .course-progress::-webkit-progress-value {
+    transition: none;
+  }
+}
+.reduce-motion .course-progress::-webkit-progress-value {
+  transition: none;
+}
+
+/* Fixed feedback/footer must respect the iPad safe area and enlarged type. */
+.bottom-bar,
+.feedback {
+  padding-bottom: max(20px, env(safe-area-inset-bottom));
+}
+.spelling-word {
+  flex-wrap: wrap;
+}
+.race-page .race-letters .letter-tile,
+.race-page .race-spelling .letter-slot {
+  font-size: calc(23px * var(--font-scale, 1));
+}
+@media (max-width: 650px) {
+  .bottom-inner {
+    flex-wrap: wrap;
+  }
+  .bottom-actions {
+    flex: 1;
+    justify-content: flex-end;
+  }
+  .keyboard-note {
+    display: none !important;
+  }
+}
+
+.editor-section[hidden] {
+  display: none !important;
+}
+.editor-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.editor-tabs a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 56px;
+  padding: 12px 24px;
+  border-radius: 16px;
+  border: 2px solid #e5e5e5;
+  color: #777;
+  font-size: 18px;
+  font-weight: 800;
+  text-decoration: none;
+}
+.editor-tabs a[aria-current='page'] {
+  background: #f3fbe9;
+  border-color: #b8f28b;
+  color: #58a700;
+}
+.editor-word-sidebar {
+  min-width: 0;
+}
+.word-search label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 800;
+}
+.word-search input {
+  width: 100%;
+  box-sizing: border-box;
+  border: 2px solid #e5e5e5;
+  border-radius: 14px;
+  padding: 12px;
+  margin-bottom: 14px;
+}
+.editor-savebar {
+  gap: 16px;
+  padding-bottom: max(16px, env(safe-area-inset-bottom));
+}
+#projection-mode[hidden] {
+  display: none !important;
+}
+
+/* During a live race, prioritise the timing tower on a Windows/TV display. */
+@media (min-width: 1100px) {
+  .race-teacher:is(
+      [data-teacher-race-state='running'],
+      [data-teacher-race-state='countdown'],
+      [data-teacher-race-state='paused']
+    )
+    .teacher-modes {
+    margin-bottom: 16px;
+  }
+  .race-teacher:is(
+      [data-teacher-race-state='running'],
+      [data-teacher-race-state='countdown'],
+      [data-teacher-race-state='paused']
+    )
+    .teacher-modes
+    a {
+    min-height: 62px;
+    padding: 12px 18px;
+  }
+  .race-teacher:is(
+      [data-teacher-race-state='running'],
+      [data-teacher-race-state='countdown'],
+      [data-teacher-race-state='paused']
+    )
+    .teacher-modes
+    small {
+    display: none;
+  }
+  .race-teacher:is(
+      [data-teacher-race-state='running'],
+      [data-teacher-race-state='countdown'],
+      [data-teacher-race-state='paused']
+    )
+    .race-history-row {
+    display: none;
+  }
+  .race-teacher:is(
+      [data-teacher-race-state='running'],
+      [data-teacher-race-state='countdown'],
+      [data-teacher-race-state='paused']
+    )
+    .race-board-heading
+    h1 {
+    font-size: 28px;
+    margin-block: 8px;
+  }
+  .race-teacher:is(
+      [data-teacher-race-state='running'],
+      [data-teacher-race-state='countdown'],
+      [data-teacher-race-state='paused']
+    )
+    .teacher-next-step {
+    margin-block: 12px;
+    padding-block: 10px;
+    font-size: 17px;
+  }
+  .race-teacher:is(
+      [data-teacher-race-state='running'],
+      [data-teacher-race-state='countdown'],
+      [data-teacher-race-state='paused']
+    )
+    .timing-row {
+    min-height: 48px;
+    padding-block: 3px;
+  }
+  .race-teacher:is(
+      [data-teacher-race-state='running'],
+      [data-teacher-race-state='countdown'],
+      [data-teacher-race-state='paused']
+    )
+    :is(#teacher-accuracy-note, #race-track-note, .race-track-panel .team-goal) {
+    display: none;
+  }
+}
+
+/* Tied ranks can legitimately put more than three learners on the podium. */
+.race-page :is(.race-podium, #race-podium) {
+  flex-wrap: wrap;
+}
+.race-page .podium-card {
+  flex: 1 1 160px;
+  max-width: 280px;
+  min-width: 140px;
+}
+/* Rewards stay next to the answer and never cover choices or letter tiles. */
+.answer-reward {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+  padding: 14px 18px;
+  margin-top: 18px;
+  border-radius: 18px;
+  background: #f1fce5;
+  color: #437900;
+}
+.answer-reward[hidden],
+#boost-status[hidden] {
+  display: none;
+}
+.reward-points {
+  font-size: 1.8em;
+  color: #58a700;
+}
+.reward-combo {
+  font-weight: 800;
+}
+.answer-reward small {
+  width: 100%;
+  text-align: center;
+}
+#boost-status {
+  display: block;
+  background: #fff7d6;
+  border-radius: 14px;
+  padding: 12px 16px;
+  color: #805900;
+  font-weight: 700;
+  line-height: 1.6;
+}
+.course-growth {
+  text-align: center;
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: 16px;
+  background: #f1fce5;
+}
+.course-growth p {
+  margin: 6px 0;
+  font-weight: 700;
+  color: #437900;
+}
+.course-growth small {
+  display: block;
+  margin-top: 12px;
+  color: #777;
+}

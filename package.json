@@ -1,0 +1,24 @@
+{
+  "name": "aomiyalingo-classroom",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "build": "node build.mjs",
+    "db:generate": "drizzle-kit generate",
+    "check": "node scripts/check.mjs",
+    "test": "node scripts/check.mjs",
+    "benchmark": "node scripts/benchmark-race.mjs",
+    "benchmark:assets": "node scripts/benchmark-assets.mjs",
+    "benchmark:models": "node scripts/benchmark-models.mjs",
+    "benchmark:diagnostics": "node scripts/benchmark-diagnostics.mjs",
+    "format": "prettier --write server/assets.mjs server/application.mjs race-server.mjs editor-server.mjs worker.mjs server/classroom server/editor public/practice public/editor public/learning public/course.js server/race public/race.js public/race public/race-session.js public/shared public/network-entry.js public/app.js public/classroom.js public/teacher.js public/teacher-home.js public/mode-settings.js public/teacher-editor.js public/word-audio.js public/settings.js public/feedback-effects.js public/effects public/ui public/components.css public/teacher-flow.css public/race-showtime.css public/experience.css build.mjs scripts .prettierrc.json package.json",
+    "format:check": "prettier --check server/assets.mjs server/application.mjs race-server.mjs editor-server.mjs worker.mjs server/classroom server/editor public/practice public/editor public/learning public/course.js server/race public/race.js public/race public/race-session.js public/shared public/network-entry.js public/app.js public/classroom.js public/teacher.js public/teacher-home.js public/mode-settings.js public/teacher-editor.js public/word-audio.js public/settings.js public/feedback-effects.js public/effects public/ui public/components.css public/teacher-flow.css public/race-showtime.css public/experience.css build.mjs scripts .prettierrc.json package.json"
+  },
+  "devDependencies": {
+    "drizzle-kit": "^0.31.0",
+    "drizzle-orm": "^0.45.3",
+    "esbuild": "0.25.12",
+    "prettier": "3.6.2",
+    "qrcode-generator": "^2.0.4"
+  }
+}

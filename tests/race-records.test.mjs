@@ -1,0 +1,57 @@
+import assert from 'node:assert/strict';
+import { createRecordStore } from '../public/race/record-model.js';
+import { recordSummary, sortRecordSummaries, commonDifficulties, spellingSegments, groupRecordAnswers } from '../public/race/records.js';
+const h=(word,mode,correct,more={})=>({word,mode,correct,station:0,...more});
+const player={id:'a',label:'10',score:9999,history:[
+ h('cheerful','spelling',false),h('cheerful','spelling',false),
+ h('cheerful','spelling',true),h('cousin','text',true,{hinted:true}),
+ h('cousin','text',true,{review:true}),h('cheerful','voice',true,{station:1}),
+]};
+const all=recordSummary(player);
+assert.equal(all.main.length,5);
+assert.equal(all.independent,2);
+assert.equal(all.accuracy,40);
+assert.equal(all.wrong.length,2);
+assert.equal(all.hinted.length,1);
+assert.equal(all.needs,2,'Repeated errors in the same word/type are one review item');
+assert.equal(recordSummary(player,'0').accuracy,25);
+assert.equal(recordSummary(player,'1').accuracy,100);
+assert.equal(recordSummary(player,'2').accuracy,null,'No responses is not zero accuracy');
+const b=recordSummary({id:'b',label:'2',history:[h('cheerful','text',false),h('kind','text',false)]});
+assert.deepEqual(commonDifficulties([all,b]),[['cheerful',2],['kind',1]],'Count learners, not repeated attempts; hints alone are not errors');
+assert.deepEqual(sortRecordSummaries([all,b]).map(s=>s.player.label),['2','10']);
+assert.deepEqual(sortRecordSummaries([all,b],'attention').map(s=>s.player.label),['2','10']);
+assert.equal(recordSummary({history:[]}).needs,0);
+assert.equal(recordSummary({}).accuracy,null);
+const grouped=groupRecordAnswers(all.wrong);
+assert.equal(grouped.length,1);
+assert.equal(grouped[0].count,2);
+assert.equal(all.wrong[0].count,undefined,'Grouping must not mutate historical records');
+assert.equal(groupRecordAnswers([{...all.wrong[0],station:0},{...all.wrong[0],station:2}])[0].stations.join(','),'0,2');
+assert.equal(groupRecordAnswers([{...all.wrong[0],answer:'a'},{...all.wrong[0],answer:'b'}]).length,2,'Different errors retain their distinct answers');
+assert.deepEqual(spellingSegments('cheerfull','cheerful').filter(s=>s.wrong).map(s=>s.char),['l']);
+assert.equal(spellingSegments('cherful','cheerful').filter(s=>s.wrong).length,0,'Omitted letter leaves following letters aligned; correct answer remains visible');
+assert.deepEqual(spellingSegments('cousan','cousin').filter(s=>s.wrong).map(s=>s.char),['a']);
+assert.equal(spellingSegments('Ate','ate').filter(s=>s.wrong).length,0);
+assert.equal(spellingSegments('x'.repeat(500),'ate').length,500,'Long legacy input stays bounded');
+let scans=0;
+const store=createRecordStore((p,station)=>{scans++;return recordSummary(p,station);});
+const first={race:{id:'r1'},players:[{...player,recordRevision:1},{id:'b',label:'2',score:0,recordRevision:1,history:[]}]};
+assert.equal(store.update(first).changed,true);
+assert.equal(scans,0,'Closed panels need no analysis');
+store.summaries();assert.equal(scans,2);
+const snapshot=store.summary('a');
+assert.equal(store.update(structuredClone(first)).changed,false,'Fresh response objects with identical revisions do not redraw');
+store.summaries();assert.equal(scans,2,'Unchanged polls reuse analyses');
+store.summaries('0');store.summaries('0');assert.equal(scans,4);
+const newer=structuredClone(first);newer.players[0].recordRevision++;newer.players[0].history.push(h('ate','text',true));
+assert.deepEqual([...store.update(newer).changedIds],['a']);
+assert.equal(store.summary('a').main.length,6);assert.equal(scans,5,'One changed learner invalidates only that learner');
+store.summary('b');assert.equal(scans,5);
+assert.equal(snapshot.main.length,5,'Open reading snapshots remain unchanged');
+store.update({...newer,players:[newer.players[1]]});assert.equal(store.summary('a'),null);
+store.update({race:{id:'r2'},players:[{...first.players[0],history:[]}]});assert.equal(store.summary('a').main.length,0,'Same IDs and revisions in a new race cannot reuse earlier data');
+store.update({race:{id:'legacy'},players:[player]});store.summaries();
+const legacy=structuredClone(player);legacy.history[0].correct=true;
+assert.equal(store.update({race:{id:'legacy'},players:[legacy]}).changed,true,'Unversioned historical responses retain change detection');
+console.log('Race records: independent accuracy, hints/review, course scope, numeric sorting, learner-level difficulties and spelling alignment passed.');

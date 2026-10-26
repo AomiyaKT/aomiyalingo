@@ -1,0 +1,530 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Aomiyalingo 英単語を聞いて、日本語の意味を選びましょう。" />
+    <title>Aomiyalingo · 先生のホーム</title>
+
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%2358cc02'/%3E%3Cpath d='M8 24 16 8l8 16M11 18h10' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"
+    />
+
+    <link rel="stylesheet" href="/ui/teacher.css?v=classroom58" />
+  </head>
+  <body class="teacher-page teacher-shell">
+    <svg class="symbols" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <symbol id="i-image" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="18" height="18" rx="3" />
+        <circle cx="8" cy="8" r="1.5" />
+        <path d="m4 17 5-5 4 4 3-3 4 4" />
+      </symbol>
+      <symbol id="i-speaker" viewBox="0 0 24 24">
+        <path d="M11 4 6 8H3v8h3l5 4Z" />
+        <path d="M15 8a6 6 0 0 1 0 8M18 5a10 10 0 0 1 0 14" />
+      </symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24">
+        <path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10" /></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></symbol>
+      <symbol id="i-layout" viewBox="0 0 24 24"><path d="M4 4h16v16H4zM4 10h16M10 10v10" /></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M20 7v5h-5M4 17v-5h5M6 6a8 8 0 0 1 14 6M18 18a8 8 0 0 1-14-6" />
+      </symbol>
+      <symbol id="i-eye" viewBox="0 0 24 24">
+        <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12" />
+        <circle cx="12" cy="12" r="3" />
+      </symbol>
+      <symbol id="i-pen" viewBox="0 0 24 24">
+        <path d="m4 16 12-12 4 4L8 20l-5 1 1-5M13 7l4 4" />
+      </symbol>
+    </svg>
+    <header class="app-header">
+      <a class="brand" href="./" aria-label="Aomiyalingo ホーム"
+        ><span class="brand-mark">A</span><span>Aomiya<span class="brand-lab">lingo</span></span></a
+      >
+
+      <div class="header-actions"><a class="home-button" href="/">ホームに戻る</a></div>
+      <button
+        id="settings-open"
+        class="settings-open"
+        aria-label="設定を開く"
+        aria-haspopup="dialog"
+        title="設定"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M9.75,4.64 L10.30,2.35 L13.70,2.35 L14.25,4.64 L15.61,5.20 L17.62,3.97 L20.03,6.38 L18.80,8.39 L19.36,9.75 L21.65,10.30 L21.65,13.70 L19.36,14.25 L18.80,15.61 L20.03,17.62 L17.62,20.03 L15.61,18.80 L14.25,19.36 L13.70,21.65 L10.30,21.65 L9.75,19.36 L8.39,18.80 L6.38,20.03 L3.97,17.62 L5.20,15.61 L4.64,14.25 L2.35,13.70 L2.35,10.30 L4.64,9.75 L5.20,8.39 L3.97,6.38 L6.38,3.97 L8.39,5.20 Z"
+          />
+          <circle cx="12" cy="12" r="3.2" />
+        </svg>
+      </button>
+    </header>
+    <nav class="workspace-nav" aria-label="先生用メニュー">
+      <a class="brand" href="./" aria-label="Aomiyalingo ホーム"
+        ><span class="brand-mark">A</span><span>Aomiya<span class="brand-lab">lingo</span></span></a
+      >
+      <div>
+        <a href="/"
+          ><svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m3 11 9-8 9 8v10h-6v-7H9v7H3Z" /></svg
+          ><span>ホーム</span></a
+        ><a href="/teacher" aria-current="page"
+          ><svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 5v16M12 5C8 3 5 3 2 5v15c4-2 7-1 10 1 3-2 6-3 10-1V5c-3-2-6-2-10 0Z" />
+            <path d="M5 8h4M5 12h4M15 8h4M15 12h4" /></svg
+          ><span>単語練習</span></a
+        ><a href="/race-teacher"
+          ><svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 22V3M5 4c5-3 10 3 16 0v12c-6 3-11-3-16 0" />
+            <path
+              d="M7 6h3v3H7zm6 1h3v3h-3zm5-1h2v3h-2zM10 9h3v3h-3zm6 1h3v3h-3zM7 12h3v2H7zm6 1h3v2h-3z"
+              fill="currentColor"
+              stroke="none"
+            /></svg
+          ><span>単語レース</span></a
+        >
+      </div>
+      <p>AOMIYALINGO · 先生用</p>
+    </nav>
+    <main class="teacher-main">
+      <section id="teacher-access" hidden class="teacher-access">
+        <span class="exercise-tag">AOMIYALINGO · 先生用</span>
+        <h1>授業を始めよう。</h1>
+        <p>教材を選んで授業を開き、QRを生徒に見せましょう。</p>
+        <form id="teacher-form">
+          <label for="teacher-password">先生用パスワード</label>
+          <div class="password-row">
+            <input
+              id="teacher-password"
+              type="password"
+              autocomplete="current-password"
+              required
+              placeholder="パスワードを入力"
+            /><button id="teacher-submit" class="submit" type="submit">ログイン</button>
+          </div>
+          <p id="teacher-error" role="alert" hidden></p>
+        </form>
+      </section>
+      <section id="teacher-board" hidden>
+        <div class="practice-workspace-bar">
+          <div class="mode-context">単語練習</div>
+          <button class="home-button mode-settings-trigger" data-mode-settings>
+            単語・練習の設定
+          </button>
+        </div>
+        <div class="board-heading">
+          <div>
+            <span class="exercise-tag">先生用 · 5年生／6年生</span>
+            <div class="context-help-heading">
+              <h1 id="practice-title">単語練習</h1>
+              <button
+                id="practice-next-step"
+                type="button"
+                class="help-trigger"
+                aria-label="この画面の使い方"
+                data-help="教材と内容を選んで、クラスを開始します。"
+              >
+                ?
+              </button>
+            </div>
+            <p id="connection-status" role="status">接続中…</p>
+          </div>
+          <div class="board-tools primary-tools">
+            <button id="prepare-class" class="submit" hidden>新しい授業を準備</button>
+            <button id="projection-mode" aria-pressed="false" hidden>
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <rect x="3" y="4" width="18" height="13" rx="2" />
+                <path d="M8 21h8M12 17v4" /></svg
+              >テレビに映す</button
+            ><button id="pause-button" class="control-button" hidden>練習を一時停止</button
+            ><button id="class-state-button" class="control-button" hidden>授業を終了</button
+            ><button id="projection-records" class="control-button">個別の記録を表示</button>
+            <details id="more-class-actions" class="more-class-actions">
+              <summary>その他の操作 <span aria-hidden="true">⌄</span></summary>
+              <div class="class-actions-menu">
+                <button id="joining-button" class="control-button" hidden>参加を締め切る</button
+                ><a id="export-results" class="control-button" hidden>成績CSVを保存</a
+                ><button id="refresh-board">今すぐ更新</button
+                ><button id="delete-ended-class" class="control-button" hidden>
+                  このクラスを削除
+                </button>
+              </div>
+            </details>
+          </div>
+        </div>
+        <div class="class-controls">
+          <div class="class-workspace">
+            <section id="current-class-panel" class="current-class-panel">
+              <div class="current-class-heading">
+                <h2>現在のクラス</h2>
+                <p id="room-state"></p>
+              </div>
+              <label for="class-select">表示するクラス</label
+              ><select id="class-select" disabled></select>
+              <p id="class-scope-summary"></p>
+            </section>
+            <details id="new-class-panel" class="class-launch new-class-panel">
+              <summary>
+                <span class="setup-summary-icon" aria-hidden="true">＋</span
+                ><span><strong>新しいクラスを準備</strong></span
+                ><span class="setup-chevron" aria-hidden="true">⌄</span>
+              </summary>
+              <div class="setup-content">
+                <form id="new-class-form">
+                  <div class="grade-field">
+                    <label for="class-grade">学年・教材</label
+                    ><select id="class-grade">
+                      <option value="6-1">6年生 · Pre Unit–Unit 1</option>
+                      <option value="6-2">6年生 · Unit 2</option>
+                      <option value="6-3">6年生 · Unit 3</option>
+                      <option value="6-4">6年生 · Unit 4</option>
+                      <option value="6-5">6年生 · Unit 5</option>
+                      <option value="6-6">6年生 · Unit 6</option>
+                      <option value="6-7">6年生 · Unit 7</option>
+                      <option value="6-8">6年生 · Unit 8</option>
+                      <option value="5">5年生 · Unit 5</option>
+                      <option value="6">6年生 · Unit 4–5（以前の設定）</option>
+                    </select>
+                  </div>
+                  <div class="setup-name-row">
+                    <label for="class-title"
+                      >クラス名<input id="class-title" maxlength="60" required /></label
+                    ><label for="round-size"
+                      >1レッスンの問題数<select id="round-size">
+                        <option value="4">4問ずつ</option>
+                        <option value="6">6問ずつ</option>
+                        <option value="8">8問ずつ</option>
+                        <option value="10">10問ずつ</option>
+                      </select></label
+                    >
+                  </div>
+                  <div class="lesson-options">
+                    <div class="word-group-field">
+                      <label for="word-group">単語の範囲</label
+                      ><select id="word-group">
+                        <option value="all">すべての設定済み単語</option>
+                        <option value="verb">動詞</option>
+                        <option value="adjective">形容詞</option>
+                        <option value="other">その他</option>
+                      </select>
+                    </div>
+                    <fieldset id="class-basic-modes">
+                      <legend>問題の種類</legend>
+                      <label
+                        ><input type="checkbox" name="lesson-mode" value="text" checked />
+                        単語</label
+                      ><label
+                        ><input type="checkbox" name="lesson-mode" value="voice" checked />
+                        リスニング</label
+                      ><label
+                        ><input type="checkbox" name="lesson-mode" value="spelling" checked />
+                        スペリング</label
+                      >
+                    </fieldset>
+                  </div>
+                  <div class="context-help-heading">
+                    <p id="lesson-options-summary" role="status"></p>
+                    <button
+                      id="class-format-summary"
+                      type="button"
+                      class="help-trigger"
+                      aria-label="練習の構成"
+                      data-help="ことば → 文づくり → リスニング。答えに合わせてヒントや入力方法を調整します。構成は「単語・練習の設定」で変更できます。"
+                    >
+                      ?
+                    </button>
+                  </div>
+                  <p id="new-class-error" role="alert" hidden></p>
+                  <div class="setup-bottom">
+                    <button type="button" class="home-button" data-mode-settings>
+                      単語・練習の設定
+                    </button>
+                    <button
+                      id="create-class"
+                      type="submit"
+                      class="submit"
+                      data-help="このクラス専用のQRを表示します。過去の記録は残ります。進行中のクラスがある場合は、確認してから終了します。"
+                    >
+                      この内容でクラスを開始</button
+                    ><button id="class-setup-cancel" type="button" class="home-button">
+                      準備をやめる
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </details>
+          </div>
+          <aside class="qr-panel">
+            <p id="tv-room-state"></p>
+            <div class="context-help-heading">
+              <h2>生徒用QR</h2>
+              <button
+                type="button"
+                class="help-trigger"
+                aria-label="生徒の参加方法"
+                data-help="生徒のiPadでQRを読み取り、出席番号を入力すると練習を始められます。"
+              >
+                ?
+              </button>
+            </div>
+            <p class="qr-empty-note">クラスを開始すると、<br />ここにQRが表示されます。</p>
+            <img hidden alt="生徒が参加するためのQRコード" /><a
+              id="student-link"
+              target="_blank"
+              rel="noopener"
+              >生徒用リンクを開く</a
+            >
+          </aside>
+        </div>
+        <p id="empty-class">内容を選び、「この内容でクラスを開始」を押してください。</p>
+        <details id="class-trash-panel" class="board-panel private-panel class-trash-panel" hidden>
+          <summary>クラスの回収箱 <span id="class-trash-count"></span></summary>
+          <p>削除したクラスと成績を戻せます。授業は自動では再開しません。</p>
+          <div id="class-trash-list"></div>
+        </details>
+        <p id="class-lifecycle-result" role="status" aria-live="polite"></p>
+        <div id="class-results" hidden>
+          <div class="summary-grid">
+            <div class="summary-card">
+              <span>参加した生徒</span><strong id="joined-count">0</strong>
+            </div>
+            <div class="summary-card">
+              <span>今回の練習完了</span><strong id="finished-count">0</strong>
+            </div>
+            <div class="summary-card">
+              <span id="mistake-summary-label">間違えた回答</span
+              ><strong id="mistake-count">0</strong>
+            </div>
+          </div>
+          <section class="board-panel tv-panel">
+            <h2 id="tv-class-title">みんなの進み具合</h2>
+            <div class="tv-progress-line">
+              <strong id="tv-progress-value">0%</strong><span id="tv-activity"></span>
+            </div>
+            <div class="tv-progress"><span id="tv-progress-fill"></span></div>
+            <div id="tv-stages" class="tv-stages"></div>
+            <p id="projection-notice">個別の番号や回答は表示していません。</p>
+          </section>
+          <section class="board-panel tv-panel">
+            <div class="context-help-heading">
+              <h2>みんなで確認しよう</h2>
+              <button
+                type="button"
+                class="help-trigger"
+                aria-label="復習する単語の選び方"
+                data-help="要復習の人数を優先しています。繰り返しの回答は重複して数えません。"
+              >
+                ?
+              </button>
+            </div>
+            <div id="tv-weak-words"></div>
+          </section>
+          <section class="board-panel private-panel">
+            <div class="context-help-heading">
+              <h2>生徒の進み具合</h2>
+              <button
+                type="button"
+                class="help-trigger"
+                aria-label="初回正答率とヒントの見方"
+                data-help="初回正答率はヒント使用を含みます。ヒントで正解した項目は、独立した正解と分けて確認できます。"
+              >
+                ?
+              </button>
+            </div>
+            <p id="waiting-students">生徒の参加を待っています…</p>
+            <div class="table-scroll">
+              <table>
+                <thead>
+                  <tr>
+                    <th>出席番号</th>
+                    <th>進捗</th>
+                    <th>次の問題</th>
+                    <th>回答数</th>
+                    <th>初回正答率</th>
+                    <th>要復習／修正／ヒント</th>
+                    <th>最終活動</th>
+                    <th>履歴</th>
+                  </tr>
+                </thead>
+                <tbody id="student-rows"></tbody>
+              </table>
+            </div>
+          </section>
+          <details id="records-management" class="board-panel private-panel records-management">
+            <summary>記録の管理</summary>
+            <p>表示中のクラス：<strong id="records-class-name"></strong></p>
+            <p>削除した記録は回収箱に保管され、後から戻せます。</p>
+            <div class="record-delete-row">
+              <label for="record-student">生徒を選ぶ</label
+              ><select id="record-student">
+                <option value="">出席番号を選んでください</option></select
+              ><button id="delete-student-record" class="control-button" disabled>
+                この生徒の記録を削除
+              </button>
+            </div>
+            <div class="record-clear-row">
+              <span>このクラス全員の記録</span
+              ><button id="clear-class-records" class="control-button" disabled>
+                すべての記録を消す
+              </button>
+            </div>
+            <p id="records-result" role="status" aria-live="polite"></p>
+            <h3>回収箱</h3>
+            <div id="record-trash-list"></div>
+          </details>
+          <section id="recovery-panel" class="board-panel private-panel" hidden>
+            <h2>端末の引き継ぎ申請</h2>
+            <div id="recovery-list"></div>
+          </section>
+          <section class="board-panel private-panel" id="student-detail"></section>
+          <details class="board-panel private-panel analysis-panel">
+            <summary>単語ごとの理解度と復習</summary>
+            <div id="word-mastery"></div>
+            <h2>間違えやすい単語</h2>
+            <div id="weak-words"></div>
+          </details>
+          <details class="board-panel private-panel analysis-panel">
+            <summary>最近の間違い</summary>
+            <div id="recent-mistakes"></div>
+          </details>
+        </div>
+      </section>
+    </main>
+    <dialog id="settings-dialog" class="settings-dialog" aria-labelledby="settings-title">
+      <div class="settings-heading">
+        <h2 id="settings-title">設定</h2>
+        <button id="settings-close" aria-label="設定を閉じる">
+          <svg><use href="#i-close" /></svg>
+        </button>
+      </div>
+      <p class="settings-intro">自分に合った学び方に調整しよう。</p>
+      <div class="setting-row">
+        <label for="voice-volume">発音の音量</label
+        ><output id="voice-volume-value" for="voice-volume"></output
+        ><input id="voice-volume" type="range" min="0" max="100" step="5" />
+      </div>
+      <div class="setting-row">
+        <label for="effects-volume">効果音の音量</label
+        ><output id="effects-volume-value" for="effects-volume"></output
+        ><input id="effects-volume" type="range" min="0" max="100" step="5" />
+      </div>
+      <div class="setting-line">
+        <label for="sound-toggle">効果音</label
+        ><input id="sound-toggle" type="checkbox" role="switch" />
+      </div>
+      <div class="setting-line">
+        <label for="font-size">文字サイズ</label
+        ><select id="font-size">
+          <option value="1">標準</option>
+          <option value="1.15">大きい</option>
+          <option value="1.3">とても大きい</option>
+        </select>
+      </div>
+      <div class="setting-line">
+        <label for="reduce-motion">動きを減らす</label
+        ><input id="reduce-motion" type="checkbox" role="switch" />
+      </div>
+      <p class="settings-note">設定はこのブラウザーに自動保存されます。</p>
+      <button id="settings-reset" class="home-button">初期設定に戻す</button
+      ><button id="settings-done" class="submit">完了</button>
+      <div id="teacher-account-settings" class="teacher-account-settings" hidden>
+        <button id="teacher-logout" class="home-button" hidden>ログアウト</button>
+        <p id="teacher-logout-error" role="alert" hidden></p>
+      </div>
+    </dialog>
+    <script src="/network.js?v=classroom58"></script>
+    <script src="/settings.js?v=classroom58"></script>
+    <script src="/curriculum.js?v=classroom58"></script>
+    <script src="/vocabulary.js?v=classroom58"></script>
+    <script src="/feedback-effects.js?v=classroom58"></script>
+    <dialog id="class-state-dialog" class="join-dialog" aria-labelledby="class-state-title">
+      <h2 id="class-state-title">クラスを閉じますか？</h2>
+      <p id="class-state-description"></p>
+      <p id="class-state-error" role="alert" hidden></p>
+      <div class="class-state-actions">
+        <button id="class-state-cancel" class="home-button">キャンセル</button
+        ><button id="class-state-confirm" class="submit">クラスを閉じる</button>
+      </div>
+    </dialog>
+    <dialog id="records-warning" class="join-dialog" aria-labelledby="records-title">
+      <h2 id="records-title">個別の記録を表示しますか？</h2>
+      <p>画面を複製している場合、出席番号や個別の回答がテレビにも表示されます。</p>
+      <div class="class-state-actions">
+        <button id="records-cancel" class="home-button">キャンセル</button
+        ><button id="records-confirm" class="submit">表示する</button>
+      </div>
+    </dialog>
+    <script src="/course.js?v=classroom58"></script>
+    <dialog
+      id="delete-records-dialog"
+      class="join-dialog delete-records-dialog"
+      aria-labelledby="delete-records-title"
+      aria-describedby="delete-records-target delete-records-description delete-records-warning"
+    >
+      <h2 id="delete-records-title">記録を削除しますか？</h2>
+      <p id="delete-records-target" class="delete-records-target"></p>
+      <p id="delete-records-description"></p>
+      <p id="delete-records-warning">
+        記録は回収箱から戻せます。参加中の生徒は参加解除されます。新しく練習する場合は、QRから参加してください。
+      </p>
+      <p id="delete-records-error" role="alert" hidden></p>
+      <div class="class-state-actions">
+        <button id="delete-records-cancel" class="home-button" autofocus>キャンセル</button
+        ><button id="delete-records-confirm" class="control-button">記録を削除</button>
+      </div>
+    </dialog>
+    <dialog
+      id="restore-records-dialog"
+      class="join-dialog delete-records-dialog"
+      aria-labelledby="restore-records-title"
+    >
+      <h2 id="restore-records-title">記録を戻しますか？</h2>
+      <p id="restore-records-target" class="delete-records-target"></p>
+      <p>
+        成績と進み具合を戻します。生徒は以前の端末でページを開き直すと、続きから再開できます。同じ出席番号がすでに参加している場合は、上書きせずにお知らせします。
+      </p>
+      <p id="restore-records-error" role="alert" hidden></p>
+      <div class="class-state-actions">
+        <button id="restore-records-cancel" class="home-button" autofocus>キャンセル</button
+        ><button id="restore-records-confirm" class="submit">記録を戻す</button>
+      </div>
+    </dialog>
+    <dialog
+      id="class-lifecycle-dialog"
+      class="join-dialog"
+      aria-labelledby="class-lifecycle-title"
+      aria-describedby="class-lifecycle-target class-lifecycle-description"
+    >
+      <h2 id="class-lifecycle-title"></h2>
+      <p id="class-lifecycle-target" class="delete-records-target"></p>
+      <p id="class-lifecycle-description"></p>
+      <p id="class-lifecycle-error" role="alert" hidden></p>
+      <div class="class-state-actions">
+        <button id="class-lifecycle-cancel" class="home-button" autofocus>キャンセル</button
+        ><button id="class-lifecycle-confirm" class="control-button"></button>
+      </div>
+    </dialog>
+    <dialog
+      id="new-class-confirm"
+      class="join-dialog"
+      aria-labelledby="new-class-confirm-title"
+      aria-describedby="new-class-confirm-description"
+    >
+      <h2 id="new-class-confirm-title">今の授業を終了して、新しく始めますか？</h2>
+      <p id="new-class-confirm-description"></p>
+      <p id="new-class-confirm-error" role="alert"></p>
+      <div class="class-state-actions">
+        <button id="new-class-confirm-cancel" class="home-button">キャンセル</button>
+        <button id="new-class-confirm-ok" class="submit">終了して新しい授業を開始</button>
+      </div>
+    </dialog>
+    <script src="/teacher.js?v=classroom58"></script>
+    <script src="/teacher-music.js?v=classroom58"></script>
+    <script src="/mode-settings.js?v=classroom58"></script>
+  </body>
+</html>

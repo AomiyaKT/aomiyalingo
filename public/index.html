@@ -1,0 +1,483 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Aomiyalingo 英単語を聞いて、日本語の意味を選びましょう。" />
+    <title>Aomiyalingo · 英単語レッスン</title>
+
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%2358cc02'/%3E%3Cpath d='M8 24 16 8l8 16M11 18h10' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"
+    />
+
+    <script src="/word-audio.js?v=classroom58"></script>
+    <link rel="stylesheet" href="/ui/student.css?v=classroom58" />
+  </head>
+  <body class="at-home classroom student-classroom">
+    <svg class="symbols" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <symbol id="i-book" viewBox="0 0 24 24">
+        <path d="M12 6c-3-2-6-2-9-1v14c3-1 6-1 9 1 3-2 6-2 9-1V5c-3-1-6-1-9 1Z" />
+        <path d="M12 6v14" />
+      </symbol>
+      <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h16M14 6l6 6-6 6" /></symbol>
+      <symbol id="i-image" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="18" height="18" rx="3" />
+        <circle cx="8" cy="8" r="1.5" />
+        <path d="m4 17 5-5 4 4 3-3 4 4" />
+      </symbol>
+      <symbol id="i-speaker" viewBox="0 0 24 24">
+        <path d="M11 4 6 8H3v8h3l5 4Z" />
+        <path d="M15 8a6 6 0 0 1 0 8M18 5a10 10 0 0 1 0 14" />
+      </symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24">
+        <path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10" /></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></symbol>
+      <symbol id="i-layout" viewBox="0 0 24 24"><path d="M4 4h16v16H4zM4 10h16M10 10v10" /></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M20 7v5h-5M4 17v-5h5M6 6a8 8 0 0 1 14 6M18 18a8 8 0 0 1-14-6" />
+      </symbol>
+      <symbol id="i-eye" viewBox="0 0 24 24">
+        <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12" />
+        <circle cx="12" cy="12" r="3" />
+      </symbol>
+      <symbol id="i-pen" viewBox="0 0 24 24">
+        <path d="m4 16 12-12 4 4L8 20l-5 1 1-5M13 7l4 4" />
+      </symbol>
+    </svg>
+    <header class="app-header">
+      <a class="brand" href="./" aria-label="Aomiyalingo ホーム"
+        ><span class="brand-mark">A</span><span>Aomiya<span class="brand-lab">lingo</span></span></a
+      >
+      <nav class="presets" aria-label="問題の種類">
+        <button data-mode="text" aria-pressed="true">単語</button>
+        <button data-mode="voice" aria-pressed="false">
+          <svg><use href="#i-speaker" /></svg>リスニング
+        </button>
+        <button data-mode="spelling" aria-pressed="false">スペリング</button>
+        <button data-mode="picture" aria-pressed="false">
+          <svg><use href="#i-image" /></svg>画像クイズ
+        </button>
+      </nav>
+      <div class="header-actions" id="header-actions" hidden>
+        <button id="save-quiz" class="save-quiz" hidden>保存</button
+        ><button id="home-button" class="home-button">レッスン一覧</button>
+      </div>
+      <button
+        id="settings-open"
+        class="settings-open"
+        aria-label="設定を開く"
+        aria-haspopup="dialog"
+        title="設定"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M9.75,4.64 L10.30,2.35 L13.70,2.35 L14.25,4.64 L15.61,5.20 L17.62,3.97 L20.03,6.38 L18.80,8.39 L19.36,9.75 L21.65,10.30 L21.65,13.70 L19.36,14.25 L18.80,15.61 L20.03,17.62 L17.62,20.03 L15.61,18.80 L14.25,19.36 L13.70,21.65 L10.30,21.65 L9.75,19.36 L8.39,18.80 L6.38,20.03 L3.97,17.62 L5.20,15.61 L4.64,14.25 L2.35,13.70 L2.35,10.30 L4.64,9.75 L5.20,8.39 L3.97,6.38 L6.38,3.97 L8.39,5.20 Z"
+          />
+          <circle cx="12" cy="12" r="3.2" />
+        </svg>
+      </button>
+    </header>
+    <div class="sync-strip">
+      <span id="sync-status" role="status" hidden></span
+      ><button id="sync-retry" hidden>再送信</button
+      ><button id="number-change" hidden>出席番号を変更</button>
+    </div>
+    <section class="start-screen" hidden id="start-screen" aria-labelledby="welcome-title">
+      <div class="welcome-art">
+        <img src="/assets/aomi-cat.svg" alt="学習を応援する猫" /><span class="welcome-bubble"
+          >Hello!</span
+        >
+      </div>
+      <span class="welcome-tag">AOMIYALINGO</span>
+      <h1 id="welcome-title">ことばの世界へ、ようこそ。</h1>
+      <p class="welcome-copy">聞いて、選んで、少しずつ。<br />5年生・6年生の英単語を覚えよう。</p>
+      <div class="entry-options">
+        <button id="student-entry" class="entry-card">
+          <span class="entry-icon"
+            ><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-book" /></svg></span
+          ><span><strong>生徒はこちら</strong><small>レッスンを始める</small></span
+          ><span class="entry-arrow"
+            ><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow" /></svg
+          ></span>
+        </button>
+        <a
+          href="/teacher"
+          id="teacher-entry"
+          class="entry-card teacher-card"
+          aria-expanded="false"
+          aria-controls="teacher-login"
+          ><span class="entry-icon"
+            ><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-pen" /></svg></span
+          ><span><strong>先生はこちら</strong><small>クラスを管理する</small></span
+          ><span class="entry-arrow"
+            ><svg viewBox="0 0 24 24" aria-hidden="true"><use href="#i-arrow" /></svg></span
+        ></a>
+        <a href="/race" id="race-entry-link" class="entry-card race-card"
+          ><span class="entry-icon" aria-hidden="true">🏁</span
+          ><span><strong>みんなで単語レース</strong><small>友だちと一緒に走ろう</small></span></a
+        >
+      </div>
+      <form id="teacher-login" class="teacher-login" hidden>
+        <label for="teacher-password">先生用パスワード</label>
+        <div class="password-row">
+          <input
+            id="teacher-password"
+            type="password"
+            autocomplete="off"
+            required
+            placeholder="パスワードを入力"
+            aria-describedby="login-error"
+          /><button type="submit">ログイン</button>
+        </div>
+        <p id="login-error" role="alert" hidden>パスワードが違います。もう一度お試しください。</p>
+      </form>
+      <p class="welcome-footnote">毎日の小さな一歩が、大きな自信に。</p>
+    </section>
+    <section id="student-welcome" class="student-welcome">
+      <img src="/assets/aomi-cat.svg" alt="学習を応援する猫" />
+      <h1>先生のクラスに参加しよう。</h1>
+      <p>出席番号を確認して始めよう。</p>
+    </section>
+    <section id="course-home" class="course-home" hidden>
+      <div class="student-unit">
+        <span class="exercise-tag">AOMIYALINGO · WORDS</span>
+        <h1>少しずつ、覚えていこう。</h1>
+        <p id="course-overview"></p>
+      </div>
+      <div class="course-roadmap">
+        <div id="course-path" class="course-path" aria-label="レッスンの道のり"></div>
+        <div class="course-card">
+          <section class="next-stage">
+            <span id="stage-tag"></span>
+            <h2 id="stage-title"></h2>
+            <p id="stage-description"></p>
+            <div id="stage-words" class="stage-words"></div>
+            <button id="course-continue" class="submit">レッスンを始める</button>
+          </section>
+          <div class="course-extras">
+            <button id="open-wordbook" class="home-button">単語帳を見る</button
+            ><button id="path-review" class="home-button" hidden>苦手なところを復習</button
+            ><button id="extra-spelling" class="home-button">スペリングを練習</button>
+          </div>
+        </div>
+      </div>
+    </section>
+    <section id="vocab-screen" class="vocab-screen" hidden aria-labelledby="study-title">
+      <span class="exercise-tag">AOMIYALINGO · WORDS</span>
+      <h1 id="study-title">まずは、単語を覚えよう。</h1>
+      <p class="study-intro">発音と意味を確認したら、クイズで思い出してみよう。</p>
+      <div class="study-card">
+        <span id="study-position"></span
+        ><button id="study-audio" aria-label="単語の発音を聞く">
+          <svg><use href="#i-speaker" /></svg> 発音を聞く
+        </button>
+        <h2 id="study-word" lang="en"></h2>
+        <img id="study-picture" class="study-picture" hidden alt="" width="200" height="140" />
+        <strong id="study-meaning"></strong>
+        <p id="study-note"></p>
+        <p id="study-example" lang="en"></p>
+      </div>
+      <div class="study-navigation">
+        <button id="study-prev">前へ</button><button id="study-next">次の単語 →</button>
+      </div>
+      <button id="study-start" class="submit">クイズに進む</button
+      ><button id="study-spelling" class="spelling-start">スペリングを練習</button>
+      <p id="study-flow" class="study-intro">
+        単語 → リスニング → スペリング。間違えた単語は、あとでもう一度。
+      </p>
+    </section>
+    <section id="lesson-complete" class="lesson-complete" hidden aria-labelledby="complete-title">
+      <span class="complete-medal">★</span>
+      <h1 id="complete-title">レッスン完了！</h1>
+      <p id="complete-stats"></p>
+      <p id="complete-message">よく頑張りました。</p>
+      <div id="review-words"></div>
+      <button id="course-again" class="submit">もう一度練習する</button
+      ><button id="review-selected" class="home-button" hidden>この単語を復習する</button
+      ><button id="complete-home" class="home-button">レッスン一覧</button>
+    </section>
+    <main id="quiz-main" hidden>
+      <div class="lesson-top">
+        <button class="restart-lesson" id="restart-lesson" aria-label="レッスンをやり直す">
+          <svg><use href="#i-refresh" /></svg>
+        </button>
+        <div
+          class="lesson-progress"
+          id="lesson-progress"
+          role="progressbar"
+          aria-label="レッスンの進捗"
+          aria-valuemin="0"
+          aria-valuemax="1"
+          aria-valuenow="0"
+        >
+          <span id="progress-fill"></span>
+        </div>
+        <span class="lesson-counter" id="lesson-counter">0 / 1</span>
+      </div>
+      <div class="workspace-heading">
+        <span
+          ><span class="eyebrow">QUESTION 01</span><span id="type-label">リスニング問題</span></span
+        ><button class="reset" id="reset">
+          <svg><use href="#i-refresh" /></svg>サンプルをリセット
+        </button>
+      </div>
+      <div class="lesson-heading">
+        <span class="exercise-tag" id="exercise-tag">単語レッスン</span>
+        <h2 id="lesson-heading">正しい日本語の意味を選ぼう</h2>
+        <p id="lesson-instruction">音声を聞いて、意味を選びましょう。</p>
+      </div>
+      <section class="quiz-shell" aria-label="問題と選択肢">
+        <div class="question-row" id="question-row">
+          <div class="lesson-mascot"><img src="/assets/aomi-cat.svg" alt="学習を応援する猫" /></div>
+          <div class="prompt-group">
+            <div class="voice-panel" id="voice-panel">
+              <div class="voice-top">
+                <span
+                  ><svg><use href="#i-speaker" /></svg>問題の音声</span
+                ><button id="speed" title="再生速度を変更">1×</button>
+              </div>
+              <button class="play-button" id="audio-play" aria-label="音声を再生">
+                <svg class="pronunciation-icon" viewBox="0 0 24 24" aria-hidden="true">
+                  <use href="#i-speaker" /></svg
+                ><span class="pause-bars"><i></i><i></i></span>
+              </button>
+              <span class="voice-caption" id="voice-caption">音声を聞いてから答えましょう</span>
+            </div>
+            <div class="question-panel" id="question-panel">
+              <div class="question-tools editor-only">
+                <button
+                  class="icon-button"
+                  id="question-image"
+                  aria-label="問題に画像を追加"
+                  title="問題の画像を追加"
+                >
+                  <svg><use href="#i-image" /></svg></button
+                ><button
+                  class="icon-button"
+                  id="voice-toggle"
+                  aria-label="問題の音声を切り替え"
+                  title="音声の表示を切り替え"
+                >
+                  <svg><use href="#i-speaker" /></svg>
+                </button>
+              </div>
+              <button
+                class="clear-question-image icon-button"
+                id="clear-question-image"
+                aria-label="問題の画像を削除"
+                hidden
+              >
+                <svg><use href="#i-close" /></svg>
+              </button>
+              <img id="question-picture" alt="問題の画像" hidden />
+              <h1
+                id="question-text"
+                contenteditable="true"
+                role="textbox"
+                aria-label="問題文"
+                spellcheck="false"
+              >
+                ate
+              </h1>
+              <div id="listening-prompt" class="listening-prompt" hidden>
+                <strong>聞いてみよう</strong><span>再生ボタンで発音を聞こう</span>
+              </div>
+              <span class="edit-hint editor-only">文字をクリックして編集</span>
+            </div>
+            <div class="audio-timeline" id="audio-timeline">
+              <span id="audio-time">0:00</span
+              ><input
+                type="range"
+                min="0"
+                max="100"
+                value="0"
+                id="audio-progress"
+                aria-label="音声の再生位置"
+              /><span id="audio-duration">0:00</span>
+            </div>
+          </div>
+        </div>
+        <section id="spelling-panel" class="spelling-panel" hidden aria-label="スペリングの回答">
+          <div
+            id="spelling-slots"
+            class="spelling-slots"
+            role="group"
+            aria-label="選んだ文字"
+          ></div>
+          <div class="spelling-controls">
+            <span id="spelling-count" aria-live="polite"></span
+            ><button id="spelling-hint">最初の文字</button
+            ><button id="spelling-undo" aria-label="最後の文字を戻す">⌫</button
+            ><button id="spelling-clear">クリア</button>
+          </div>
+          <p id="spelling-hint-note" role="status" hidden></p>
+          <div id="letter-bank" class="letter-bank" role="group" aria-label="文字を選ぶ"></div>
+        </section>
+        <section
+          id="practice-exercise"
+          class="practice-exercise exercise-surface"
+          hidden
+          aria-label="回答"
+        ></section>
+        <button id="practice-exercise-hint" class="home-button" type="button" hidden>
+          ヒントを見る
+        </button>
+        <div class="answers-row">
+          <div class="answers" id="answers"></div>
+          <button
+            class="add-answer editor-only"
+            id="add-answer"
+            aria-label="選択肢を追加"
+            title="選択肢を追加"
+          >
+            <svg><use href="#i-plus" /></svg>
+          </button>
+        </div>
+        <footer class="quiz-footer">
+          <label class="multiple-control editor-only"
+            ><span>複数選択</span><input type="checkbox" id="multiple" /><span
+              class="switch"
+              aria-hidden="true"
+            ></span
+          ></label>
+          <span id="student-hint" class="student-only">答えを1つ選んでください</span>
+          <button class="layout-button" id="layout">
+            <svg><use href="#i-layout" /></svg><span id="layout-label">縦並びにする</span>
+          </button>
+        </footer>
+      </section>
+      <section class="feedback" id="feedback" aria-live="polite" hidden>
+        <span class="feedback-icon"></span>
+        <div>
+          <strong id="feedback-title"></strong>
+          <p id="feedback-detail"></p>
+        </div>
+        <button id="try-again">もう一度</button>
+      </section>
+      <div class="bottom-bar">
+        <div class="bottom-inner">
+          <span class="editor-only"
+            ><span class="legend-check">✓</span>丸にチェックして正解を設定</span
+          ><span class="student-only" id="selection-note">答えを1つ選んでください</span
+          ><span class="bottom-actions"
+            ><button id="back-to-editor" class="back-to-editor" hidden>編集に戻る</button
+            ><span class="keyboard-note">数字キーで選択 · Enterで確認</span
+            ><button class="submit student-only" id="submit" disabled>答えを確認</button
+            ><button class="try-button editor-only" id="try-button">
+              <svg><use href="#i-eye" /></svg>プレビュー
+            </button></span
+          >
+        </div>
+      </div>
+    </main>
+    <div class="toast" id="toast" role="status" hidden></div>
+    <input type="file" id="image-input" accept="image/*" hidden />
+    <dialog id="settings-dialog" class="settings-dialog" aria-labelledby="settings-title">
+      <div class="settings-heading">
+        <h2 id="settings-title">設定</h2>
+        <button id="settings-close" aria-label="設定を閉じる">
+          <svg><use href="#i-close" /></svg>
+        </button>
+      </div>
+      <p class="settings-intro">自分に合った学び方に調整しよう。</p>
+      <div class="setting-row">
+        <label for="voice-volume">発音の音量</label
+        ><output id="voice-volume-value" for="voice-volume"></output
+        ><input id="voice-volume" type="range" min="0" max="100" step="5" />
+      </div>
+      <div class="setting-row">
+        <label for="effects-volume">効果音の音量</label
+        ><output id="effects-volume-value" for="effects-volume"></output
+        ><input id="effects-volume" type="range" min="0" max="100" step="5" />
+      </div>
+      <div class="setting-line">
+        <label for="sound-toggle">効果音</label
+        ><input id="sound-toggle" type="checkbox" role="switch" />
+      </div>
+      <div class="setting-line">
+        <label for="font-size">文字サイズ</label
+        ><select id="font-size">
+          <option value="1">標準</option>
+          <option value="1.15">大きい</option>
+          <option value="1.3">とても大きい</option>
+        </select>
+      </div>
+      <div class="setting-line">
+        <label for="reduce-motion">動きを減らす</label
+        ><input id="reduce-motion" type="checkbox" role="switch" />
+      </div>
+      <p class="settings-note">設定はこのブラウザーに自動保存されます。</p>
+      <button id="settings-reset" class="home-button">初期設定に戻す</button
+      ><button id="settings-done" class="submit">完了</button>
+    </dialog>
+    <script src="/network.js?v=classroom58"></script>
+    <script src="/settings.js?v=classroom58"></script>
+    <script src="/curriculum.js?v=classroom58"></script>
+    <script src="/vocabulary.js?v=classroom58"></script>
+    <script src="/feedback-effects.js?v=classroom58"></script>
+    <dialog
+      id="join-dialog"
+      class="join-dialog"
+      aria-labelledby="join-title"
+      aria-describedby="join-class"
+    >
+      <div class="join-heading">
+        <h2 id="join-title">クラスに参加</h2>
+        <button id="join-close" hidden aria-label="閉じる">×</button>
+      </div>
+      <p id="join-class"></p>
+      <form id="join-form" class="student-entry-form">
+        <div class="student-entry-field">
+          <label for="attendance-number">出席番号</label
+          ><input
+            id="attendance-number"
+            type="text"
+            inputmode="numeric"
+            pattern="[0-9]{1,3}"
+            maxlength="3"
+            autocomplete="off"
+            required
+            placeholder="例：12"
+          />
+        </div>
+        <p id="join-error" role="alert" hidden></p>
+        <p id="join-confirmation" hidden></p>
+        <div class="student-entry-actions">
+          <button id="join-back" type="button" class="home-button" hidden>番号を修正</button
+          ><button id="join-submit" class="submit" type="submit">確認する</button>
+        </div>
+        <button id="recovery-request" type="button" class="home-button" hidden>
+          先生に引き継ぎを申請
+        </button>
+      </form>
+    </dialog>
+    <dialog id="class-paused" class="join-dialog" aria-labelledby="paused-title">
+      <h2 id="paused-title">クラスは閉じられています</h2>
+      <p id="paused-message">先生が再開するまで、お待ちください。</p>
+      <button id="paused-home" hidden class="home-button">レッスン一覧</button>
+    </dialog>
+    <dialog id="number-dialog" class="join-dialog" aria-labelledby="number-title">
+      <h2 id="number-title">出席番号を変更</h2>
+      <p>記録はそのまま、新しい番号に変更します。</p>
+      <form id="number-form" class="student-entry-form">
+        <div class="student-entry-field">
+          <label for="new-number">正しい出席番号</label
+          ><input id="new-number" inputmode="numeric" pattern="[0-9]{1,3}" maxlength="3" required />
+        </div>
+        <p id="number-error" role="alert" hidden></p>
+        <div class="student-entry-actions">
+          <button id="number-save" class="submit" type="submit">変更する</button
+          ><button id="number-cancel" class="home-button" type="button">キャンセル</button>
+        </div>
+      </form>
+    </dialog>
+    <script src="/course.js?v=classroom58"></script>
+    <script src="/classroom.js?v=classroom58"></script>
+    <script src="/app.js?v=classroom58"></script>
+  </body>
+</html>

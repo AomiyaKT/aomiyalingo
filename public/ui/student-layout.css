@@ -1,0 +1,317 @@
+/* Shared tablet geometry. Full content remains scrollable above measured actions. */
+/* Entry dialogs own their spacing; generic button resets must not collapse it. */
+:is(#join-dialog, #number-dialog) {
+  position: fixed;
+  inset-block-start: calc(
+    var(--student-viewport-top, 0px) + var(--student-visible-height, 100dvh) / 2
+  );
+  inset-block-end: auto;
+  margin-block: 0;
+  transform: translateY(-50%);
+  width: min(460px, calc(100vw - 32px));
+  max-width: none;
+  max-height: calc(var(--student-visible-height, 100dvh) - 32px);
+  padding: 28px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scroll-padding-block: 16px;
+}
+:is(#join-dialog, #number-dialog) h2 {
+  margin: 0;
+  font-size: calc(27px * var(--font-scale, 1));
+  line-height: 1.4;
+}
+#join-class {
+  margin: 12px 0 0;
+  font-size: calc(15px * var(--font-scale, 1));
+  font-weight: 700;
+  color: var(--muted);
+  line-height: 1.6;
+  overflow-wrap: anywhere;
+}
+.student-entry-form {
+  display: grid;
+  gap: 16px;
+  margin-top: 24px;
+}
+.student-entry-field {
+  display: grid;
+  gap: 8px;
+}
+.student-entry-field label {
+  margin: 0;
+  font-size: calc(16px * var(--font-scale, 1));
+}
+.student-entry-field input {
+  min-height: 56px;
+  margin: 0;
+  font-size: calc(24px * var(--font-scale, 1));
+  letter-spacing: 0.08em;
+  scroll-margin-block: 16px;
+}
+.student-entry-field input:is(:focus, :focus-visible) {
+  border-color: var(--green-edge);
+  outline: none;
+  box-shadow: none;
+  background: #fff;
+}
+.student-entry-field input[readonly] {
+  background: var(--green-soft);
+  border-color: var(--line);
+}
+.student-entry-form > :is(p, button) {
+  margin: 0;
+}
+.student-entry-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  padding-bottom: 4px;
+}
+.student-entry-actions :is(.submit, .home-button) {
+  flex: 1;
+  width: auto;
+  min-width: 0;
+  min-height: 52px;
+  margin: 0;
+}
+.student-entry-actions .submit {
+  flex-grow: 2;
+}
+#join-confirmation {
+  font-size: calc(16px * var(--font-scale, 1));
+  padding: 12px 16px;
+  line-height: 1.6;
+}
+@media (max-width: 480px), (max-height: 520px) {
+  :is(#join-dialog, #number-dialog) {
+    padding: 22px;
+  }
+}
+:is(.student, .race-student) {
+  scroll-padding-block-end: calc(
+    var(--action-height, 96px) + var(--student-keyboard-inset, 0px) + 24px
+  );
+}
+:is(.student, .race-student) :is(button, input, a) {
+  touch-action: manipulation;
+}
+.student #quiz-main {
+  padding-bottom: calc(var(--action-height, 96px) + var(--student-keyboard-inset, 0px) + 32px);
+}
+.student :is(.bottom-bar, .feedback) {
+  bottom: var(--student-keyboard-inset, 0px);
+  padding-bottom: max(14px, env(safe-area-inset-bottom));
+}
+.student .bottom-inner,
+.student .bottom-actions {
+  min-width: 0;
+}
+body:not(.student) .keyboard-note {
+  display: none;
+}
+.student :is(#selection-note, .question-panel, .answer-text) {
+  overflow-wrap: anywhere;
+}
+:is(.student, .race-student) :is(.spelling-word, .spelling-slots, .race-spelling) {
+  max-inline-size: 100%;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+:is(.student, .race-student) .spelling-word {
+  row-gap: 8px;
+}
+:is(.student, .race-student) :is(.spell-slot, .letter-slot, .letter-tile, .spell-letter) {
+  flex-shrink: 0;
+  min-width: 44px;
+  min-height: 48px;
+}
+.exercise-surface,
+.exercise-pair-column,
+.exercise-token-bank,
+.exercise-sentence-answer {
+  min-width: 0;
+  max-width: 100%;
+}
+.exercise-pair-column .pair-tile {
+  overflow-wrap: anywhere;
+}
+.exercise-input-label input {
+  scroll-margin-block: 100px calc(var(--action-height, 96px) + 32px);
+}
+.race-student[data-race-phase='question'] .race-question {
+  padding-bottom: calc(var(--action-height, 96px) + var(--student-keyboard-inset, 0px) + 24px);
+}
+.race-student[data-race-phase='question'] .race-submit-row {
+  position: fixed;
+  inset: auto 0 var(--student-keyboard-inset, 0px);
+  width: 100%;
+  min-height: 84px;
+  margin: 0;
+  padding: 12px max(24px, calc((100vw - 900px) / 2)) max(14px, env(safe-area-inset-bottom));
+  border-top: 2px solid var(--line);
+  box-shadow: 0 -6px 24px #3c3c3c06;
+  gap: 16px;
+  z-index: 12;
+  box-sizing: border-box;
+}
+.race-student .race-submit-row p {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.race-student .race-submit-row .submit {
+  flex: 0 0 auto;
+  min-height: 52px;
+}
+.race-student .race-prompt h1 {
+  overflow-wrap: anywhere;
+  min-width: 0;
+}
+.race-student #race-exercise:has(.exercise-picture-cue) > .exercise-instruction {
+  display: none;
+}
+@media (pointer: coarse), (max-width: 1100px) {
+  .student .keyboard-note {
+    display: none;
+  }
+  :is(.student, .race-student) button {
+    -webkit-tap-highlight-color: transparent;
+  }
+}
+@media (max-width: 1100px) {
+  .student #quiz-main {
+    padding-inline: 24px;
+    padding-top: 18px;
+  }
+  .student .lesson-top {
+    margin-bottom: 20px;
+  }
+  .student .lesson-heading {
+    margin-bottom: 18px;
+  }
+  .student .bottom-bar {
+    padding: 14px 24px max(14px, env(safe-area-inset-bottom));
+  }
+  .student .bottom-inner {
+    gap: 12px;
+  }
+  .student .answers {
+    gap: 12px;
+  }
+  .student .answer {
+    min-height: 76px;
+    padding-block: 14px;
+  }
+  .race-student .race-main {
+    margin-top: 12px;
+  }
+  .race-student .race-mini-stats {
+    padding-block: 8px;
+    margin-block: 8px;
+  }
+  .race-student .race-question {
+    padding-top: 12px;
+  }
+  .exercise-surface {
+    margin-block: 12px 18px;
+  }
+  .exercise-token-bank {
+    padding-top: 18px;
+  }
+}
+@media (min-width: 700px) and (max-height: 850px) {
+  :is(.student, .race-student) > .app-header {
+    min-height: 60px;
+    height: 60px;
+    padding-block: 8px;
+  }
+  .student .sync-strip {
+    padding-block: 4px;
+    min-height: 24px;
+  }
+  .student .lesson-top {
+    margin-bottom: 14px;
+  }
+  .student .lesson-heading h2 {
+    font-size: calc(25px * var(--font-scale, 1));
+    margin-block: 8px;
+  }
+  .student .lesson-heading p {
+    margin-block: 8px;
+  }
+  .student .question-row {
+    min-height: 112px;
+    margin-bottom: 16px;
+  }
+  .student :is(.lesson-mascot, .lesson-mascot img) {
+    height: 112px;
+  }
+  .student .prompt-group {
+    min-height: 108px;
+  }
+  .student .audio-timeline {
+    display: none;
+  }
+  .exercise-surface:has(.exercise-picture-cue) {
+    display: grid;
+    grid-template-columns: minmax(160px, 0.8fr) minmax(0, 1.6fr);
+    align-items: center;
+    gap: 12px 24px;
+  }
+  .exercise-surface:has(.exercise-picture-cue) > :is(.exercise-instruction, .exercise-hint) {
+    grid-column: 1 / -1;
+    margin: 0;
+  }
+  .exercise-surface:has(.exercise-picture-cue) .exercise-picture-cue {
+    width: 100%;
+    margin: 0;
+    box-sizing: border-box;
+  }
+  .exercise-surface:has(.exercise-picture-cue) .exercise-choice-bank {
+    margin: 0;
+  }
+  .exercise-surface:has(.exercise-picture-cue) .exercise-picture-cue img {
+    height: 150px;
+  }
+  .race-student .race-scene {
+    padding-block: 8px;
+    margin-block: 8px;
+  }
+  .race-student .scene-road {
+    height: 32px;
+  }
+  .race-student .scene-racer .avatar-art {
+    width: 36px;
+    height: 36px;
+  }
+  .race-student .race-prompt {
+    min-height: 56px;
+    margin-block: 8px 12px;
+  }
+  .race-student .race-prompt h1 {
+    font-size: calc(26px * var(--font-scale, 1));
+  }
+}
+@media (max-width: 540px) {
+  .student #quiz-main {
+    padding-inline: 16px;
+  }
+  .student .bottom-bar {
+    padding-inline: 16px;
+  }
+  .student .bottom-inner .submit {
+    min-width: 140px;
+  }
+  .student #selection-note {
+    font-size: 13px;
+  }
+  .race-student .race-submit-row {
+    padding-inline: 16px;
+  }
+  .race-student .race-submit-row .submit {
+    min-width: 128px;
+  }
+  .race-student .race-submit-row p {
+    font-size: 14px;
+  }
+}

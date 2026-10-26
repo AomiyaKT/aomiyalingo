@@ -1,0 +1,318 @@
+/* Shared interaction sizes and surfaces. Brand colours remain Duolingo green/sky. */
+:root {
+  --color-green: #58cc02;
+  --color-green-dark: #58a700;
+  --color-sky: #1cb0f6;
+  --color-sky-dark: #1899d6;
+  --color-text: #4b4b4b;
+  --color-border: #e5e5e5;
+  --color-danger: #ea2b2b;
+  --primary: var(--color-green);
+  --primary-dark: var(--color-green-dark);
+  --blue: var(--color-sky);
+  --ink: var(--color-text);
+  --control-radius: 14px;
+  --touch-size: 48px;
+  --action-height: 112px;
+}
+button,
+summary,
+a,
+input:not([type='checkbox']):not([type='range']):not([type='file']),
+select {
+  -webkit-tap-highlight-color: transparent;
+}
+button,
+a {
+  touch-action: manipulation;
+}
+button svg,
+a svg {
+  display: block;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+.home-button,
+.settings-open,
+.audio-race,
+.icon-button {
+  align-items: center;
+  justify-content: center;
+}
+.settings-open {
+  display: inline-flex;
+  padding: 0;
+  flex-shrink: 0;
+}
+.settings-open svg {
+  width: 28px;
+  height: 28px;
+  margin: 0;
+}
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.brand-mark {
+  flex-shrink: 0;
+}
+.submit {
+  min-height: 54px;
+  line-height: 1.35;
+}
+input:not([type='checkbox']):not([type='range']):not([type='file']),
+select {
+  min-height: var(--touch-size);
+  font-size: max(16px, 1em);
+}
+:is(h1, h2, h3)[tabindex='-1']:focus {
+  outline: none;
+}
+
+/* Shared control geometry keeps icons and labels on the same centre line. */
+:is(
+  .home-button,
+  .control-button,
+  .detail-button,
+  .settings-open,
+  .audio-race,
+  .icon-button,
+  .submit,
+  .item-button
+) {
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  text-decoration: none;
+}
+:is(.home-button, .control-button, .detail-button, .settings-open) {
+  min-height: var(--touch-size);
+  border-radius: var(--control-radius);
+  line-height: 1.4;
+}
+:is(.home-button, .control-button, .detail-button, .settings-open):not(:disabled) {
+  cursor: pointer;
+}
+:is(.home-button, .control-button, .detail-button, .settings-open):disabled {
+  cursor: not-allowed;
+}
+:is(.home-button, .control-button, .detail-button, .submit, .item-button) svg {
+  width: 24px;
+  height: 24px;
+  margin: 0;
+}
+.settings-open {
+  width: 56px;
+  height: 56px;
+}
+.icon-button {
+  padding: 0;
+  flex-shrink: 0;
+}
+.icon-button svg {
+  margin: 0;
+}
+:is(
+  .home-button,
+  .control-button,
+  .detail-button,
+  .settings-open,
+  .audio-race,
+  .submit,
+  .item-button
+):focus-visible {
+  outline: 3px solid #89d856;
+  outline-offset: 3px;
+}
+.header-actions {
+  margin-left: auto;
+  flex-shrink: 0;
+}
+@media (max-width: 600px) {
+  .header-actions {
+    gap: 8px;
+  }
+  .header-actions .home-button {
+    min-height: 48px;
+    padding: 10px 12px;
+  }
+  .settings-open {
+    width: 48px;
+    height: 48px;
+  }
+}
+.student-welcome {
+  max-width: 700px;
+  margin: 60px auto;
+  padding: 24px;
+  text-align: center;
+}
+.student-welcome img {
+  width: 160px;
+}
+.student-welcome h1 {
+  font-size: 28px;
+}
+.student-classroom .presets {
+  display: none;
+}
+
+/* Consistent workspace edges, form rhythm, and settings surfaces. */
+:is(.teacher-page:not(.teacher-home), .race-teacher) > .app-header {
+  padding-inline: max(28px, calc((100vw - 1296px) / 2));
+  gap: 16px;
+}
+:is(.teacher-page:not(.teacher-home) .teacher-main, .race-teacher-main) {
+  box-sizing: border-box;
+  max-width: 1360px;
+  padding-inline: 28px;
+}
+.app-header .brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  line-height: 1;
+}
+.app-header .settings-open {
+  box-sizing: border-box;
+  width: 52px;
+  height: 52px;
+  min-height: 52px;
+  border-radius: 16px;
+}
+.app-header .header-actions .home-button {
+  box-sizing: border-box;
+  min-height: 52px;
+  padding: 12px 18px;
+  font-size: calc(16px * var(--font-scale, 1));
+}
+:is(input:not([type='checkbox']):not([type='range']):not([type='file']), select):focus {
+  border-color: #58a700;
+  outline: none;
+  box-shadow: none;
+}
+.settings-dialog {
+  box-sizing: border-box;
+  width: min(520px, calc(100vw - 32px));
+  border: 2px solid #e5e5e5;
+  border-radius: 24px;
+  padding: 28px;
+  color: #4b4b4b;
+  box-shadow: 0 16px 48px #00000018;
+}
+.settings-dialog::backdrop {
+  background: #23351950;
+  backdrop-filter: blur(3px);
+}
+.settings-heading {
+  gap: 20px;
+  padding-bottom: 8px;
+}
+.settings-heading button {
+  display: grid;
+  place-items: center;
+  flex: none;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 2px solid #e5e5e5;
+  border-radius: 14px;
+  background: #fff;
+}
+.settings-heading svg {
+  display: block;
+  margin: 0;
+  width: 22px;
+  height: 22px;
+}
+.settings-intro {
+  font-size: calc(15px * var(--font-scale, 1));
+  margin: 0 0 6px;
+  color: #777;
+}
+.setting-row {
+  gap: 8px 16px;
+  padding: 18px 0;
+}
+.setting-row output {
+  padding: 4px 10px;
+  border-radius: 9px;
+  background: #f3fbe8;
+  color: #58a700;
+  line-height: 1.4;
+  font-variant-numeric: tabular-nums;
+}
+.setting-row label {
+  align-self: center;
+}
+.setting-row input[type='range'] {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  cursor: pointer;
+}
+.setting-row #music-play-toggle {
+  justify-self: start;
+  margin: 0;
+  min-height: 44px;
+  font-size: calc(15px * var(--font-scale, 1));
+}
+.setting-row #music-status {
+  grid-column: 1/-1;
+  color: #777;
+  line-height: 1.7;
+  font-size: calc(13px * var(--font-scale, 1));
+}
+.setting-line {
+  min-height: 52px;
+  padding: 12px 0;
+}
+.settings-dialog .setting-line select {
+  min-height: 48px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  font-size: calc(16px * var(--font-scale, 1));
+}
+.settings-dialog .settings-note {
+  color: #777;
+  font-size: calc(13px * var(--font-scale, 1));
+  margin: 20px 0 8px;
+}
+.settings-dialog #settings-reset {
+  margin: 8px auto;
+  min-height: 46px;
+  font-size: calc(15px * var(--font-scale, 1));
+}
+.settings-dialog #settings-done {
+  min-height: 54px;
+  font-size: calc(18px * var(--font-scale, 1));
+  margin-top: 16px;
+}
+@media (max-width: 650px) {
+  :is(.teacher-page:not(.teacher-home), .race-teacher) > .app-header {
+    padding-inline: 20px;
+    gap: 10px;
+  }
+  :is(.teacher-page:not(.teacher-home) .teacher-main, .race-teacher-main) {
+    padding-inline: 20px;
+  }
+  .app-header .header-actions .home-button {
+    font-size: calc(14px * var(--font-scale, 1));
+    min-height: 48px;
+    padding: 10px 12px;
+  }
+  .app-header .settings-open {
+    width: 48px;
+    height: 48px;
+    min-height: 48px;
+  }
+  .settings-dialog {
+    padding: 22px;
+  }
+}

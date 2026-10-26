@@ -1,0 +1,22 @@
+node_modules/
+dist/
+.sites-runtime/
+.dev.vars
+output/
+tmp/
+
+# Credentials and local runtime data
+.env
+.env.*
+!.env.example
+.dev.vars.*
+*.pem
+*.key
+*.p12
+*.sqlite
+*.sqlite-*
+*.db
+*.db-*
+.wrangler/
+.DS_Store
+Thumbs.db

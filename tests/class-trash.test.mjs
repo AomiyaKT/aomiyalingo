@@ -1,0 +1,64 @@
+import assert from 'node:assert/strict';
+import worker from '../dist/server/index.js';
+import {database} from './database.mjs';
+const env={DB:database(),TEACHER_PASSWORD:'test-password'};
+async function req(path,data,headers={}){
+ const response=await worker.fetch(new Request('https://classroom.test'+path,{method:data===undefined?'GET':'POST',headers:{'content-type':'application/json',...headers},...(data===undefined?{}:{body:JSON.stringify(data)})}),env);
+ let body;try{body=await response.clone().json()}catch{}return {status:response.status,body,response};
+}
+const login=await req('/api/teacher/login',{password:'test-password'}),teacher={cookie:login.response.headers.get('set-cookie').split(';')[0]};
+const room=(await req('/api/teacher/classes',{title:'Old lesson',wordGroup:'verb',modes:['text']},teacher)).body;
+const st=(await req('/api/join',{label:'1'})).body,peer=(await req('/api/join',{label:'2'})).body,auth={authorization:'Bearer '+st.token};
+await req('/api/student/answer',{questionId:st.lesson.queue[0].id,answer:['wrong']},auth);
+const lesson=(await req('/api/student/me',undefined,auth)).body.lesson;
+const recycled=(await req('/api/teacher/records-delete',{classId:room.id,classTitle:room.title,scope:'student',studentId:peer.id,label:'2',confirm:true},teacher)).body;
+const action={classId:room.id,classTitle:room.title,confirm:true};
+assert.equal((await req('/api/teacher/class-delete',action)).status,401);
+assert.equal((await req('/api/teacher/class-delete',action,auth)).status,401);
+assert.equal((await req('/api/teacher/class-delete',action,{...teacher,origin:'https://other.test'})).status,403);
+assert.equal((await req('/api/teacher/class-delete',{...action,confirm:false},teacher)).status,400);
+assert.equal((await req('/api/teacher/class-delete',{...action,classTitle:'Other'},teacher)).status,400);
+assert.equal((await req('/api/teacher/class-delete',action,teacher)).status,409);
+const active=(await req('/api/teacher/classes',{title:'Live lesson'},teacher)).body;
+const current=(await req('/api/join',{label:'1'})).body,currentAuth={authorization:'Bearer '+current.token};
+// A failed transaction must leave the old class visible and its progress intact.
+const realBatch=env.DB.batch;env.DB.batch=items=>realBatch([items[0],{run(){throw Error('injected failure')}},...items.slice(1)]);
+assert.equal((await req('/api/teacher/class-delete',action,teacher)).status,503);env.DB.batch=realBatch;
+assert.equal((await req('/api/teacher/classes',undefined,teacher)).body.classes.length,2);
+assert.deepEqual((await req('/api/student/me',undefined,auth)).body.lesson,lesson);
+assert.equal((await req('/api/teacher/class-delete',action,teacher)).status,200);
+let list=(await req('/api/teacher/classes',undefined,teacher)).body;
+assert.deepEqual(list.classes.map(c=>c.id),[active.id]);assert.equal(list.trash[0].id,room.id);assert.equal(list.trash[0].students,1);
+for(const path of ['progress','export','trash'])assert.equal((await req('/api/teacher/'+path+'?class='+room.id,undefined,teacher)).status,404);
+assert.equal((await req('/api/teacher/class-state',{classId:room.id,action:'reopen'},teacher)).status,404);
+assert.equal((await req('/api/teacher/records-restore',{...action,trashId:recycled.trashId},teacher)).status,400);
+assert.equal((await req('/api/join',{label:'3',classId:room.id})).status,409);
+assert.equal((await req('/api/student/me',undefined,auth)).status,401);
+assert.equal((await req('/api/student/answer',{questionId:lesson.queue[0].id,answer:['wrong']},auth)).status,401);
+assert.equal((await req('/api/student/me',undefined,currentAuth)).status,200);
+assert.equal((await req('/api/class/current')).body.classroom.id,active.id);
+assert.equal((await req('/api/teacher/class-delete',action,teacher)).status,404);
+assert.equal((await req('/api/teacher/class-restore',action)).status,401);
+assert.equal((await req('/api/teacher/class-restore',{...action,classTitle:'Wrong'},teacher)).status,400);
+assert.equal((await req('/api/teacher/class-restore',action,teacher)).status,200);
+assert.equal((await req('/api/teacher/class-restore',action,teacher)).status,404);
+list=(await req('/api/teacher/classes',undefined,teacher)).body;assert.equal(list.trash.length,0);assert.equal(list.classes.length,2);
+const restored=(await req('/api/teacher/progress?class='+room.id,undefined,teacher)).body;
+assert.equal(restored.classroom.active,0);assert.equal(restored.classroom.ended,1);assert.equal(restored.classroom.word_group,'verb');
+assert.equal(restored.students.length,1);assert.equal(restored.attempts.length,1);assert.equal(restored.trash[0].id,recycled.trashId);
+assert.deepEqual((await req('/api/student/me',undefined,auth)).body.lesson,lesson);
+assert.equal((await req('/api/class/current')).body.classroom.id,active.id);
+await req('/api/teacher/records-restore',{...action,trashId:recycled.trashId},teacher);
+assert.equal((await req('/api/teacher/progress?class='+room.id,undefined,teacher)).body.students.length,2);
+// Another teacher may delete this ended class after the reopen request reads it.
+// Reopening must not then terminate an unrelated live class or revive a deleted class.
+env.DB.batch=async items=>{await env.DB.prepare('UPDATE classrooms SET deleted_at=? WHERE id=?').bind(Date.now(),room.id).run();return realBatch(items)};
+assert.equal((await req('/api/teacher/class-state',{classId:room.id,action:'reopen'},teacher)).status,409);env.DB.batch=realBatch;
+assert.equal((await req('/api/class/current')).body.classroom.id,active.id);
+await req('/api/teacher/class-restore',action,teacher);
+await req('/api/teacher/class-state',{classId:active.id,action:'end'},teacher);
+await req('/api/teacher/class-delete',{classId:active.id,classTitle:active.title,confirm:true},teacher);
+await req('/api/teacher/class-delete',action,teacher);
+list=(await req('/api/teacher/classes',undefined,teacher)).body;assert.equal(list.classes.length,0);assert.equal(list.trash.length,2);
+assert.equal((await req('/api/class/current')).body.classroom,null);
+console.log('PASS: authenticated ended-class deletion, validation, atomic failure, hidden progress/CSV/session access, retained scores and student recycle bin, restore without restarting or affecting live class, last-class deletion.');

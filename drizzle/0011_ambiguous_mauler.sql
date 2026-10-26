@@ -1,0 +1,1 @@
+ALTER TABLE `races` ADD `station_token` text DEFAULT '' NOT NULL;

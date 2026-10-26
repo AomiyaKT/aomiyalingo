@@ -1,0 +1,27 @@
+import assert from 'node:assert/strict';
+import worker from '../dist/server/index.js';
+import {database} from './database.mjs';
+const env={DB:database(),TEACHER_PASSWORD:'test-password'};
+async function req(path,data,headers={}){const r=await worker.fetch(new Request('https://classroom.test'+path,{method:data===undefined?'GET':'POST',headers:{'content-type':'application/json',...headers},...(data===undefined?{}:{body:JSON.stringify(data)})}),env);return {status:r.status,body:await r.clone().json(),r}}
+const login=await req('/api/teacher/login',{password:'test-password'}),teacher={cookie:login.r.headers.get('set-cookie').split(';')[0]};
+const id=(await req('/api/teacher/race/create',{title:'Ready lobby'},teacher)).body.raceId;
+const joined=await req('/api/race/join',{raceId:id,label:'35'}),auth={authorization:'Bearer '+joined.body.token};
+assert.equal(joined.body.self.prepared,false);
+const board=async()=>(await req('/api/teacher/race/board?race='+id,undefined,teacher)).body;
+assert.equal((await board()).players[0].prepared,false);
+assert.equal((await req('/api/race/ready',{avatar:'fox'})).status,401);
+assert.equal((await req('/api/race/ready',{avatar:'invalid'},auth)).status,400);
+const ready=await req('/api/race/ready',{avatar:'fox'},auth);
+assert.equal(ready.status,200);assert.equal(ready.body.self.prepared,true);assert.equal(ready.body.race.status,'lobby');
+assert.equal((await board()).players[0].prepared,true);
+assert.equal((await req('/api/race/me',undefined,auth)).body.self.prepared,true);
+const row=()=>env.DB.prepare('SELECT * FROM racers WHERE id=?').bind(joined.body.self.id).first();
+const revision=(await row()).revision;
+await req('/api/race/ready',{avatar:'fox'},auth);assert.equal((await row()).revision,revision);
+assert.equal((await req('/api/race/avatar',{avatar:'panda'},auth)).body.self.prepared,false);
+assert.equal((await board()).players[0].prepared,false);
+await req('/api/race/ready',{avatar:'panda'},auth);
+assert.equal((await board()).players[0].avatar,'panda');
+await req('/api/teacher/race/state',{raceId:id,action:'end',confirm:true},teacher);
+assert.equal((await req('/api/race/ready',{avatar:'cat'},auth)).status,409);
+console.log('Ready confirmation, teacher status, persistence, avatar reset, idempotency and authorization passed.');

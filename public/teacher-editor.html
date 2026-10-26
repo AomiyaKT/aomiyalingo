@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Aomiyalingo · 内容とルールを編集</title>
+    <script src="/word-audio.js?v=classroom58"></script>
+    <link rel="stylesheet" href="/ui/editor.css?v=classroom58" />
+  </head>
+  <body class="teacher-page editor-page">
+    <svg class="symbols" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <symbol id="i-image" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="18" height="18" rx="3" />
+        <circle cx="8" cy="8" r="1.5" />
+        <path d="m4 17 5-5 4 4 3-3 4 4" />
+      </symbol>
+      <symbol id="i-speaker" viewBox="0 0 24 24">
+        <path d="M11 4 6 8H3v8h3l5 4Z" />
+        <path d="M15 8a6 6 0 0 1 0 8M18 5a10 10 0 0 1 0 14" />
+      </symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24">
+        <path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10" /></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></symbol>
+      <symbol id="i-layout" viewBox="0 0 24 24"><path d="M4 4h16v16H4zM4 10h16M10 10v10" /></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M20 7v5h-5M4 17v-5h5M6 6a8 8 0 0 1 14 6M18 18a8 8 0 0 1-14-6" />
+      </symbol>
+      <symbol id="i-eye" viewBox="0 0 24 24">
+        <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12" />
+        <circle cx="12" cy="12" r="3" />
+      </symbol>
+      <symbol id="i-pen" viewBox="0 0 24 24">
+        <path d="m4 16 12-12 4 4L8 20l-5 1 1-5M13 7l4 4" />
+      </symbol>
+    </svg>
+    <header class="app-header">
+      <a class="brand" href="./" aria-label="Aomiyalingo ホーム"
+        ><span class="brand-mark">A</span><span>Aomiya<span class="brand-lab">lingo</span></span></a
+      >
+
+      <div class="header-actions"><a class="home-button" href="/">ホームに戻る</a></div>
+      <button
+        id="settings-open"
+        class="settings-open"
+        aria-label="設定を開く"
+        aria-haspopup="dialog"
+        title="設定"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M9.75,4.64 L10.30,2.35 L13.70,2.35 L14.25,4.64 L15.61,5.20 L17.62,3.97 L20.03,6.38 L18.80,8.39 L19.36,9.75 L21.65,10.30 L21.65,13.70 L19.36,14.25 L18.80,15.61 L20.03,17.62 L17.62,20.03 L15.61,18.80 L14.25,19.36 L13.70,21.65 L10.30,21.65 L9.75,19.36 L8.39,18.80 L6.38,20.03 L3.97,17.62 L5.20,15.61 L4.64,14.25 L2.35,13.70 L2.35,10.30 L4.64,9.75 L5.20,8.39 L3.97,6.38 L6.38,3.97 L8.39,5.20 Z"
+          />
+          <circle cx="12" cy="12" r="3.2" />
+        </svg>
+      </button>
+    </header>
+    <main class="editor-main">
+      <nav class="teacher-modes" aria-label="先生用メニュー">
+        <a href="/teacher" data-mode="practice"
+          ><span class="mode-icon" aria-hidden="true">📖</span
+          ><span><strong>通常の練習</strong><small>自分のペースで学ぶ・記録を見る</small></span></a
+        ><a href="/race-teacher" data-mode="race"
+          ><span class="mode-icon" aria-hidden="true">🏁</span
+          ><span
+            ><strong>みんなで単語レース</strong><small>参加受付・QR・レース開始</small></span
+          ></a
+        ><a href="/teacher-editor" data-mode="editor" aria-current="page"
+          ><span class="mode-icon" aria-hidden="true">✏️</span
+          ><span
+            ><strong>内容とルールを編集</strong><small>単語帳・練習・ゲームを設定</small></span
+          ></a
+        >
+      </nav>
+      <section id="editor-login" class="editor-login">
+        <h1>先生用ログイン</h1>
+        <form id="editor-login-form">
+          <label for="editor-password">先生用パスワード</label
+          ><input
+            id="editor-password"
+            type="password"
+            autocomplete="current-password"
+            required
+          /><button class="submit">ログイン</button>
+        </form>
+        <p id="editor-login-error" role="alert"></p>
+      </section>
+      <div id="editor-content" hidden>
+        <div class="editor-heading">
+          <div>
+            <h1>内容とルールを編集</h1>
+            <p>保存した設定は、次に開始するクラス・レースに適用されます。</p>
+          </div>
+          <button id="editor-reload" class="home-button">保存済みに戻す</button>
+        </div>
+        <div class="grade-field">
+          <label for="editor-grade">編集する学年・教材</label
+          ><select id="editor-grade">
+            <option value="6-1">6年生 · Pre Unit–Unit 1</option>
+            <option value="6-2">6年生 · Unit 2</option>
+            <option value="6-3">6年生 · Unit 3</option>
+            <option value="6-4">6年生 · Unit 4</option>
+            <option value="6-5">6年生 · Unit 5</option>
+            <option value="6-6">6年生 · Unit 6</option>
+            <option value="6-7">6年生 · Unit 7</option>
+            <option value="6-8">6年生 · Unit 8</option>
+            <option value="5">5年生 · Unit 5</option>
+            <option value="6">6年生 · Unit 4–5（以前の設定）</option>
+          </select>
+          <p>教材ごとに単語帳・練習・レースのルールを保存できます。</p>
+        </div>
+        <nav class="editor-tabs" aria-label="編集する内容">
+          <a class="home-button" href="#words">単語と音声</a
+          ><a class="home-button" href="#course">通常の練習</a
+          ><a class="home-button" href="#race">レースのルール</a>
+        </nav>
+        <section id="words" class="editor-section">
+          <h2>単語と音声</h2>
+          <p id="word-count" class="editor-note"></p>
+          <div class="editor-actions">
+            <button id="word-add" class="home-button">単語を追加</button>
+          </div>
+          <div class="editor-word-grid">
+            <div class="editor-word-sidebar">
+              <div class="word-search">
+                <label for="word-search">単語を探す</label
+                ><input
+                  id="word-search"
+                  type="search"
+                  placeholder="英語・日本語で検索"
+                  autocomplete="off"
+                />
+              </div>
+              <div id="word-list" class="editor-word-list" aria-label="編集する単語"></div>
+            </div>
+            <div>
+              <div class="editor-fields">
+                <label
+                  >英単語・表現<input
+                    id="word-word"
+                    maxlength="40"
+                    autocapitalize="none"
+                    spellcheck="false" /></label
+                ><label>日本語の意味<input id="word-meaning" maxlength="100" /></label
+                ><label
+                  >単語の種類<select id="word-group">
+                    <option value="verb">動詞</option>
+                    <option value="adjective">形容詞</option>
+                    <option value="family">家族</option>
+                    <option value="occupation">職業</option>
+                    <option value="phrase">ことば・表現</option>
+                    <option value="other">その他</option>
+                  </select></label
+                ><label>原形（動詞のみ）<input id="word-base" maxlength="200" /></label
+                ><label class="full">英語の例文<input id="word-example" maxlength="200" /></label>
+              </div>
+              <div class="editor-checks">
+                <label><input id="word-enabled" type="checkbox" />この単語を使用する</label>
+              </div>
+              <div id="word-image-panel" hidden>
+                <figure class="exercise-picture-cue">
+                  <img id="word-image-preview" alt="単語のイラスト" />
+                </figure>
+                <label
+                  ><input
+                    id="word-picture-enabled"
+                    type="checkbox"
+                  />ステップアップ練習・レースで画像問題を使用する</label
+                >
+              </div>
+              <h3>意味問題の不正解の選択肢</h3>
+              <p class="editor-note">空欄は、ほかの単語の意味から自動で補います。</p>
+              <div class="editor-fields">
+                <label>選択肢 1<input id="distractor-0" maxlength="100" /></label
+                ><label>選択肢 2<input id="distractor-1" maxlength="100" /></label
+                ><label>選択肢 3<input id="distractor-2" maxlength="100" /></label>
+              </div>
+              <h3>英語の発音</h3>
+              <div class="editor-audio">
+                <button id="word-preview" class="home-button">音声を聞く</button
+                ><label
+                  >音声ファイル<input
+                    id="audio-file"
+                    type="file"
+                    accept=".wav,.mp3,.m4a,.ogg" /></label
+                ><button id="word-speech" class="home-button">端末の読み上げを使用</button>
+                <p id="word-audio-status"></p>
+              </div>
+              <p class="editor-note">
+                WAV・MP3・M4A・OGG／1 MB以下。iPadではMP3・M4A・WAVをおすすめします。
+              </p>
+              <button id="word-delete" class="home-button editor-danger">この単語を削除</button>
+            </div>
+          </div>
+        </section>
+        <section id="course" class="editor-section">
+          <h2>通常の練習</h2>
+          <label
+            >練習の構成<select id="course-format">
+              <option value="adaptive-four">ステップアップ練習（10種類）</option>
+              <option value="classic">基本の3種類から選ぶ</option>
+            </select></label
+          >
+          <p id="course-format-guide" class="editor-note">
+            意味を選ぶ・ペア・スペリングから、文づくり・穴うめ・聞いて答える問題へ進みます。1語を3回ずつ練習し、1レッスンは設定した長さのままです。答えに合わせて、選択肢やことばのまとまりを調整します。文の問題には単語帳の例文を使います。
+          </p>
+          <p class="editor-note">新しいクラスで使う単語・問題の種類・レッスンの長さを選びます。</p>
+          <h3>使用する単語</h3>
+          <div id="course-pool" class="editor-checks editor-pool"></div>
+          <h3 id="course-modes-title">問題の種類</h3>
+          <div id="course-modes" class="editor-checks"></div>
+          <div class="editor-rule-grid">
+            <label
+              >1レッスンの問題数<select id="course-roundSize">
+                <option value="4">4問</option>
+                <option value="6">6問</option>
+                <option value="8">8問</option>
+                <option value="10">10問</option>
+              </select></label
+            >
+          </div>
+        </section>
+        <section id="race" class="editor-section">
+          <h2>単語レース</h2>
+          <p class="editor-note">
+            3コースで開催し、各コースのトップ3と総合順位を発表します。問題の順番は生徒ごと・コースごとにランダムです。順位は得点順で、同点なら自力正解率を比べます。速さによる加点はありません。途中参加も、準備ができてから同じ回答時間で挑戦します。
+          </p>
+          <h3>使用する単語</h3>
+          <div id="race-pool" class="editor-checks editor-pool"></div>
+          <h3>問題の種類</h3>
+          <label
+            >コースの構成<select id="race-format">
+              <option value="adaptive-four">ステップアップ・各コース4種類</option>
+              <option value="classic">基本の3種類から選ぶ</option>
+            </select></label
+          >
+          <div id="race-format-guide" class="editor-note">
+            <p><strong>コース1</strong> 意味を選ぶ・ことばのペア・スペリング・聞いて選ぶ</p>
+            <p><strong>コース2</strong> 文を組み立てる・文の穴うめ・音のペア・聞いて文を作る</p>
+            <p><strong>コース3</strong> 文を組み立てる・文の穴うめ・聞いて穴うめ・聞いて書く</p>
+            <p>
+              全員が4種類に挑戦します。最近の答えに合わせて、選択肢・ことばのまとまり・入力問題を調整します。速さや順位では難しさを変えません。文の問題には単語帳の例文を使います。
+            </p>
+            <p>
+              例文は学習する単語を含む英語で入力してください。単語が含まれない場合は「The word is
+              ...」の文で出題します。
+            </p>
+          </div>
+          <div id="race-modes" class="editor-checks"></div>
+          <h3>問題の順番</h3>
+          <label
+            >問題の順番<select id="race-order">
+              <option value="mixed">生徒ごとにランダム</option>
+            </select></label
+          >
+          <div class="editor-rule-grid">
+            <label hidden
+              >出題デッキの長さ<input
+                data-rule="questions"
+                type="number"
+                min="6"
+                max="60"
+                step="1" /></label
+            ><label
+              >1コースの回答時間（分）（1〜20）<input
+                data-rule="minutes"
+                type="number"
+                min="1"
+                max="20"
+                step="1" /></label
+            ><label
+              >開始前のカウントダウン（秒）（0〜10）<input
+                data-rule="countdown"
+                type="number"
+                min="0"
+                max="10"
+                step="1" /></label
+            ><label
+              >道具を配る間隔（問題数）（3〜20）<input
+                data-rule="itemEvery"
+                type="number"
+                min="3"
+                max="20"
+                step="1" /></label
+            ><label
+              >正解の得点（10〜500）<input
+                data-rule="correctPoints"
+                type="number"
+                min="10"
+                max="500"
+                step="1" /></label
+            ><label
+              >ヒント使用時の正解得点（0〜500）<input
+                data-rule="hintPoints"
+                type="number"
+                min="0"
+                max="500"
+                step="1" /></label
+            ><label
+              >復習スターの正解得点（0〜500）<input
+                data-rule="reviewPoints"
+                type="number"
+                min="0"
+                max="500"
+                step="1" /></label
+            ><label
+              >ダッシュの追加得点（0〜200）<input
+                data-rule="boostPoints"
+                type="number"
+                min="0"
+                max="200"
+                step="1" /></label
+            ><label
+              >ダッシュが続く正解数（1〜5）<input
+                data-rule="boostCount"
+                type="number"
+                min="1"
+                max="5"
+                step="1" /></label
+            ><label
+              >連続正解の追加幅（0〜100）<input
+                data-rule="streakStep"
+                type="number"
+                min="0"
+                max="100"
+                step="1" /></label
+            ><label
+              >1問の連続正解ボーナス上限（0〜500）<input
+                data-rule="streakCap"
+                type="number"
+                min="0"
+                max="500"
+                step="1" /></label
+            ><label
+              >クラス共通目標（正解率％）（10〜100）<input
+                data-rule="goalPercent"
+                type="number"
+                min="10"
+                max="100"
+                step="1"
+            /></label>
+          </div>
+          <h3>使用する道具</h3>
+          <p>
+            ダブルヒント：選択肢を2つ減らす／最初の2文字。ダブルスター：次の独立正解を2倍に。ラッキークローバー：次の独立正解に20〜80点追加。
+          </p>
+          <div id="race-items" class="editor-checks"></div>
+          <p class="editor-note">
+            連続正解は2問目から加点します。標準は＋20、＋40、＋60、＋80、＋100点（以降＋100点）。不正解・ヒント使用で連続正解がリセットされ、復習の正解は連続数に含みません。すべて外すと道具なしになります。ヒント・復習の得点は、通常の正解以下に設定してください。
+          </p>
+        </section>
+        <div class="editor-savebar">
+          <p id="editor-status" role="status" aria-live="polite"></p>
+          <button id="editor-save" class="submit" disabled>変更を保存</button>
+        </div>
+      </div>
+    </main>
+    <dialog id="settings-dialog" class="settings-dialog" aria-labelledby="settings-title">
+      <div class="settings-heading">
+        <h2 id="settings-title">設定</h2>
+        <button id="settings-close" aria-label="設定を閉じる">
+          <svg><use href="#i-close" /></svg>
+        </button>
+      </div>
+      <p class="settings-intro">自分に合った学び方に調整しよう。</p>
+      <div class="setting-row">
+        <label for="voice-volume">発音の音量</label
+        ><output id="voice-volume-value" for="voice-volume"></output
+        ><input id="voice-volume" type="range" min="0" max="100" step="5" />
+      </div>
+      <div class="setting-row">
+        <label for="effects-volume">効果音の音量</label
+        ><output id="effects-volume-value" for="effects-volume"></output
+        ><input id="effects-volume" type="range" min="0" max="100" step="5" />
+      </div>
+      <div class="setting-line">
+        <label for="sound-toggle">効果音</label
+        ><input id="sound-toggle" type="checkbox" role="switch" />
+      </div>
+      <div class="setting-line">
+        <label for="font-size">文字サイズ</label
+        ><select id="font-size">
+          <option value="1">標準</option>
+          <option value="1.15">大きい</option>
+          <option value="1.3">とても大きい</option>
+        </select>
+      </div>
+      <div class="setting-line">
+        <label for="reduce-motion">動きを減らす</label
+        ><input id="reduce-motion" type="checkbox" role="switch" />
+      </div>
+      <p class="settings-note">設定はこのブラウザーに自動保存されます。</p>
+      <button id="settings-reset" class="home-button">初期設定に戻す</button
+      ><button id="settings-done" class="submit">完了</button>
+      <div id="teacher-account-settings" class="teacher-account-settings" hidden>
+        <button id="teacher-logout" class="home-button" hidden>ログアウト</button>
+        <p id="teacher-logout-error" role="alert" hidden></p>
+      </div>
+    </dialog>
+    <script src="/network.js?v=classroom58"></script>
+    <script src="/curriculum.js?v=classroom58"></script>
+    <script src="/settings.js?v=classroom58"></script>
+    <script src="/feedback-effects.js?v=classroom58"></script>
+    <script src="/teacher-editor.js?v=classroom58"></script>
+    <script src="/teacher-music.js?v=classroom58"></script>
+  </body>
+</html>

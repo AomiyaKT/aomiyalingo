@@ -1,0 +1,319 @@
+/* Short, semantic race moments. These layers never intercept answer gestures. */
+.race-highlight {
+  position: fixed;
+  z-index: 65;
+  right: max(20px, env(safe-area-inset-right));
+  bottom: calc(var(--action-height, 96px) + var(--student-keyboard-inset, 0px) + 18px);
+  width: min(380px, calc(100vw - 40px));
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border: 2px solid #84d8ff;
+  border-bottom-width: 5px;
+  border-radius: 22px;
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 12px 36px #1899d61c;
+  pointer-events: none;
+  box-sizing: border-box;
+}
+.race-highlight[hidden] {
+  display: none;
+}
+.race-teacher .race-highlight {
+  top: 96px;
+  bottom: auto;
+}
+.race-highlight-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 56px;
+  height: 56px;
+  font-size: 32px;
+  border-radius: 17px;
+  background: var(--sky-soft);
+  color: var(--sky-edge);
+}
+.race-highlight > div {
+  display: grid;
+  gap: 4px;
+  min-width: 0;
+}
+.race-highlight small {
+  font:
+    900 11px Nunito,
+    sans-serif;
+  letter-spacing: 0.12em;
+  color: var(--sky-edge);
+}
+.race-highlight strong {
+  font-size: 21px;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.race-highlight > div > span {
+  font-size: 13px;
+  color: #777;
+  line-height: 1.6;
+}
+.race-highlight:is([data-kind='combo'], [data-kind='item'], [data-kind='podium']) {
+  border-color: #ffc800;
+  box-shadow: 0 12px 36px #ffc80022;
+}
+.race-highlight:is([data-kind='combo'], [data-kind='item'], [data-kind='podium'])
+  .race-highlight-icon {
+  background: #fff4cc;
+}
+.race-highlight:is([data-kind='combo'], [data-kind='item'], [data-kind='podium']) small {
+  color: #9c6900;
+}
+.race-highlight[data-kind='final'] {
+  border-color: #ffb366;
+}
+.race-highlight[data-kind='final'] .race-highlight-icon {
+  background: #fff1e5;
+}
+.race-highlight[data-kind='final'] small {
+  color: #c56816;
+}
+.race-student #race-clock {
+  transition:
+    color 180ms,
+    background-color 180ms;
+}
+.race-student[data-race-time='final'] #race-clock {
+  color: #c56816;
+  background: #fff1e5;
+}
+.race-student .race-scene {
+  isolation: isolate;
+}
+.race-page[data-race-effect] .race-scene::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0 15px,
+    #ffc80066 16px 18px,
+    transparent 19px 32px
+  );
+  mask-image: linear-gradient(90deg, #000, transparent 80%);
+  animation: race-speed-lines 650ms ease-out;
+  z-index: -1;
+}
+.race-page[data-race-effect='boost'] .scene-racer {
+  filter: drop-shadow(-12px 0 8px #ffc800);
+}
+.race-page[data-race-effect='double'] .scene-racer {
+  filter: drop-shadow(0 0 10px #ce82ff);
+}
+.race-student .reward-combo {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 12px;
+  border-radius: 12px;
+  background: #fff1b8;
+  color: #a45f00;
+  font-size: 16px;
+}
+.race-teacher .timing-row[data-change='up'] {
+  box-shadow: inset 3px 0 #1cb0f6;
+}
+.race-teacher .timing-row[data-change='down'] {
+  box-shadow: inset 3px 0 #e5e5e5;
+}
+.race-page .item-roulette {
+  overflow: hidden;
+  border: 3px solid #ffc800;
+}
+.race-page .item-roulette::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: repeating-conic-gradient(
+    from 10deg at 50% 45%,
+    #ffffff00 0 18deg,
+    #ffffff99 18deg 36deg
+  );
+  opacity: 0.65;
+}
+.race-page .item-roulette > * {
+  position: relative;
+}
+.race-page .roulette-window {
+  overflow: hidden;
+  position: relative;
+  background: #fff;
+  border-radius: 18px;
+}
+.race-page .roulette-window::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  box-shadow:
+    inset 0 12px 14px #a5760022,
+    inset 0 -12px 14px #a5760022;
+  pointer-events: none;
+}
+.race-page .item-roulette.is-spinning #roulette-symbol {
+  animation-name: race-slot-spin;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+}
+.race-page .item-roulette.is-revealed {
+  animation: race-item-land 440ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.race-page .item-roulette.is-revealed .roulette-window {
+  border-color: #ffc800;
+  box-shadow: 0 0 0 7px #fff3b0;
+}
+.race-page .race-podium {
+  gap: 16px;
+  padding-top: 12px;
+}
+.race-page .podium-card {
+  position: relative;
+  text-align: center;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  transform-origin: center bottom;
+  animation: race-podium-enter 650ms cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.race-page .podium-card[data-rank='1'] {
+  min-height: 260px;
+  animation-delay: 260ms;
+  box-shadow:
+    0 6px 0 #e5b400,
+    0 14px 30px #ffc8001a;
+}
+.race-page .podium-card[data-rank='2'] {
+  min-height: 228px;
+  animation-delay: 120ms;
+}
+.race-page .podium-card[data-rank='3'] {
+  min-height: 208px;
+}
+.race-page .podium-card .avatar-art {
+  margin: 4px auto 8px;
+  padding: 4px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid #ffffff;
+  box-shadow: 0 3px 0 #0000000c;
+}
+.race-page .podium-card[data-rank='1'] .avatar-art {
+  border-color: #ffc800;
+}
+.race-page .podium-identity {
+  display: grid;
+  justify-items: center;
+  gap: 4px;
+  width: 100%;
+  min-width: 0;
+}
+.race-page .podium-identity small {
+  font-size: calc(13px * var(--font-scale, 1));
+  line-height: 1.4;
+  font-weight: 800;
+  color: var(--muted);
+}
+.race-page .podium-identity strong {
+  font-size: calc(42px * var(--font-scale, 1));
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+.race-page .podium-place {
+  font-size: calc(16px * var(--font-scale, 1));
+  line-height: 1.5;
+}
+.race-page .podium-card > span:last-child {
+  font-size: calc(14px * var(--font-scale, 1));
+  line-height: 1.6;
+}
+@keyframes race-slot-spin {
+  from {
+    transform: translateY(-60px) scale(0.85);
+    filter: blur(2px);
+  }
+  to {
+    transform: translateY(60px) scale(0.85);
+    filter: blur(1px);
+  }
+}
+@keyframes race-item-land {
+  0% {
+    scale: 0.8;
+  }
+  65% {
+    scale: 1.04;
+  }
+  100% {
+    scale: 1;
+  }
+}
+@keyframes race-speed-lines {
+  from {
+    translate: 15% 0;
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  to {
+    translate: -30% 0;
+    opacity: 0;
+  }
+}
+@keyframes race-podium-enter {
+  from {
+    opacity: 0;
+    translate: 0 28px;
+    scale: 0.92;
+  }
+  to {
+    opacity: 1;
+    translate: 0 0;
+    scale: 1;
+  }
+}
+@media (max-width: 600px) {
+  .race-highlight {
+    right: 16px;
+    width: min(340px, calc(100vw - 32px));
+    padding: 12px;
+    gap: 12px;
+  }
+  .race-highlight strong {
+    font-size: 18px;
+  }
+  .race-page .race-podium {
+    gap: 8px;
+  }
+  .race-page .podium-card {
+    padding: 16px 8px;
+  }
+  .race-page .podium-card[data-rank='1'] {
+    min-height: 240px;
+  }
+  .race-page .podium-card[data-rank='2'] {
+    min-height: 216px;
+  }
+  .race-page .podium-card[data-rank='3'] {
+    min-height: 196px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .race-page :is(.podium-card, .item-roulette, #roulette-symbol),
+  .race-page[data-race-effect] .race-scene::after {
+    animation: none !important;
+  }
+}
+.reduce-motion :is(.podium-card, .item-roulette, #roulette-symbol),
+.reduce-motion[data-race-effect] .race-scene::after {
+  animation: none !important;
+}

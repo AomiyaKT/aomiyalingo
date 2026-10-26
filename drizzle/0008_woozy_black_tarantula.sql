@@ -1,0 +1,1 @@
+ALTER TABLE `races` ADD `deleted_at` integer DEFAULT 0 NOT NULL;

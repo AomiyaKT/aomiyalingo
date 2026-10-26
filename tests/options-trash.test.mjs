@@ -1,0 +1,56 @@
+import assert from 'node:assert/strict';
+import worker from '../dist/server/index.js';
+import {database} from './database.mjs';
+const env={DB:database(),TEACHER_PASSWORD:'test-password'};
+async function req(path,data,headers={}){const response=await worker.fetch(new Request('https://classroom.test'+path,{method:data===undefined?'GET':'POST',headers:{'content-type':'application/json',...headers},...(data===undefined?{}:{body:JSON.stringify(data)})}),env);let body;try{body=await response.clone().json()}catch{}return {status:response.status,body,response}}
+const login=await req('/api/teacher/login',{password:'test-password'}),teacher={cookie:login.response.headers.get('set-cookie').split(';')[0]};
+const create=data=>req('/api/teacher/classes',{title:'Assigned lesson',...data},teacher);
+for(const data of [{modes:[]},{modes:['text','text']},{modes:['picture']},{wordGroup:'unknown'},{modes:'voice'}])assert.equal((await create(data)).status,400);
+const verbs=(await create({wordGroup:'verb',modes:['text','spelling']})).body;
+const verbStudent=(await req('/api/join',{label:'1'})).body;
+assert.equal(verbStudent.lesson.total,22);assert.equal(verbStudent.lesson.learnWords.length,11);assert.ok(verbStudent.lesson.queue.every(t=>['text','spelling'].includes(t.mode)));assert.ok(verbStudent.lesson.learnWords.includes('ate'));assert.ok(!verbStudent.lesson.learnWords.includes('smart'));
+const room=(await create({wordGroup:'adjective',modes:['voice']})).body;
+const st=(await req('/api/join',{label:'999'})).body,peer=(await req('/api/join',{label:'2'})).body,auth={authorization:'Bearer '+st.token};
+assert.equal(st.lesson.total,8);assert.equal(st.lesson.learnWords.length,8);assert.deepEqual(st.lesson.enabledModes,['voice']);assert.ok(st.lesson.queue.every(t=>t.mode==='voice'));assert.ok(!st.lesson.learnWords.includes('ate'));
+const oldFirst=st.lesson.queue[0].id;
+assert.equal((await req('/api/student/start',{mode:'spelling'},auth)).body.lesson.queue[0].id,oldFirst);
+assert.ok((await req('/api/student/start',{mode:'spelling',reset:true},auth)).body.lesson.queue.every(t=>t.mode==='voice'));
+const fresh=(await req('/api/student/me',undefined,auth)).body.lesson;
+await req('/api/student/answer',{questionId:fresh.queue[0].id,answer:['wrong']},auth);
+const saved=(await req('/api/student/me',undefined,auth)).body.lesson;
+let board=(await req('/api/teacher/progress?class='+room.id,undefined,teacher)).body;
+assert.equal(board.students[1].skills.length,8);assert.deepEqual(Object.keys(board.students[1].skills[0].modes),['voice']);
+const csv=await req('/api/teacher/export?class='+room.id,undefined,teacher),csvText=await csv.response.text();assert.ok(csvText.includes('voice'));assert.ok(!csvText.includes('"text"'));assert.ok(!csvText.includes('"ate"'));
+const del={classId:room.id,classTitle:room.title,scope:'student',studentId:st.id,label:'999',confirm:true};
+const removed=(await req('/api/teacher/records-delete',del,teacher)).body;
+const restore={classId:room.id,classTitle:room.title,trashId:removed.trashId,confirm:true};
+assert.equal((await req('/api/teacher/trash?class='+room.id)).status,401);
+assert.equal((await req('/api/teacher/records-restore',restore,auth)).status,401);
+assert.equal((await req('/api/teacher/records-restore',{...restore,classId:verbs.id,classTitle:verbs.title},teacher)).status,404);
+assert.equal((await req('/api/teacher/records-restore',{...restore,confirm:false},teacher)).status,400);
+assert.equal((await req('/api/teacher/trash?class='+room.id,undefined,teacher)).body.items[0].count,1);
+assert.equal((await req('/api/student/me',undefined,auth)).status,401);
+const replacement=(await req('/api/join',{label:'999'})).body;
+assert.equal((await req('/api/teacher/records-restore',restore,teacher)).status,409);
+assert.equal((await req('/api/student/me',undefined,{authorization:'Bearer '+replacement.token})).body.lesson.attempts,0);
+await req('/api/student/label',{label:'3'},{authorization:'Bearer '+replacement.token});
+// Restoration must be atomic, including its recycle-bin entry.
+const realBatch=env.DB.batch;env.DB.batch=items=>realBatch([items[0],{run(){throw Error('simulated restoration failure')}},...items.slice(1)]);
+assert.equal((await req('/api/teacher/records-restore',restore,teacher)).status,503);env.DB.batch=realBatch;
+assert.equal((await req('/api/student/me',undefined,auth)).status,401);assert.equal((await req('/api/teacher/trash?class='+room.id,undefined,teacher)).body.items.length,1);
+assert.equal((await req('/api/teacher/records-restore',restore,teacher)).status,200);
+assert.deepEqual((await req('/api/student/me',undefined,auth)).body.lesson,saved);
+assert.equal((await req('/api/teacher/trash?class='+room.id,undefined,teacher)).body.items.length,0);
+assert.equal((await req('/api/teacher/records-restore',restore,teacher)).status,404);
+const clear=(await req('/api/teacher/records-delete',{classId:room.id,classTitle:room.title,scope:'class',confirm:true},teacher)).body;
+board=(await req('/api/teacher/progress?class='+room.id,undefined,teacher)).body;assert.equal(board.students.length,0);assert.equal(board.attempts.length,0);assert.equal(board.trash[0].count,3);
+assert.equal((await req('/api/teacher/records-restore',{...restore,trashId:clear.trashId},teacher)).status,200);
+board=(await req('/api/teacher/progress?class='+room.id,undefined,teacher)).body;assert.equal(board.students.length,3);assert.equal(board.attempts.length,1);assert.equal(board.classroom.active,1);assert.equal(board.classroom.word_group,'adjective');
+assert.deepEqual((await req('/api/student/me',undefined,auth)).body.lesson,saved);
+const untouched=(await req('/api/teacher/progress?class='+verbs.id,undefined,teacher)).body;assert.equal(untouched.students[0].id,verbStudent.id);assert.equal(untouched.students[0].total,22);
+// Targeted review cannot introduce an unassigned question type or word.
+let l=(await req('/api/student/me',undefined,auth)).body.lesson;
+while(l.queue.length){const t=l.queue[0];l=(await req('/api/student/answer',{questionId:t.id,answer:['wrong']},auth)).body.lesson}
+l=(await req('/api/student/start',{review:true},auth)).body.lesson;assert.equal(l.total,8);assert.ok(l.queue.every(t=>t.mode==='voice'&&!['ate','made'].includes(t.word)));assert.deepEqual(l.enabledModes,['voice']);
+assert.deepEqual((await req('/api/student/me',undefined,auth)).body.lesson.enabledModes,['voice']);
+console.log('PASS: assigned word ranges and modes, input validation, scoped diagnostics/CSV, recycle-bin restoration, conflict protection, transactional restore, preserved progress and constrained review.');

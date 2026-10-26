@@ -1,0 +1,1 @@
+ALTER TABLE `classrooms` ADD `deleted_at` integer DEFAULT 0 NOT NULL;

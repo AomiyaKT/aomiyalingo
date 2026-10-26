@@ -1,0 +1,171 @@
+/* Shared tactile feedback. Individual transforms preserve winding path positions. */
+:root {
+  --motion-fast: 170ms;
+  --motion-panel: 280ms;
+  --motion-reward: 540ms;
+}
+:is(button, a.home-button, .mode-choice, .stage-node, .answer, summary) {
+  -webkit-user-select: none;
+  user-select: none;
+  transition:
+    background-color 140ms,
+    border-color 140ms,
+    box-shadow 100ms,
+    translate 100ms,
+    scale 100ms;
+}
+:is(button, a.home-button, .mode-choice, .answer, summary).fx-pressed {
+  translate: 0 3px;
+  scale: 0.99;
+  box-shadow: 0 0 0 var(--btn-edge, var(--line));
+}
+button:not(:disabled):active,
+a.home-button:active {
+  transform: none;
+}
+.lesson-mascot img,
+.complete-medal {
+  transform-origin: center bottom;
+}
+#progress-fill,
+.scene-fill {
+  transition:
+    width 420ms cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 200ms;
+}
+.progress-bar,
+progress {
+  overflow: hidden;
+}
+progress::-webkit-progress-value {
+  transition: width 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.feedback .feedback-icon {
+  display: grid;
+  place-items: center;
+  flex: 0 0 64px;
+  width: 64px;
+  height: 64px;
+  padding: 0;
+  border-radius: 50%;
+  background: #fff;
+  color: var(--green-edge);
+  box-shadow: none;
+}
+.feedback.wrong .feedback-icon {
+  color: var(--red);
+}
+.student .answer.result-correct .answer-text {
+  color: var(--green-edge);
+}
+.student .answer.result-wrong .answer-text {
+  color: var(--red);
+}
+.feedback-icon svg {
+  width: 44px;
+  height: 44px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.feedback-icon path {
+  stroke-dasharray: 1;
+  stroke-dashoffset: 0;
+  animation: fx-draw-check 220ms ease-out;
+}
+.fx-particles {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  pointer-events: none;
+  overflow: hidden;
+}
+.fx-particles i {
+  position: absolute;
+  width: 9px;
+  height: 12px;
+  border-radius: 3px;
+  background: var(--spark-color);
+}
+.fx-particles i:nth-child(3n) {
+  clip-path: polygon(50% 0, 62% 35%, 100% 50%, 62% 64%, 50% 100%, 36% 64%, 0 50%, 36% 35%);
+  width: 15px;
+  height: 15px;
+}
+.fx-streak-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 5px 12px;
+  margin-inline-start: 12px;
+  border: 2px solid #ffc800;
+  border-radius: 12px;
+  background: #fff5cc;
+  color: #a45f00;
+  font:
+    800 calc(15px * var(--font-scale, 1)) / 1.5 Nunito,
+    'Aomi Round',
+    sans-serif;
+  white-space: nowrap;
+  vertical-align: middle;
+}
+#race-feedback:not(:empty) {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+#race-feedback.correct-feedback::before,
+#race-feedback.wrong-feedback::before {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #d7ffb8;
+  color: var(--green-edge);
+  content: '✓';
+  flex: none;
+  font-weight: 900;
+}
+#race-feedback.wrong-feedback::before {
+  background: #ffdfe0;
+  color: var(--red);
+  content: '×';
+}
+@keyframes fx-draw-check {
+  from {
+    stroke-dashoffset: 1;
+  }
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+@media (max-width: 650px) {
+  .feedback .feedback-icon {
+    width: 44px;
+    height: 44px;
+    flex-basis: 44px;
+  }
+  .feedback-icon svg {
+    width: 32px;
+    height: 32px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .fx-pressed {
+    translate: none;
+    scale: none;
+  }
+  .fx-particles {
+    display: none;
+  }
+}
+.reduce-motion .fx-pressed {
+  translate: none;
+  scale: none;
+}
+.reduce-motion .fx-particles {
+  display: none;
+}

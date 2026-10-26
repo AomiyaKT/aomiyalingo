@@ -1,0 +1,1 @@
+ALTER TABLE `races` ADD `station` integer DEFAULT 0 NOT NULL;

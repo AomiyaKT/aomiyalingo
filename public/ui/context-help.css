@@ -1,0 +1,91 @@
+.context-help {
+  position: fixed;
+  z-index: 10000;
+  max-width: min(380px, calc(100vw - 24px));
+  box-sizing: border-box;
+  padding: 12px 16px;
+  border-radius: 12px;
+  background: #3c3c3c;
+  color: #fff;
+  font-size: calc(16px * var(--font-scale, 1));
+  font-weight: 700;
+  line-height: 1.7;
+  box-shadow: 0 4px 16px #0002;
+}
+.help-trigger {
+  display: inline-grid;
+  place-items: center;
+  flex: none;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  box-shadow: none;
+  color: var(--muted);
+  font: inherit;
+  font-size: 18px;
+  font-weight: 900;
+}
+.help-trigger:hover {
+  background: var(--soft);
+}
+.race-heading-help {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.race-heading-help h2 {
+  margin: 0;
+}
+.race-qr-panel .race-heading-help {
+  position: relative;
+  display: block;
+}
+.race-qr-panel .race-heading-help .help-trigger {
+  position: absolute;
+  top: -28px;
+  right: -12px;
+}
+.race-archive-picker {
+  width: 100%;
+  margin-top: 18px;
+}
+.timing-tower:empty {
+  min-height: 40px;
+}
+.context-help-heading {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+.context-help-heading > h1,
+.context-help-heading > h2,
+.context-help-heading > p {
+  flex: 1;
+  min-width: 0;
+  margin-block: 0;
+  overflow-wrap: anywhere;
+}
+.teacher-page .board-panel > .context-help-heading {
+  margin-bottom: 20px;
+}
+.teacher-page .board-heading .help-trigger {
+  color: #fff;
+}
+.teacher-page .board-heading .help-trigger:hover {
+  background: #fff2;
+}
+.teacher-page .qr-panel > .context-help-heading {
+  position: relative;
+  display: block;
+}
+.teacher-page .qr-panel > .context-help-heading .help-trigger {
+  position: absolute;
+  right: -12px;
+  top: -28px;
+}

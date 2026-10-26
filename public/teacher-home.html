@@ -1,0 +1,212 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Aomiyalingo 英単語を聞いて、日本語の意味を選びましょう。" />
+    <title>Aomiyalingo · 先生のホーム</title>
+
+    <link
+      rel="icon"
+      type="image/svg+xml"
+      href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%2358cc02'/%3E%3Cpath d='M8 24 16 8l8 16M11 18h10' fill='none' stroke='white' stroke-width='3' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E"
+    />
+
+    <link rel="stylesheet" href="/ui/home.css?v=classroom58" />
+  </head>
+  <body class="teacher-page teacher-home teacher-shell">
+    <svg class="symbols" aria-hidden="true" xmlns="http://www.w3.org/2000/svg">
+      <symbol id="i-image" viewBox="0 0 24 24">
+        <rect x="3" y="3" width="18" height="18" rx="3" />
+        <circle cx="8" cy="8" r="1.5" />
+        <path d="m4 17 5-5 4 4 3-3 4 4" />
+      </symbol>
+      <symbol id="i-speaker" viewBox="0 0 24 24">
+        <path d="M11 4 6 8H3v8h3l5 4Z" />
+        <path d="M15 8a6 6 0 0 1 0 8M18 5a10 10 0 0 1 0 14" />
+      </symbol>
+      <symbol id="i-trash" viewBox="0 0 24 24">
+        <path d="M3 6h18M9 6V3h6v3M5 6l1 15h12l1-15M10 10v7M14 10v7" />
+      </symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12 4 4 10-10" /></symbol>
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></symbol>
+      <symbol id="i-layout" viewBox="0 0 24 24"><path d="M4 4h16v16H4zM4 10h16M10 10v10" /></symbol>
+      <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14" /></symbol>
+      <symbol id="i-refresh" viewBox="0 0 24 24">
+        <path d="M20 7v5h-5M4 17v-5h5M6 6a8 8 0 0 1 14 6M18 18a8 8 0 0 1-14-6" />
+      </symbol>
+      <symbol id="i-eye" viewBox="0 0 24 24">
+        <path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12" />
+        <circle cx="12" cy="12" r="3" />
+      </symbol>
+      <symbol id="i-pen" viewBox="0 0 24 24">
+        <path d="m4 16 12-12 4 4L8 20l-5 1 1-5M13 7l4 4" />
+      </symbol>
+    </svg>
+    <header class="app-header">
+      <a class="brand" href="./" aria-label="Aomiyalingo ホーム"
+        ><span class="brand-mark">A</span><span>Aomiya<span class="brand-lab">lingo</span></span></a
+      >
+
+      <button
+        id="settings-open"
+        class="settings-open"
+        aria-label="設定を開く"
+        aria-haspopup="dialog"
+        title="設定"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M9.75,4.64 L10.30,2.35 L13.70,2.35 L14.25,4.64 L15.61,5.20 L17.62,3.97 L20.03,6.38 L18.80,8.39 L19.36,9.75 L21.65,10.30 L21.65,13.70 L19.36,14.25 L18.80,15.61 L20.03,17.62 L17.62,20.03 L15.61,18.80 L14.25,19.36 L13.70,21.65 L10.30,21.65 L9.75,19.36 L8.39,18.80 L6.38,20.03 L3.97,17.62 L5.20,15.61 L4.64,14.25 L2.35,13.70 L2.35,10.30 L4.64,9.75 L5.20,8.39 L3.97,6.38 L6.38,3.97 L8.39,5.20 Z"
+          />
+          <circle cx="12" cy="12" r="3.2" />
+        </svg>
+      </button>
+    </header>
+    <nav class="workspace-nav" aria-label="先生用メニュー">
+      <a class="brand" href="./" aria-label="Aomiyalingo ホーム"
+        ><span class="brand-mark">A</span><span>Aomiya<span class="brand-lab">lingo</span></span></a
+      >
+      <div>
+        <a href="/" aria-current="page"
+          ><svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="m3 11 9-8 9 8v10h-6v-7H9v7H3Z" /></svg
+          ><span>ホーム</span></a
+        ><a href="/teacher"
+          ><svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 5v16M12 5C8 3 5 3 2 5v15c4-2 7-1 10 1 3-2 6-3 10-1V5c-3-2-6-2-10 0Z" />
+            <path d="M5 8h4M5 12h4M15 8h4M15 12h4" /></svg
+          ><span>単語練習</span></a
+        ><a href="/race-teacher"
+          ><svg viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M5 22V3M5 4c5-3 10 3 16 0v12c-6 3-11-3-16 0" />
+            <path
+              d="M7 6h3v3H7zm6 1h3v3h-3zm5-1h2v3h-2zM10 9h3v3h-3zm6 1h3v3h-3zM7 12h3v2H7zm6 1h3v2h-3z"
+              fill="currentColor"
+              stroke="none"
+            /></svg
+          ><span>単語レース</span></a
+        >
+      </div>
+      <p>AOMIYALINGO · 先生用</p>
+    </nav>
+    <main class="teacher-home-main">
+      <section id="teacher-access" class="teacher-access">
+        <div class="login-art" aria-hidden="true">
+          <img src="/assets/aomi-cat.svg" alt="" />
+          <h2>学ぶって、たのしい。</h2>
+        </div>
+        <div class="login-fields">
+          <h1>先生用ログイン</h1>
+          <p>今日のレッスンを、始めましょう。</p>
+          <form id="teacher-form">
+            <label for="teacher-password">先生用パスワード</label>
+            <div class="teacher-login-row">
+              <input
+                type="password"
+                id="teacher-password"
+                autocomplete="current-password"
+                required
+                placeholder="パスワードを入力"
+              /><button class="submit" id="teacher-submit">ログイン</button>
+            </div>
+            <p id="teacher-error" role="alert" hidden></p>
+          </form>
+        </div>
+      </section>
+      <section id="mode-chooser" class="mode-chooser" hidden>
+        <div class="home-unit">
+          <span class="exercise-tag">先生のホーム</span>
+          <h1 id="chooser-title" tabindex="-1">今日は、どちらで学びますか？</h1>
+          <p>モードを選んで、レッスンを準備しましょう。</p>
+        </div>
+        <div class="home-content">
+          <div class="mode-choice-cards">
+            <a href="/teacher"
+              ><span class="mode-choice-icon" aria-hidden="true"
+                ><svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path
+                    d="M12 5v16M12 5C8 3 5 3 2 5v15c4-2 7-1 10 1 3-2 6-3 10-1V5c-3-2-6-2-10 0Z"
+                  />
+                  <path d="M5 8h4M5 12h4M15 8h4M15 12h4" /></svg></span
+              ><strong>単語練習</strong
+              ><small>聞いて、選んで、つづって。<br />一人ひとりのペースで学ぼう。</small
+              ><span class="mode-choice-cta" aria-hidden="true">練習を準備 <span>→</span></span></a
+            >
+            <a href="/race-teacher"
+              ><span class="mode-choice-icon" aria-hidden="true"
+                ><svg viewBox="0 0 24 24" aria-hidden="true">
+                  <path d="M5 22V3M5 4c5-3 10 3 16 0v12c-6 3-11-3-16 0" />
+                  <path
+                    d="M7 6h3v3H7zm6 1h3v3h-3zm5-1h2v3h-2zM10 9h3v3h-3zm6 1h3v3h-3zM7 12h3v2H7zm6 1h3v2h-3z"
+                    fill="currentColor"
+                    stroke="none"
+                  /></svg></span
+              ><strong>単語レース</strong
+              ><small>動物たちと、いっしょに出発！<br />クラスのみんなで挑戦しよう。</small
+              ><span class="mode-choice-cta" aria-hidden="true"
+                >レースを準備 <span>→</span></span
+              ></a
+            >
+          </div>
+          <aside class="home-guide">
+            <h2>授業の始め方</h2>
+            <ol>
+              <li>教材を選ぶ</li>
+              <li>QRで生徒が参加</li>
+              <li>みんなでスタート</li>
+            </ol>
+            <img src="/assets/aomi-cat.svg" alt="学習を応援する猫" />
+          </aside>
+        </div>
+      </section>
+    </main>
+    <dialog id="settings-dialog" class="settings-dialog" aria-labelledby="settings-title">
+      <div class="settings-heading">
+        <h2 id="settings-title">設定</h2>
+        <button id="settings-close" aria-label="設定を閉じる">
+          <svg><use href="#i-close" /></svg>
+        </button>
+      </div>
+      <p class="settings-intro">自分に合った学び方に調整しよう。</p>
+      <div class="setting-row">
+        <label for="voice-volume">発音の音量</label
+        ><output id="voice-volume-value" for="voice-volume"></output
+        ><input id="voice-volume" type="range" min="0" max="100" step="5" />
+      </div>
+      <div class="setting-row">
+        <label for="effects-volume">効果音の音量</label
+        ><output id="effects-volume-value" for="effects-volume"></output
+        ><input id="effects-volume" type="range" min="0" max="100" step="5" />
+      </div>
+      <div class="setting-line">
+        <label for="sound-toggle">効果音</label
+        ><input id="sound-toggle" type="checkbox" role="switch" />
+      </div>
+      <div class="setting-line">
+        <label for="font-size">文字サイズ</label
+        ><select id="font-size">
+          <option value="1">標準</option>
+          <option value="1.15">大きい</option>
+          <option value="1.3">とても大きい</option>
+        </select>
+      </div>
+      <div class="setting-line">
+        <label for="reduce-motion">動きを減らす</label
+        ><input id="reduce-motion" type="checkbox" role="switch" />
+      </div>
+      <p class="settings-note">設定はこのブラウザーに自動保存されます。</p>
+      <button id="settings-reset" class="home-button">初期設定に戻す</button
+      ><button id="settings-done" class="submit">完了</button>
+      <div id="teacher-account-settings" class="teacher-account-settings" hidden>
+        <button id="teacher-logout" class="home-button" hidden>ログアウト</button>
+        <p id="teacher-logout-error" role="alert" hidden></p>
+      </div>
+    </dialog>
+    <script src="/network.js?v=classroom58"></script>
+    <script src="/settings.js?v=classroom58"></script>
+    <script src="/feedback-effects.js?v=classroom58"></script>
+    <script src="/teacher-home.js?v=classroom58"></script>
+    <script src="/teacher-music.js?v=classroom58"></script>
+  </body>
+</html>
