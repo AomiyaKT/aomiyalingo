@@ -1064,7 +1064,7 @@ export const englishUI = {
   '接続が切れた・音が出ないとき': 'Connection or sound problems',
   'Wi-Fiと端末の音量を確認してください。音楽は先生の端末だけで流れます。最初に画面を一度押すと音が有効になります。生徒の回答が未送信のときは、画面を閉じずに再送信してください。':
     "Check Wi-Fi and device volume. Music plays only on the teacher's device. Tap the screen once to enable audio. Keep the page open and retry if a student's answer has not been sent.",
-  '先生用ガイドを開く（PDF） ↗': 'Open teacher guide (Japanese PDF) ↗',
+  '先生用ガイドを開く（PDF） ↗': 'Open teacher guide (English PDF) ↗',
   '先生が見せたQRから参加します。自分の番号を確認しよう。':
     "Join from your teacher's QR code. Check that you entered your own number.",
   '聞いて・選んで・つづろう': 'Listen, choose and spell',

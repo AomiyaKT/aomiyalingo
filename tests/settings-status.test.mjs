@@ -4,6 +4,7 @@ import { createRequest } from '../public/shared/request.js';
 import { APP_VERSION } from '../public/shared/release.js';
 import worker from '../dist/server/index.js';
 import { readFileSync } from 'node:fs';
+import { teacherGuidePath } from '../public/shared/teacher-guide.js';
 
 let clock = 1000;
 const state = createRuntimeStatus({ now: () => clock++ });
@@ -64,12 +65,14 @@ const health = await worker.fetch(new Request('https://classroom.test/api/health
 assert.equal(health.status, 200);
 assert.deepEqual(await health.json(), { ok: true, version: APP_VERSION });
 assert.match(health.headers.get('cache-control'), /no-store/);
-const pdf = await worker.fetch(new Request('https://classroom.test/help/teacher-guide.pdf'), {});
-assert.equal(pdf.headers.get('content-type'), 'application/pdf');
-assert.equal(
-  (await pdf.arrayBuffer()).byteLength,
-  readFileSync('public/help/teacher-guide.pdf').length,
-);
+for (const language of ['ja', 'en', undefined, 'unknown']) {
+  const path = teacherGuidePath(language);
+  assert.equal(path, language === 'en' ? '/help/teacher-guide-en.pdf' : '/help/teacher-guide.pdf');
+  const pdf = await worker.fetch(new Request('https://classroom.test' + path), {});
+  assert.equal(pdf.status, 200);
+  assert.equal(pdf.headers.get('content-type'), 'application/pdf');
+  assert.deepEqual(Buffer.from(await pdf.arrayBuffer()), readFileSync('public' + path));
+}
 console.log(
   'PASS: pending writes, failed answer retention across polls/other saves, retry recovery, editor dirty state, offline status, read-only version health and local PDF delivery.',
 );

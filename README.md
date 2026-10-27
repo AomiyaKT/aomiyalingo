@@ -2,8 +2,8 @@
 
 English practice and multiplayer word races for Japanese elementary classrooms. Teachers manage lessons on a Windows computer; students scan a QR code with their iPads.
 
-**Current version: Release 74 · 27 October 2026**  
-[Open the app](https://aomiyalingo.minamiyakk.chatgpt.site/) · [更新记录 / Changelog](CHANGELOG.md) · [Release 74 details](docs/release-74.md)
+**Current version: Release 75 · 27 October 2026**  
+[Open the app](https://aomiyalingo.minamiyakk.chatgpt.site/) · [更新记录 / Changelog](CHANGELOG.md) · [Release 75 details](docs/release-75.md)
 
 ## 目前包含什么
 
@@ -17,7 +17,7 @@ English practice and multiplayer word races for Japanese elementary classrooms. 
 
 ## 最近更新
 
-Release 72 补齐五年级全单元和素材；Release 73 优化老师端刷新和渲染；Release 74 加入学生端增量同步、下一题素材预取、按阶段精简的老师界面、教材检查及备份恢复。完整说明见 [CHANGELOG.md](CHANGELOG.md)。
+Release 75 同步更新日英教师 PDF（各 11 页），齿轮里的说明书随界面语言切换。Release 72 补齐五年级全单元和素材；Release 73 优化老师端刷新和渲染；Release 74 加入学生端增量同步、下一题素材预取、按阶段精简的老师界面、教材检查及备份恢复。完整说明见 [CHANGELOG.md](CHANGELOG.md)。
 
 ## 验证结果
 
@@ -63,12 +63,12 @@ The existing deployment identity is retained in `.openai/hosting.json`. Uploadin
 | `server/` | Classroom, race, editor and storage logic |
 | `db/`, `drizzle/` | Database schema and migrations |
 | `tests/`, `scripts/` | Regression checks, benchmarks, classroom rehearsal and backup tools |
-| `public/help/teacher-guide.pdf` | Japanese teacher guide |
+| `public/help/teacher-guide.pdf`, `public/help/teacher-guide-en.pdf` | Current Japanese and English teacher guides |
 | `ARCHITECTURE.md`, `docs/` | Architecture, release notes and earlier development notes |
 
 ## Source and privacy
 
-Application snapshot: `b6fd2f22d5c7d96d20e3bdec46022a5447a51a2b` (interface Release 74). Hosting version numbers are separate from interface release numbers. Earlier development notes are preserved in `docs/project-history.md`.
+Application snapshot: `5a04ce1f40d4bad9e2e2178d5690d8fbe0965a8c` (interface Release 75). Hosting version numbers are separate from interface release numbers. Earlier development notes are preserved in `docs/project-history.md`.
 
 Production student records, attendance exports, passwords, dependency folders, build output, runtime caches and temporary packages are excluded. Teaching JSON backups exclude student results and passwords; use CSV for results. Built-in media remain in this repository.
 

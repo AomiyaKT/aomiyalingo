@@ -1,5 +1,6 @@
 import { APP_VERSION } from './release.js';
 import { describeRuntimeStatus } from './runtime-status.js';
+import { teacherGuidePath } from './teacher-guide.js';
 
 const teacherHelp = `
   <h3>授業を始めるには</h3>
@@ -53,6 +54,18 @@ export function mountSettingsPanels({ dialog, teacher }) {
   help.innerHTML = teacher
     ? teacherHelp
     : studentHelp(document.body.classList.contains('race-student'));
+  if (teacher) {
+    const guide = help.querySelector('.settings-guide');
+    const updateGuide = (language) => {
+      guide.href = teacherGuidePath(language);
+    };
+    let language = 'ja';
+    try {
+      language = window.localStorage.getItem('aomiyalingo.uiLanguage');
+    } catch {}
+    updateGuide(language);
+    window.addEventListener('aomiyalingo-language', (event) => updateGuide(event.detail));
+  }
   status.innerHTML = `
     <h3>接続と保存</h3>
     <dl class="settings-status-list">
