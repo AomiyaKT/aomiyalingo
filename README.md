@@ -1,30 +1,39 @@
 # Aomiyalingo
 
+**English** | [日本語](README.ja.md)
+
 English practice and multiplayer word races for Japanese elementary classrooms. Teachers manage lessons on a Windows computer; students scan a QR code with their iPads.
 
 **Current version: Release 75 · 27 October 2026**  
-[Open the app](https://aomiyalingo.minamiyakk.chatgpt.site/) · [更新记录 / Changelog](CHANGELOG.md) · [Release 75 details](docs/release-75.md)
+[Open the app](https://aomiyalingo.minamiyakk.chatgpt.site/) · [Changelog](CHANGELOG.md) · [Release 75 details](docs/release-75.md)
 
-## 目前包含什么
+## Features
 
-- 五年级 Unit 1–8、六年级 Pre Unit–Unit 8，附图片、发音音频和例句；五年级共 159 个词条。
-- 默认日语，齿轮里可切换英文；老师登录后选择单词练习或竞速游戏。
-- 十种练习题型：词义选择、听音选词、字母拼写、词语配对、连词成句、句子填空、听音配对、听音连词成句、听力填空、听写。
-- 单词练习支持分段学习、自适应提示、错题复习、保存进度和详细记录。
-- 竞速包含三站，默认每站六分钟无尽答题，学生题序分别随机；支持头像、准备、中途加入、道具、连击、实时排名和每站前三名。
-- 老师可暂停、结束、重设赛事、管理加入、查看错题、导出 CSV，以及删除或恢复记录。
-- 教材检查、教材/规则/自制音频 JSON 备份与恢复、完整项目 ZIP 脚本。
+- Grade 5 Units 1-8 and Grade 6 Pre Unit-Unit 8, with pictures, pronunciation recordings and example sentences. Grade 5 includes 159 vocabulary entries.
+- Japanese interface by default, with English available in the gear menu. Teachers sign in, then choose Vocabulary Practice or Word Race.
+- Ten question types: meaning choice, listening choice, letter spelling, word matching, sentence ordering, sentence gaps, audio matching, audio sentence ordering, listening gaps and dictation.
+- Short practice lessons, adaptive support, focused review, saved progress and detailed answer records.
+- Three race courses, defaulting to six minutes of unlimited questions per course. Each student receives a separate randomized order. Includes avatars, readiness, late joining, items, streaks, live standings and a podium after each course.
+- Teacher controls for pausing, ending, resetting, joining, reviewing errors, CSV export, and record deletion/restoration.
+- Content checks, JSON backup/restore for teaching materials, rules and custom audio, plus a complete-project ZIP script.
 
-## 最近更新
+## Teacher guides
 
-Release 75 同步更新日英教师 PDF（各 11 页），齿轮里的说明书随界面语言切换。Release 72 补齐五年级全单元和素材；Release 73 优化老师端刷新和渲染；Release 74 加入学生端增量同步、下一题素材预取、按阶段精简的老师界面、教材检查及备份恢复。完整说明见 [CHANGELOG.md](CHANGELOG.md)。
+- [English PDF](public/help/teacher-guide-en.pdf)
+- [Japanese PDF](public/help/teacher-guide.pdf)
 
-## 验证结果
+Each guide has 11 pages and covers the current classroom workflow. The gear menu opens the guide matching the selected interface language.
 
-- 75 组回归测试通过。
-- 17 组教材配置 / 387 条配置记录检查通过，0 错误、0 警告（包含旧版兼容配置，并非 387 个不重复单词）。
-- 35 名学生、加速模拟 30 分钟课堂，30,452 次请求、3,209 次竞速答题、200 次重试回放，0 意外错误。
-- 长测使用本地 Worker API 和 SQLite；尚不能替代实体 iPad、学校 Wi-Fi 或帧率实测。
+## Recent updates
+
+Release 75 updates both teacher guides and their language-aware download link. Release 74 adds student incremental synchronization, next-task media prefetch, stage-based teacher controls, content checks and teaching backups. Release 73 reduces repeated teacher refresh/rendering work. Release 72 completes all Grade 5 units and media. See the [changelog](CHANGELOG.md).
+
+## Verification
+
+- 75 regression suites passed.
+- 17 curriculum profiles / 387 configured entries passed content checks with zero errors or warnings. These include legacy compatibility profiles; the count does not represent 387 unique vocabulary words.
+- Accelerated 30-minute classroom simulation with 35 learners: 30,452 requests, 3,209 race answer submissions, 200 replayed requests and zero unexpected errors.
+- The simulation used local Worker APIs and SQLite. It does not replace physical iPad, classroom Wi-Fi or frame-rate testing.
 
 ## Development
 

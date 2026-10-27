@@ -1,58 +1,65 @@
-# 更新记录 / Changelog
+# Changelog
 
-## Release 75 — 2026-10-27
+**English** | [日本語](CHANGELOG.ja.md)
 
-- 重写日文版并新增英文版教师说明书，每份 11 页，使用大字、分步骤排版和可点击的网站入口。
-- 同步五、六年级全部单元、十种题型、三站无尽竞速、得分/道具、迟到加入、暂停/结束/重设、CSV、回收箱/永久删除、教材检查和备份恢复。
-- 齿轮的使用说明入口随界面语言打开对应 PDF：默认日文，英文界面打开英文版。
-- 两份 PDF 共 22 页逐页渲染检查；75 组回归通过，包含两种 PDF 的实际 Worker 下载、文件内容及语言回退检查。
-- 新增可重复生成两份 PDF 的 Python 脚本。未改变竞速计分、规则、学习进度或已存课堂记录。
+## Release 75 - 2026-10-27
 
-技术详情：[Release 75](docs/release-75.md)。
+- Rewrote the Japanese teacher guide and added an English edition, 11 pages each, with large text, numbered steps and clickable app links.
+- Updated coverage for all Grade 5/6 units, ten question types, three endless race courses, scoring/items, late joining, pause/end/reset, CSV, recycle/permanent deletion, content checks and backups.
+- The gear Help button opens the guide matching the interface language: Japanese by default, English when selected.
+- Rendered and visually reviewed all 22 pages. All 75 regression suites passed, including exact Worker delivery of both PDFs and language fallback checks.
+- Added a repeatable Python PDF generator. Classroom scoring, rules, learning progress and stored records are unchanged.
 
-## Release 74 — 2026-10-27
+Technical notes: [Release 75](docs/release-75.md).
 
-### 课堂使用与备份
+### Repository documentation correction - 2026-10-27
 
-- 新增齿轮 → 状态中的「教材检查」和「备份与恢复」，同时支持日语和英语。
-- 教材检查覆盖重复选项、重复释义、图片/音频缺失、共享图片、例句目标词和基础格式问题；不会自动修改教材。
-- JSON 导出全部配置教材、例句、练习/竞速规则和关联的自制录音。导入先预览数量，再确认恢复。
-- 恢复采用版本冲突保护和原子写入，失败回滚；自动保存恢复前设置，历史班级/赛事快照保留。
-- 新增完整项目 ZIP 脚本，以 SHA-256 校验源代码及素材。线上使用仍需要互联网。
+- Replaced the Chinese repository overview and release history with English documentation and complete Japanese editions.
+- Added reciprocal language links and direct links to both teacher PDFs. This documentation-only update keeps the application at Release 75.
 
-### 界面与性能
+## Release 74 - 2026-10-27
 
-- 竞速老师端按阶段突出开始、暂停/继续、结束或下一站；结束紧邻暂停，加入/重设操作归到二维码区域。
-- 练习设置在准备阶段显示，上课时突出当前学生进度，仍可准备新课程。
-- 学生端复用未变化的答题历史、题目和学习摘要；分数、个人计时和排名继续更新，首次打开/缓存丢失自动完整加载。
-- 下一题最多预取两个同源图片/音频资源，单任务低优先级下载；隐藏、离线、节流模式或弱网络时停止，并限制大小/时间。
-- 180 条历史的合成测试中，未变化学生轮询由 20,306 降至 2,313 字节，约减少 88.6%；实际大小取决于课堂数据。
+### Teaching tools and backups
 
-### 验证
+- Added Content check and Backup & restore under gear > Status, in Japanese and English.
+- Content checks flag duplicate choices/meanings, missing pictures/audio, shared pictures, target-word and basic sentence-format issues. They do not rewrite materials.
+- JSON exports include all configured materials, examples, practice/race rules and referenced custom recordings. Imports preview counts before confirmation.
+- Restores use revision guards and atomic writes, roll back on failure, automatically retain the previous settings, and preserve classroom/race snapshots.
+- Added a complete-project ZIP script with SHA-256 verification for source and media. Hosted use still requires internet access.
 
-- 75 组回归通过，17 组教材配置 / 387 条记录、图片/音频检查无错误或警告。
-- 35 人加速模拟 30 分钟，涵盖单词练习、三站无尽竞速、十种题型、中途加入、暂停、道具、断网轮询和丢失应答重试。
-- 30,452 次请求，3,209 次竞速答题提交，200 次重试回放，0 意外错误。
-- 这些是本地 API/SQLite 和模拟时钟结果，不是实体 iPad、学校网络、浏览器帧率或真实 30 分钟测量。
+### Interface and performance
 
-技术详情：[Release 74](docs/release-74.md)。应用源提交：`b6fd2f22d5c7d96d20e3bdec46022a5447a51a2b`。
+- Race controls emphasize Start, Pause/Resume, End or Next Course by stage. End stays beside Pause; joining/reset controls sit with the QR.
+- Practice setup appears during preparation, while a live class emphasizes student progress. Preparing another class remains available.
+- Student polls reuse unchanged answer histories, tasks and learning summaries. Scores, personal timers and standings stay current; first loads or cache misses receive full data.
+- Prefetch warms at most two same-origin next-task resources, one low-priority transfer at a time. It stops on hidden, offline, save-data or weak-network pages and has size/time limits.
+- In a synthetic 180-answer fixture, an unchanged student response dropped from 20,306 to 2,313 bytes, about 88.6%. Actual sizes depend on classroom data.
 
-## Release 73 — 2026-10-27
+### Verification
 
-- 老师端增量同步学生记录，未变化的答题历史不再反复传输。
-- 轮询等待上一请求完成，按赛事阶段调整间隔；页面隐藏暂停、失败退避、返回前台立即刷新。
-- 排名、分数、参赛人数和领奖台复用 DOM，减少无效渲染与 localStorage 写入。
-- 35 人 × 180 条历史合成测试中，未变化老师轮询从 872,652 降至 2,832 字节；属于测试数据，非学校网络测速。
+- 75 regression suites passed; 17 profiles / 387 configured entries passed media/content checks without errors or warnings.
+- Accelerated 30-minute, 35-learner simulation covered practice, three endless race courses, ten question types, late joining, pause, items, offline polls and lost-acknowledgement retries.
+- 30,452 requests, 3,209 race answer submissions, 200 replays and zero unexpected errors.
+- These are local API/SQLite results using a simulated clock, not physical iPad, school network, browser frame-rate or 30-minute wall-clock measurements.
 
-技术详情：[Performance 73](docs/performance-73.md)。
+Technical notes: [Release 74](docs/release-74.md). Application source: `b6fd2f22d5c7d96d20e3bdec46022a5447a51a2b`.
 
-## Release 72 — 2026-10-27
+## Release 73 - 2026-10-27
 
-- 补齐五年级 Unit 1–8，共 159 个词条，配套 159 张图片、159 段发音及例句。
-- 接入单词练习、竞速和教材编辑，保留原六年级及旧班级兼容配置。
-- 无损压缩打包 WAV，在保持播放内容不变的同时减小 Worker。
+- Added teacher incremental record synchronization so unchanged answer histories are not repeatedly transferred.
+- Polling waits for an in-flight request, adapts to race stages, pauses while hidden, backs off on failure and refreshes on foregrounding.
+- Reused DOM nodes for standings, scores, participant counts and podiums; reduced redundant rendering and localStorage writes.
+- In a synthetic 35-learner x 180-answer fixture, an unchanged teacher response dropped from 872,652 to 2,832 bytes. This is fixture data, not classroom network throughput.
 
-## Release 71 — 2026-10-26
+Technical notes: [Performance 73](docs/performance-73.md).
 
-- 首次上传完整应用快照，含五年级 Unit 5、六年级 Pre Unit–Unit 8、十种题型、练习/竞速、日英界面和教师指南。
-- GitHub 初始应用提交：`517fa18be8cf8955250c9f481ae32891cad8dd38`。
+## Release 72 - 2026-10-27
+
+- Completed Grade 5 Units 1-8: 159 vocabulary entries with 159 pictures, 159 recordings and example sentences.
+- Integrated the material into practice, races and editing while retaining Grade 6 and legacy class compatibility.
+- Added lossless WAV packing to reduce the Worker size without changing decoded audio.
+
+## Release 71 - 2026-10-26
+
+- First complete GitHub application snapshot: Grade 5 Unit 5, Grade 6 Pre Unit-Unit 8, ten question types, practice/races, Japanese/English UI and teacher guide.
+- Initial application commit: `517fa18be8cf8955250c9f481ae32891cad8dd38`.
