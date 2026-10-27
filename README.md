@@ -81,4 +81,4 @@ Application snapshot: `5a04ce1f40d4bad9e2e2178d5690d8fbe0965a8c` (interface Rele
 
 Production student records, attendance exports, passwords, dependency folders, build output, runtime caches and temporary packages are excluded. Teaching JSON backups exclude student results and passwords; use CSV for results. Built-in media remain in this repository.
 
-This is a private project backup. Bundled third-party media retain their original rights; this repository does not grant a separate redistribution license for those assets.
+This repository contains the application source and bundled media. Bundled third-party media retain their original rights; this repository does not grant a separate redistribution license for those assets.
