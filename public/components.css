@@ -316,3 +316,15 @@ select {
     padding: 22px;
   }
 }
+.teacher-tools-links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 24px 0;
+}
+.teacher-tools-links a {
+  flex: 1;
+  min-width: 160px;
+  white-space: normal;
+  text-align: center;
+}

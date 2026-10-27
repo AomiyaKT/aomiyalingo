@@ -1,4 +1,5 @@
 import { createRaceReset } from './reset.js';
+import { recordSyncQuery, restoreRaceRecords } from '../shared/race-record-sync.js';
 import { curriculumSelection, curriculumProfile, curriculumValue } from '../shared/curriculum.js';
 
 // Teacher setup, confirmation and lifecycle controls never initialize on a student page.
@@ -299,6 +300,7 @@ export function createTeacherRaceController({
     lifecycle.busy = true;
     lifecycle.epoch++;
     for (const b of q('.race-controls').querySelectorAll('button')) b.disabled = true;
+    for (const id of ['#race-join-toggle','#race-reset','#delete-race']) q(id).disabled=true;
     q('#board-race-status').textContent = '変更を保存しています…';
     try {
       const result = await api('/api/teacher/race/state', {
@@ -356,11 +358,26 @@ export function createTeacherRaceController({
     confirmLifecycle: confirmRaceLifecycle,
     purge,
     async refresh(isCurrent) {
-      const latest = await api('/api/teacher/race/current');
+      const previous = getData();
+      const query = recordSyncQuery(previous);
+      async function read(path) {
+        const result = await api(
+          path + (query ? (path.includes('?') ? query : '?' + query.slice(1)) : ''),
+        );
+        if (!isCurrent()) return result;
+        try {
+          return restoreRaceRecords(result, previous);
+        } catch {
+          // A missing local snapshot heals with one full read, rather than
+          // leaving the teacher stuck on a partial record response.
+          return api(path);
+        }
+      }
+      const latest = await read('/api/teacher/race/current');
       if (!isCurrent()) return;
       if (selectedRace && !latest.races.some((r) => r.id === selectedRace)) selectedRace = null;
       if (selectedRace && selectedRace !== latest.race?.id) {
-        const old = await api('/api/teacher/race/board?race=' + encodeURIComponent(selectedRace));
+        const old = await read('/api/teacher/race/board?race=' + encodeURIComponent(selectedRace));
         if (!isCurrent()) return;
         drawTeacher({
           ...old,

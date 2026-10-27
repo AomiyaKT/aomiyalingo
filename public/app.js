@@ -1,4 +1,5 @@
 import { createPracticeAudio } from './practice/audio.js';
+import { createResourcePreloader, practiceResourceHints } from './shared/resource-preloader.js';
 import { installStudentViewport } from './shared/student-viewport.js';
 import { createPracticeSpelling } from './practice/spelling.js';
 import { createPracticeChoices } from './practice/choices.js';
@@ -11,6 +12,7 @@ import { createPracticeNavigation } from './practice/navigation.js';
 import { svgMarkup as svg } from './shared/dom.js';
 const $ = (s) => document.querySelector(s);
 installStudentViewport();
+const practicePreloader = createResourcePreloader();
 const originalQuestion = 'ate';
 const textOptions = ['食べた', '飲んだ', '寝た', '行った'];
 let accessRole = null,
@@ -150,6 +152,7 @@ const practiceNavigation = createPracticeNavigation({
   },
 });
 function showCourseHome() {
+  practicePreloader.reset();
   practiceNavigation.cancel();
   renderCourseHome();
 }
@@ -621,6 +624,7 @@ async function startVocabularyQuiz(practiceMode = null, reset = false, review = 
   return practiceNavigation.start(practiceMode, reset, review);
 }
 function showVocabularyQuestion() {
+  practicePreloader.warm(practiceResourceHints(lesson, vocabulary));
   stopAudio();
   clearAttempt();
   state = createPracticeQuestion({

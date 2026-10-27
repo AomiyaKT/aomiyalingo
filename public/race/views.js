@@ -1,4 +1,5 @@
 import { createTimingTower } from './timing-tower.js';
+import { setTextIfChanged, setAttributeIfChanged } from '../shared/dom.js';
 export function createRaceViews({ q, make, isTeacher, avatars, getData, appSettings }) {
   function avatarArt(id) {
     const a = avatars[id] || avatars.cat,
@@ -42,14 +43,17 @@ export function createRaceViews({ q, make, isTeacher, avatars, getData, appSetti
         lane.append(road, make('strong', '', 'lane-score'));
         panel.append(lane);
       }
-      lane.querySelector('.lane-rank').textContent = p.rank
-        ? p.rank +
-          '位' +
-          (data?.race?.rules >= 4 && data.race.status !== 'finished' ? '（暫定）' : '')
-        : (p.answered ?? p.index)
-          ? '参考記録'
-          : '参加済み';
-      lane.querySelector('.lane-name strong').textContent = p.alias;
+      setTextIfChanged(
+        lane.querySelector('.lane-rank'),
+        p.rank
+          ? p.rank +
+              '位' +
+              (data?.race?.rules >= 4 && data.race.status !== 'finished' ? '（暫定）' : '')
+          : (p.answered ?? p.index)
+            ? '参考記録'
+            : '参加済み',
+      );
+      setTextIfChanged(lane.querySelector('.lane-name strong'), p.alias);
       if (panel.children[position] !== lane)
         panel.insertBefore(lane, panel.children[position] || null);
       const face = lane.querySelector('.lane-cat');
@@ -57,7 +61,11 @@ export function createRaceViews({ q, make, isTeacher, avatars, getData, appSetti
         face.replaceChildren(avatarArt(p.avatar));
         face.dataset.avatar = p.avatar || 'cat';
       }
-      face.setAttribute('aria-label', p.alias + ' ' + (avatars[p.avatar] || avatars.cat).name);
+      setAttributeIfChanged(
+        face,
+        'aria-label',
+        p.alias + ' ' + (avatars[p.avatar] || avatars.cat).name,
+      );
       lane.querySelector('.lane-cat').style.left =
         Math.min(
           89,
@@ -82,21 +90,20 @@ export function createRaceViews({ q, make, isTeacher, avatars, getData, appSetti
       lane.dataset.score = String(p.score);
       const score = lane.querySelector('.lane-score');
       if (data?.race?.rules >= 4) {
-        score.replaceChildren(
-          make('span', p.accuracy === null ? '—' : p.accuracy + '%'),
-          make(
-            'small',
-            (data.race.endless
-              ? p.stationIndex
-              : data.race.rules >= 5
-                ? p.stationIndex + '/' + data.race.stationQuestions
-                : p.index + '/' + data.race.total) +
-              '問 · ' +
-              p.score +
-              ' pt',
-          ),
+        if (!score.children.length) score.append(make('span'), make('small'));
+        setTextIfChanged(score.children[0], p.accuracy === null ? '—' : p.accuracy + '%');
+        setTextIfChanged(
+          score.children[1],
+          (data.race.endless
+            ? p.stationIndex
+            : data.race.rules >= 5
+              ? p.stationIndex + '/' + data.race.stationQuestions
+              : p.index + '/' + data.race.total) +
+            '問 · ' +
+            p.score +
+            ' pt',
         );
-      } else score.textContent = p.score + ' pt';
+      } else setTextIfChanged(score, p.score + ' pt');
     }
     for (const lane of [...panel.children]) if (!shownIds.has(lane.dataset.id)) lane.remove();
   }
@@ -152,11 +159,17 @@ export function createRaceViews({ q, make, isTeacher, avatars, getData, appSetti
   }
   function podium(panel, players) {
     const data = getData();
-    const key = JSON.stringify([data?.race?.id, players.filter((p) => p.rank && p.rank <= 3)]);
+    if (panel.hidden) return;
+    const winners = players.filter((p) => p.rank && p.rank <= 3);
+    const key = JSON.stringify([
+      data?.race?.id,
+      data?.race?.rules,
+      winners.map((p) => [p.id, p.rank, p.label, p.alias, p.avatar, p.score, p.accuracy]),
+    ]);
     if (panel.dataset.podium === key) return;
     panel.dataset.podium = key;
     panel.replaceChildren();
-    for (const p of players.filter((p) => p.rank && p.rank <= 3)) {
+    for (const p of winners) {
       panel.append(
         podiumCard(
           p,
@@ -188,9 +201,11 @@ export function createRaceViews({ q, make, isTeacher, avatars, getData, appSetti
         card.querySelector('.wall-face').replaceChildren(avatarArt(p.avatar));
         card.dataset.avatar = p.avatar;
       }
-      card.querySelector('small').textContent = data?.race?.endless
-        ? p.stationIndex + '問回答'
-        : p.index + '/' + (data?.race?.total || 24);
+      setTextIfChanged(card.querySelector('strong'), p.alias);
+      setTextIfChanged(
+        card.querySelector('small'),
+        data?.race?.endless ? p.stationIndex + '問回答' : p.index + '/' + (data?.race?.total || 24),
+      );
       card.classList.toggle(
         'wall-finished',
         data?.race?.endless ? p.done : p.index >= (data?.race?.total || 24),

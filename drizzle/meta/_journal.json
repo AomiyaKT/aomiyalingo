@@ -85,6 +85,13 @@
       "when": 1791516894903,
       "tag": "0011_ambiguous_mauler",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "6",
+      "when": 1793085772451,
+      "tag": "0012_wonderful_kitty_pryde",
+      "breakpoints": true
     }
   ]
 }

@@ -24,7 +24,7 @@ export function createClassroomLessons({ words, course, json }) {
           )),
       vocabulary: roomWords(room),
       grade: room.grade || 6,
-      unit: room.grade === 5 ? '5' : room.unit || '4-5',
+      unit: room.unit || (room.grade === 5 ? '5' : '4-5'),
     };
   }
   function roomState(room) {

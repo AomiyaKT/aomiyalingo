@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Aomiyalingo · 教材の管理</title>
+    <link rel="stylesheet" href="/ui/editor.css" />
+    <link rel="stylesheet" href="/ui/teaching-tools.css" />
+  </head>
+  <body class="teacher-page teaching-tools">
+    <svg class="symbols" aria-hidden="true">
+      <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M18 6 6 18" /></symbol>
+    </svg>
+    <header class="app-header">
+      <a class="brand" href="/"><span class="brand-mark">A</span><span>Aomiyalingo</span></a
+      ><button
+        id="settings-open"
+        class="settings-open"
+        aria-label="設定を開く"
+        aria-haspopup="dialog"
+        title="設定"
+      >
+        <svg viewBox="0 0 24 24" aria-hidden="true">
+          <path
+            d="M9.75,4.64 L10.30,2.35 L13.70,2.35 L14.25,4.64 L15.61,5.20 L17.62,3.97 L20.03,6.38 L18.80,8.39 L19.36,9.75 L21.65,10.30 L21.65,13.70 L19.36,14.25 L18.80,15.61 L20.03,17.62 L17.62,20.03 L15.61,18.80 L14.25,19.36 L13.70,21.65 L10.30,21.65 L9.75,19.36 L8.39,18.80 L6.38,20.03 L3.97,17.62 L5.20,15.61 L4.64,14.25 L2.35,13.70 L2.35,10.30 L4.64,9.75 L5.20,8.39 L3.97,6.38 L6.38,3.97 L8.39,5.20 Z"
+          />
+          <circle cx="12" cy="12" r="3.2" />
+        </svg>
+      </button>
+    </header>
+    <main class="tools-main">
+      <h1>教材の管理</h1>
+      <nav class="tools-tabs" aria-label="教材の管理">
+        <a href="#backup" id="tab-backup">バックアップ</a
+        ><a href="#quality" id="tab-quality">教材チェック</a>
+      </nav>
+      <section id="tools-backup" class="tools-card">
+        <h2>教材とルールを保存</h2>
+        <p>全教材の単語・例文・授業ルール・自作音声を1つのファイルに保存します。</p>
+        <p class="tools-note">
+          生徒の成績・出席番号・パスワードは含みません。内蔵の画像・音声はアプリ本体に含まれています。
+        </p>
+        <button id="backup-export" class="submit">バックアップを保存</button
+        ><a
+          id="backup-previous"
+          class="home-button"
+          href="/api/teacher/config/backup?previous=1"
+          download
+          hidden
+          >復元前の設定を保存</a
+        >
+        <hr />
+        <h2>バックアップから戻す</h2>
+        <label for="backup-file">保存したJSONファイル（8 MB以下）</label
+        ><input id="backup-file" type="file" accept="application/json,.json" />
+        <div id="backup-preview" class="backup-preview" hidden>
+          <strong id="backup-summary"></strong>
+          <p>現在の授業と成績はそのままです。復元した内容は次の授業・レースから使えます。</p>
+          <button id="backup-restore" class="submit">この内容を復元</button
+          ><button id="backup-cancel" class="home-button">選び直す</button>
+        </div>
+      </section>
+      <section id="tools-quality" class="tools-card" hidden>
+        <div class="tools-card-heading">
+          <h2>教材チェック</h2>
+          <button id="audit-run" class="home-button">もう一度確認</button>
+        </div>
+        <p class="tools-note">
+          画像・音声の参照、選択肢の重複、例文の対応を確認します。例文の自然さや絵の意味は先生も確認してください。
+        </p>
+        <div id="audit-summary" class="audit-summary"></div>
+        <label for="audit-filter">確認項目</label
+        ><select id="audit-filter">
+          <option value="all">すべて</option>
+          <option value="error">修正が必要</option>
+          <option value="warning">確認したい項目</option>
+        </select>
+        <div id="audit-issues"></div>
+        <button id="audit-download" class="home-button" disabled>チェック結果を保存</button
+        ><a href="/teacher-editor" class="home-button" target="_blank" rel="noopener">教材を編集</a>
+      </section>
+      <p id="tools-status" role="status"></p>
+      <a href="/" class="home-button">先生ホームに戻る</a>
+    </main>
+    <dialog id="restore-confirm" class="settings-dialog" aria-labelledby="restore-title">
+      <h2 id="restore-title">教材とルールを復元しますか？</h2>
+      <p id="restore-error" class="tools-error" role="alert"></p>
+      <p>
+        現在の設定を置き換えます。復元前の設定は自動保存されます。生徒の成績と進行中の授業は変更しません。
+      </p>
+      <div class="tools-actions">
+        <button id="restore-cancel" class="home-button">キャンセル</button
+        ><button id="restore-confirm-ok" class="submit">復元する</button>
+      </div>
+    </dialog>
+    <dialog id="settings-dialog" class="settings-dialog" aria-labelledby="settings-title">
+      <div class="settings-heading">
+        <h2 id="settings-title">設定</h2>
+        <button id="settings-close" aria-label="設定を閉じる">
+          <svg><use href="#i-close" /></svg>
+        </button>
+      </div>
+      <p class="settings-intro">自分に合った学び方に調整しよう。</p>
+      <div class="setting-row">
+        <label for="voice-volume">発音の音量</label
+        ><output id="voice-volume-value" for="voice-volume"></output
+        ><input id="voice-volume" type="range" min="0" max="100" step="5" />
+      </div>
+      <div class="setting-row">
+        <label for="effects-volume">効果音の音量</label
+        ><output id="effects-volume-value" for="effects-volume"></output
+        ><input id="effects-volume" type="range" min="0" max="100" step="5" />
+      </div>
+      <div class="setting-line">
+        <label for="sound-toggle">効果音</label
+        ><input id="sound-toggle" type="checkbox" role="switch" />
+      </div>
+      <div class="setting-line">
+        <label for="font-size">文字サイズ</label
+        ><select id="font-size">
+          <option value="1">標準</option>
+          <option value="1.15">大きい</option>
+          <option value="1.3">とても大きい</option>
+        </select>
+      </div>
+      <div class="setting-line">
+        <label for="reduce-motion">動きを減らす</label
+        ><input id="reduce-motion" type="checkbox" role="switch" />
+      </div>
+      <p class="settings-note">設定はこのブラウザーに自動保存されます。</p>
+      <button id="settings-reset" class="home-button">初期設定に戻す</button
+      ><button id="settings-done" class="submit">完了</button>
+      <div id="teacher-account-settings" class="teacher-account-settings" hidden>
+        <button id="teacher-logout" class="home-button" hidden>ログアウト</button>
+        <p id="teacher-logout-error" role="alert" hidden></p>
+      </div>
+    </dialog>
+
+    <script src="/network.js"></script>
+    <script src="/settings.js"></script>
+    <script src="/feedback-effects.js"></script>
+    <script src="/teacher-tools.js"></script>
+  </body>
+</html>

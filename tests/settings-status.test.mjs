@@ -7,6 +7,19 @@ import { readFileSync } from 'node:fs';
 
 let clock = 1000;
 const state = createRuntimeStatus({ now: () => clock++ });
+const previewState = createRuntimeStatus();
+const preview = previewState.request({
+  phase: 'start',
+  path: '/api/teacher/config/backup/inspect',
+  method: 'POST',
+});
+assert.equal(previewState.snapshot().pending, 0);
+previewState.request({ phase: 'end', ticket: preview, ok: true });
+assert.equal(
+  previewState.snapshot().savedAt,
+  null,
+  'Previewing a backup must never report a successful save',
+);
 let outcome = 'ok';
 const request = createRequest({
   onRequest: (event) => state.request(event),

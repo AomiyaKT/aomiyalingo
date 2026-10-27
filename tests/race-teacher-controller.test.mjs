@@ -164,7 +164,7 @@ assert.ok(polls > 0);
 const historyEpoch = lifecycle.epoch;
 const historyPoll = controller.refresh(() => historyEpoch === lifecycle.epoch);
 requests.at(-1).resolve({ race: { id: 'live' }, races: [{ id: 'history' }], trash: [] });
-await Promise.resolve();
+for (let i = 0; i < 10; i++) await Promise.resolve();
 assert.match(requests.at(-1).path, /board\?race=history$/);
 lifecycle.epoch++;
 requests.at(-1).resolve({ race: { id: 'history' }, players: [] });
@@ -234,6 +234,50 @@ requests.at(-1).resolve({ ok: true, removed: 1 });
 await single;
 assert.equal(q('#race-confirm').open, false);
 assert.match(q('#race-lifecycle-result').textContent, /1件/);
+data = {
+  race: { id: 'cached', status: 'running' },
+  players: [{ id: 'p1', recordRevision: 5, history: [{ word: 'math', correct: true }] }],
+  races: [{ id: 'cached' }],
+};
+const cachedHistory = data.players[0].history;
+const incremental = controller.refresh(() => true);
+assert.match(requests.at(-1).path, /records=/);
+requests
+  .at(-1)
+  .resolve({
+    race: { id: 'cached', status: 'running' },
+    players: [{ id: 'p1', recordRevision: 5, score: 100 }],
+    races: [{ id: 'cached' }],
+  });
+await incremental;
+assert.equal(
+  data.players[0].history,
+  cachedHistory,
+  'Live teacher polls merge only exact cached revisions',
+);
+const missingSnapshot = controller.refresh(() => true);
+requests
+  .at(-1)
+  .resolve({
+    race: { id: 'cached', status: 'running' },
+    players: [{ id: 'p1', recordRevision: 6 }],
+    races: [{ id: 'cached' }],
+  });
+for (let i = 0; i < 10; i++) await Promise.resolve();
+assert.equal(
+  requests.at(-1).path,
+  '/api/teacher/race/current',
+  'A mismatched cache automatically retries once without a manifest',
+);
+requests
+  .at(-1)
+  .resolve({
+    race: { id: 'cached', status: 'running' },
+    players: [{ id: 'p1', recordRevision: 6, history: [{ word: 'science', correct: false }] }],
+    races: [{ id: 'cached' }],
+  });
+await missingSnapshot;
+assert.equal(data.players[0].history[0].word, 'science');
 console.log(
   'Race teacher controller: configuration coalescing/stale reads, pinned confirmation targets, write exclusion, error recovery, stale current/history polls and reset passed.',
 );

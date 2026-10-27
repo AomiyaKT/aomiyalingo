@@ -11,7 +11,7 @@ const jobs=initial.config.unit7.words;
 assert.deepEqual(jobs.map(w=>w.word),['actor','teacher','police officer','illustrator','comedian','soccer player','pastry chef','pilot','farmer','voice actor','game creator','fire fighter','scientist','doctor','astronaut','baker','flight attendant','dentist','hairdresser','nursery school teacher','nurse','musician','vet','fashion designer']);
 assert.ok(jobs.every(w=>w.group==='occupation'));
 for(const w of jobs){const audio=await req(w.audio);assert.equal(audio.status,200);assert.equal(audio.response.headers.get('content-type'),'audio/wav');const bytes=new Uint8Array(await audio.response.arrayBuffer());assert.equal(new TextDecoder().decode(bytes.slice(0,4)),'RIFF');assert.ok(bytes.length>10000)}
-for(const input of [{grade:5,unit:'7'},{grade:6,unit:'9'},{grade:7,unit:'7'}]){assert.equal((await req('/api/teacher/classes',input,auth)).status,400);assert.equal((await req('/api/teacher/race/create',input,auth)).status,400)}
+for(const input of [{grade:5,unit:'9'},{grade:6,unit:'9'},{grade:7,unit:'7'}]){assert.equal((await req('/api/teacher/classes',input,auth)).status,400);assert.equal((await req('/api/teacher/race/create',input,auth)).status,400)}
 const old=(await req('/api/teacher/classes',{title:'Old unit'},auth)).body;
 assert.equal(old.unit,'4-5');
 const room=(await req('/api/teacher/classes',{grade:6,unit:'7',wordGroup:'occupation'},auth)).body;

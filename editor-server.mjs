@@ -1,12 +1,54 @@
 import { createEditorAudio } from './server/editor/audio.mjs';
+import { createTeachingBackup } from './server/editor/backup.mjs';
+import { auditTeachingContent } from './public/shared/content-audit.js';
 import { validateConfig } from './server/editor/validation.mjs';
 import { curriculumProfileKeys, allCurriculumProfiles } from './public/shared/curriculum.js';
-export function createEditorRoute({ stmt, teacher, json, loadConfig, supplementUnitFive }) {
+export function createEditorRoute({
+  stmt,
+  db,
+  hash,
+  teacher,
+  json,
+  loadConfig,
+  supplementUnitFive,
+  assetExists,
+}) {
   const audio = createEditorAudio({ stmt, json });
+  const backup = createTeachingBackup({ stmt, db, hash, loadConfig, json, assetExists });
   async function editorRoute(req, env, url) {
     if (url.pathname.startsWith('/api/audio/') && req.method === 'GET')
       return audio.read(req, env, url);
     if (!(await teacher(req, env))) return json({ error: 'ログインしてください。' }, 401);
+    if (url.pathname.startsWith('/api/teacher/config/backup')) return backup(req, env, url);
+    if (url.pathname === '/api/teacher/config/audit' && req.method === 'GET') {
+      const { config } = await loadConfig(env),
+        ids = new Set();
+      const references = [
+        ...new Set(
+          allCurriculumProfiles(config)
+            .flatMap((p) => p.words)
+            .map((w) => w.audio)
+            .filter((path) => path?.startsWith('/api/audio/')),
+        ),
+      ];
+      for (let i = 0; i < references.length; i += 50) {
+        const chunk = references.slice(i, i + 50);
+        const rows = (
+          await stmt(
+            env,
+            'SELECT id FROM config_audio WHERE id IN (' + chunk.map(() => '?').join(',') + ')',
+            ...chunk.map((path) => path.split('/').at(-1)),
+          ).all()
+        ).results;
+        for (const row of rows) ids.add('/api/audio/' + row.id);
+      }
+      return json({
+        ...auditTeachingContent(config, (path) =>
+          path.startsWith('/api/audio/') ? ids.has(path) : (assetExists?.(path) ?? true),
+        ),
+        hasPreviousBackup: !!(await stmt(env, 'SELECT id FROM teaching_backup WHERE id=1').first()),
+      });
+    }
     if (url.pathname === '/api/teacher/config' && req.method === 'GET')
       return json(await loadConfig(env));
     if (url.pathname === '/api/teacher/config' && req.method === 'POST') {

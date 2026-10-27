@@ -100,7 +100,7 @@ export function createClassroomStudent(runtime) {
           l.enabledModes = roomModes(room);
           l.vocabulary = roomWords(room);
           l.grade = room.grade || 6;
-          l.unit = room.grade === 5 ? '5' : room.unit || '4-5';
+          l.unit = room.unit || (room.grade === 5 ? '5' : '4-5');
         }
         const changed = await stmt(
           env,

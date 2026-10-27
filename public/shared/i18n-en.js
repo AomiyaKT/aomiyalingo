@@ -1,5 +1,62 @@
 // UI strings only. Curriculum meanings and student answers are never translated.
 export const englishUI = {
+  '例文の主語とbe動詞の組み合わせを確認してください。':
+    'Check the subject and be-verb agreement in this example.',
+  '例文に同じことばが続いています。': 'An example contains a repeated word.',
+  '小学生向けの例文として長すぎないか確認してください。':
+    'Check whether this example is too long for elementary learners.',
+  確認項目: 'Review filter',
+  教材の管理: 'Teaching materials',
+  バックアップ: 'Backup',
+  教材チェック: 'Content check',
+  バックアップと復元: 'Backup & restore',
+  教材とルールを保存: 'Save materials and rules',
+  '全教材の単語・例文・授業ルール・自作音声を1つのファイルに保存します。':
+    'Save vocabulary, examples, lesson rules and your recordings in one file.',
+  '生徒の成績・出席番号・パスワードは含みません。内蔵の画像・音声はアプリ本体に含まれています。':
+    'Student results, student numbers and passwords are excluded. Built-in images and recordings remain part of the app.',
+  バックアップを保存: 'Download backup',
+  復元前の設定を保存: 'Download previous settings',
+  バックアップから戻す: 'Restore a backup',
+  '保存したJSONファイル（8 MB以下）': 'Saved JSON file (up to 8 MB)',
+  '現在の授業と成績はそのままです。復元した内容は次の授業・レースから使えます。':
+    'Current lessons and results are preserved. Restored materials apply to new lessons and races.',
+  この内容を復元: 'Restore these materials',
+  選び直す: 'Choose another file',
+  もう一度確認: 'Check again',
+  '画像・音声の参照、選択肢の重複、例文の対応を確認します。例文の自然さや絵の意味は先生も確認してください。':
+    'Checks image and audio references, duplicate choices and vocabulary in examples. Teachers should also review natural phrasing and picture meanings.',
+  修正が必要: 'Needs correction',
+  確認したい項目: 'Review suggested',
+  チェック結果を保存: 'Download check results',
+  教材を編集: 'Edit materials',
+  先生ホームに戻る: 'Back to Teacher Home',
+  '教材とルールを復元しますか？': 'Restore materials and rules?',
+  '現在の設定を置き換えます。復元前の設定は自動保存されます。生徒の成績と進行中の授業は変更しません。':
+    'This replaces the teaching settings. Your previous settings are backed up automatically. Student results and ongoing lessons stay unchanged.',
+  復元する: 'Restore',
+  'バックアップを保存しました。': 'Backup downloaded.',
+  'バックアップは8 MBまでです。': 'Backups may be up to 8 MB.',
+  'ファイルを確認中…': 'Checking file…',
+  '内容を確認してから復元できます。': 'Review the contents before restoring.',
+  'JSONファイルを読み取れませんでした。': 'Could not read the JSON file.',
+  '復元しました。次の授業・レースから適用されます。':
+    'Restored. Changes apply to new lessons and races.',
+  '教材を確認中…': 'Checking teaching materials…',
+  '教材チェックが完了しました。': 'Content check complete.',
+  'この条件で確認する項目はありません。': 'No items to review for this filter.',
+  '{{0}}教材 · {{1}}語 · 自作音声 {{2}}件':
+    '{{0}} curricula · {{1}} words · {{2}} custom recordings',
+  '同じ英語が重複しています。': 'The same English entry appears more than once.',
+  '同じ意味の単語があります：{{0}}': 'Another entry has the same meaning: {{0}}',
+  '正解と不正解の選択肢が重複しています。': 'Correct and incorrect choices overlap.',
+  '画像ファイルが見つかりません。': 'Image file not found.',
+  '音声ファイルが見つかりません。': 'Audio file not found.',
+  '画像が同じ単語があります：{{0}}': 'Another entry uses the same image: {{0}}',
+  '例文がありません。文の問題では補助文を使います。':
+    'No example sentence. Sentence exercises use a fallback sentence.',
+  '例文に対象の英語が見つからないか、対応していない記号があります。':
+    'The example does not contain the target English or uses unsupported characters.',
   表示言語: 'Interface language',
   'コース {{0}} を開始': 'Start course {{0}}',
   '{{0}} · 単語の意味': '{{0}} · Word meaning',
@@ -726,6 +783,13 @@ export const englishUI = {
   '0人': '0 students',
   成績CSVを保存: 'Save results CSV',
   '学年・教材': 'Grade & curriculum',
+  '5年生 · Unit 1': 'Grade 5 · Unit 1',
+  '5年生 · Unit 2': 'Grade 5 · Unit 2',
+  '5年生 · Unit 3': 'Grade 5 · Unit 3',
+  '5年生 · Unit 4': 'Grade 5 · Unit 4',
+  '5年生 · Unit 6': 'Grade 5 · Unit 6',
+  '5年生 · Unit 7': 'Grade 5 · Unit 7',
+  '5年生 · Unit 8': 'Grade 5 · Unit 8',
   '6年生 · Pre Unit–Unit 1': 'Grade 6 · Pre Unit–Unit 1',
   '6年生 · Unit 2': 'Grade 6 · Unit 2',
   '6年生 · Unit 3': 'Grade 6 · Unit 3',

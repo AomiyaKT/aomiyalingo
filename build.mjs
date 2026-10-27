@@ -1,15 +1,20 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
+import { gzipSync } from 'node:zlib';
 import { build } from 'esbuild';
 import { versionAssetLinks } from './scripts/asset-versions.mjs';
 const assets = {};
 function assetRecord(type, bytes) {
+  // Speech WAVs compress losslessly; retain their exact public bytes and validators.
+  const compressed = type === 'audio/wav' ? gzipSync(bytes, { level: 9 }) : null;
+  const packed = compressed && compressed.length + 32 < bytes.length * 0.9;
   return {
     type,
     size: bytes.byteLength,
     etag: '"' + createHash('sha256').update(bytes).digest('hex') + '"',
-    data: bytes.toString('base64'),
+    ...(packed ? { encoding: 'gzip' } : {}),
+    data: (packed ? compressed : bytes).toString('base64'),
   };
 }
 const mime = {
@@ -64,6 +69,7 @@ for (const entryPoint of [
   'curriculum',
   'classroom',
   'teacher-editor',
+  'teacher-tools',
   'teacher',
   'app',
 ]) {
@@ -128,6 +134,16 @@ await build({
   legalComments: 'none',
 });
 
+const workerBytes = fs.statSync('dist/server/index.js').size;
+if (workerBytes > 60 * 1024 * 1024)
+  throw Error('Worker exceeds the 60 MiB build budget; move more assets out of the source bundle.');
+
 fs.mkdirSync('dist/.openai', { recursive: true });
 fs.copyFileSync('.openai/hosting.json', 'dist/.openai/hosting.json');
-console.log('Built classroom Worker with ' + Object.keys(assets).length + ' local assets.');
+console.log(
+  'Built classroom Worker with ' +
+    Object.keys(assets).length +
+    ' local assets (' +
+    (workerBytes / 1024 / 1024).toFixed(1) +
+    ' MiB; lossless speech packing).',
+);

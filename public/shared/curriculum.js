@@ -3,6 +3,12 @@ export const curriculumCatalog = {
   6: { grade: 6, unit: '4-5', label: '6年生 · Unit 4–5（以前の設定）', key: null },
   5: { grade: 5, unit: '5', label: '5年生 · Unit 5', key: 'grade5' },
   ...Object.fromEntries(
+    [1, 2, 3, 4, 6, 7, 8].map((unit) => [
+      '5-' + unit,
+      { grade: 5, unit: String(unit), label: '5年生 · Unit ' + unit, key: 'grade5unit' + unit },
+    ]),
+  ),
+  ...Object.fromEntries(
     [1, 2, 3, 4, 5, 6, 7, 8].map((unit) => [
       '6-' + unit,
       {

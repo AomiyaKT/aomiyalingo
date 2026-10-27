@@ -11,7 +11,7 @@ export function validateConfig(c) {
   for (const w of c.words) {
     if (
       !w ||
-      !/^[a-z]+(?:['’][a-z]*)?(?:[ -][a-z]+(?:['’][a-z]*)?)*$/i.test(w.word) ||
+      !/^(?:[a-z]+(?:['’][a-z]*)?(?:[ -][a-z]+(?:['’][a-z]*)?)*|(?:[a-z]\.){2,})$/i.test(w.word) ||
       w.word.length > 40 ||
       seen.has(w.word.toLowerCase())
     )
@@ -23,7 +23,7 @@ export function validateConfig(c) {
       w.image != null &&
       !(
         typeof w.image === 'string' &&
-        /^\/assets\/vocabulary\/g6-unit[1-8]\/[0-9]{2}_[a-z0-9_]+\.png$/.test(w.image)
+        /^\/assets\/vocabulary\/g[56]-unit[1-8]\/[0-9]{2}_[a-z0-9_]+\.png$/.test(w.image)
       )
     )
       configError('単語の画像を確認してください。');

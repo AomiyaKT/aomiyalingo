@@ -57,6 +57,16 @@ export function createAssetResponder(
     }
     headers['content-length'] = String(asset.size);
     // HEAD and unchanged browser requests never decode or allocate a response body.
-    return new Response(req.method === 'HEAD' ? null : read(key, asset), { headers });
+    let body = null;
+    if (req.method !== 'HEAD') {
+      const bytes = read(key, asset);
+      // Compression is a source-bundle detail. Browsers receive the original WAV,
+      // including the same size/ETag, without an audio codec or playback change.
+      body =
+        asset.encoding === 'gzip'
+          ? new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))
+          : bytes;
+    }
+    return new Response(body, { headers });
   };
 }

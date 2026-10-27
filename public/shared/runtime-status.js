@@ -43,7 +43,10 @@ export function createRuntimeStatus({ now = Date.now, online = true } = {}) {
       if (event.phase === 'start') {
         const id = ++sequence;
         const path = event.path.split('?')[0];
-        const writes = event.method === 'POST' && !/\/(login|logout)$/.test(path);
+        const writes =
+          event.method === 'POST' &&
+          !/\/(login|logout)$/.test(path) &&
+          path !== '/api/teacher/config/backup/inspect';
         if (writes) pending.add(id);
         notify();
         return { id, path, writes };

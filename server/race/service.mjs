@@ -82,14 +82,19 @@ export function createRaceService({
   async function raceBoard(env, r, privateView = false) {
     return (await raceSnapshot(env, r, privateView)).board;
   }
-  async function raceSession(env, p, r, receipt = null) {
+  async function raceSession(env, p, r, receipt = null, known = null) {
     const snapshot = await raceSnapshot(env, r);
     r = snapshot.room;
     const state = racePlayerState(p),
       total = raceTaskList(r).length,
       board = snapshot.board,
-      learning = raceLearning(state, raceEndless(r) ? Infinity : total);
-    if (!raceEndless(r) && state.index >= total && board.race.status === 'finished') {
+      done = board.race.status === 'finished' || racePlayerDone(r, state),
+      syncKey = [r.id, p.id, p.revision || 0, r.station || 0, board.race.status, done ? 1 : 0].join(
+        ':',
+      ),
+      unchanged = known === syncKey,
+      learning = unchanged ? null : raceLearning(state, raceEndless(r) ? Infinity : total);
+    if (!unchanged && !raceEndless(r) && state.index >= total && board.race.status === 'finished') {
       const prior = (
         await stmt(
           env,
@@ -135,6 +140,7 @@ export function createRaceService({
       board: board.players,
       team: board.team,
       self: {
+        syncKey,
         id: p.id,
         label: p.label,
         alias: raceAlias(p),
@@ -149,33 +155,62 @@ export function createRaceService({
         prepared: state.prepared ?? state.ready !== false,
         ready: state.ready !== false,
         remaining: racePersonalRemaining(r, state),
-        done: board.race.status === 'finished' || racePlayerDone(r, state),
+        done,
         item: state.item,
         itemName: raceItems[state.item] || null,
         boost: state.boost,
         double: !!state.double,
         lucky: state.lucky || 0,
         itemBox: state.itemBox || null,
-        task:
-          state.ready === false || (raceStations(r) && racePlayerDone(r, state))
-            ? null
-            : raceVisibleTask(raceCurrentTask(r, state), state, p.number),
-        history: state.history,
-        reviewCards:
-          racePlayerDone(r, state) || board.race.status === 'finished'
-            ? racePool(r)
-                .filter((w) =>
-                  raceHistory(state)
-                    .words(raceStations(r) ? r.station || 0 : 'all')
-                    .review.has(w.word),
+        ...(!unchanged
+          ? {
+              task:
+                state.ready === false || (raceStations(r) && racePlayerDone(r, state))
+                  ? null
+                  : raceVisibleTask(raceCurrentTask(r, state), state, p.number),
+              history: state.history,
+              reviewCards:
+                racePlayerDone(r, state) || board.race.status === 'finished'
+                  ? racePool(r)
+                      .filter((w) =>
+                        raceHistory(state)
+                          .words(raceStations(r) ? r.station || 0 : 'all')
+                          .review.has(w.word),
+                      )
+                      .map((w) => ({
+                        word: w.word,
+                        meaning: w.meaning,
+                        audio:
+                          w.audio === null ? null : w.audio || '/assets/words/' + w.word + '.wav',
+                      }))
+                  : [],
+              learning,
+              lookahead: (() => {
+                if (done || state.ready === false || r.status !== 'running') return [];
+                const next = {
+                  ...state,
+                  index: state.index + (state.reviewTask ? 0 : 1),
+                  reviewTask: null,
+                  hintFor: null,
+                };
+                if (
+                  !raceEndless(r) &&
+                  next.index >= (raceStations(r) ? ((r.station || 0) + 1) * stationSize(r) : total)
                 )
-                .map((w) => ({
-                  word: w.word,
-                  meaning: w.meaning,
-                  audio: w.audio === null ? null : w.audio || '/assets/words/' + w.word + '.wav',
-                }))
-            : [],
-        learning,
+                  return [];
+                const task = raceCurrentTask(r, next);
+                if (!task) return [];
+                const visible = raceVisibleTask(task, next, p.number);
+                return [
+                  ...new Set(
+                    [visible.exercise?.image, visible.exerciseAudio?.audio ?? visible.audio].filter(
+                      (url) => typeof url === 'string' && url.startsWith('/'),
+                    ),
+                  ),
+                ].slice(0, 2);
+              })(),
+            }
+          : {}),
       },
       receipt,
     };

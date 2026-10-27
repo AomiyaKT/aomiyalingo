@@ -5,6 +5,8 @@ import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 
 const mocks={
+ './shared/resource-preloader.js':'export const createResourcePreloader=()=>({warm(){},reset(){}});export const taskResourceHints=()=>[];',
+ './shared/poll-scheduler.js':'export const createPollScheduler=({run})=>({refresh:run});',
  './shared/student-viewport.js':'export const installStudentViewport=()=>{};',
  './shared/context-help.js':'export const installContextHelp=()=>{};',
  './race/showtime.js':'export const createRaceShowtime=()=>({});',

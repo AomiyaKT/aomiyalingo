@@ -117,7 +117,7 @@ export function createStudentRaceHandler({
     const r = await raceRoom(env, p.race_id);
     if (!r) return json({ error: 'レースが見つかりません。' }, 404);
     if (path.endsWith('/me') && req.method === 'GET') {
-      return json(await raceSession(env, p, r));
+      return json(await raceSession(env, p, r, null, url.searchParams.get('known')));
     }
     if (path.endsWith('/avatar') && req.method === 'POST') {
       const data = await body(req);

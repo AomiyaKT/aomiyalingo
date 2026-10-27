@@ -20,6 +20,7 @@ const sourceFiles = [
   'public/teacher-home.js',
   'public/mode-settings.js',
   'public/teacher-editor.js',
+  'public/teacher-tools.js',
   'public/word-audio.js',
   'public/shared/request.js',
   ...[

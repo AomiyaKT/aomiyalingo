@@ -1,4 +1,5 @@
 import { gradeSixContent } from './grade6-content.mjs';
+import { gradeFiveContent } from './grade5-content.mjs';
 import { allCurriculumProfiles, curriculumCatalog } from '../../public/shared/curriculum.js';
 
 function editableWord(word, recorded = true) {
@@ -71,12 +72,16 @@ export function createConfigurationStore({
       key: entry.key,
       source:
         entry.grade === 5
-          ? gradeFiveVocabulary
+          ? entry.unit === '5'
+            ? gradeFiveVocabulary
+            : gradeFiveContent[entry.unit]
           : entry.unit === '7'
             ? unitSevenVocabulary
             : gradeSixContent[entry.unit],
       options:
-        entry.grade === 6 && entry.unit !== '7' ? { format: 'adaptive-four', recorded: false } : {},
+        (entry.grade === 6 && entry.unit !== '7') || (entry.grade === 5 && entry.unit !== '5')
+          ? { format: 'adaptive-four', recorded: false }
+          : {},
     }));
   function supplementUnitFive(config) {
     if (config.unit5Supplement) return config;
@@ -103,6 +108,12 @@ export function createConfigurationStore({
       config[key] ??= defaultProfile(source, options);
     addBuiltInPictures(config, builtInPictures[5]);
     addBuiltInPictures(config.unit7, builtInPictures[7]);
+    addBuiltInPictures(config.grade5, new Map(gradeFiveContent[5].map((w) => [w.word, w.image])));
+    for (const word of config.grade5.words) {
+      const builtIn = gradeFiveContent[5].find((w) => w.word === word.word);
+      if (word.pictureEnabled === undefined && builtIn?.pictureEnabled === false)
+        word.pictureEnabled = false;
+    }
     config.race.order ??= 'mixed';
     if (!config.race.itemVersion) {
       if (

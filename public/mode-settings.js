@@ -1,5 +1,9 @@
 'use strict';
 (() => {
+  window.addEventListener('storage', (event) => {
+    if (event.key === 'aomiyalingo.configRevision')
+      window.dispatchEvent(new CustomEvent('aomi-mode-settings-saved'));
+  });
   const mode = document.body.classList.contains('race-teacher') ? 'race' : 'practice';
   const dialog = document.createElement('dialog');
   dialog.className = 'mode-settings-dialog';

@@ -12,12 +12,15 @@ import { studentPhase } from './race/lifecycle.js';
 import { createWaitingReview } from './race/review.js';
 import { renderRaceBriefing } from './race/briefing.js';
 import { createTeacherRaceController } from './race/teacher-controller.js';
+import { createPollScheduler } from './shared/poll-scheduler.js';
+import { createResourcePreloader, taskResourceHints } from './shared/resource-preloader.js';
 (() => {
   const q = (s) => document.querySelector(s),
     isTeacher = document.body.classList.contains('race-teacher');
   const targetRace = !isTeacher && new URLSearchParams(location.search).get('race');
   if (!isTeacher) installStudentViewport();
   else installContextHelp();
+  const preloader = !isTeacher ? createResourcePreloader() : null;
   const currentRacePath =
     '/api/race/current' + (targetRace ? '?race=' + encodeURIComponent(targetRace) : '');
   const lifecycle = { busy: false, epoch: 0 };
@@ -38,7 +41,8 @@ import { createTeacherRaceController } from './race/teacher-controller.js';
     lastCelebration = null;
   const store = (key, value) => {
       try {
-        localStorage.setItem(key, JSON.stringify(value));
+        const serialized = JSON.stringify(value);
+        if (localStorage.getItem(key) !== serialized) localStorage.setItem(key, serialized);
       } catch {}
     },
     read = (key) => {
@@ -197,12 +201,13 @@ import { createTeacherRaceController } from './race/teacher-controller.js';
     if (!team) return;
     const target = Math.max(1, team.target),
       done = team.target > 0 && team.correct >= team.target;
-    q('#' + prefix + '-team-count').textContent = team.correct + ' / ' + team.target;
+    setTextIfChanged(q('#' + prefix + '-team-count'), team.correct + ' / ' + team.target);
     q('#' + prefix + '-team-progress').max = target;
     q('#' + prefix + '-team-progress').value = Math.min(target, team.correct);
-    q('#' + prefix + '-team-caption').textContent = done
-      ? '目標達成！みんなで力を合わせたね！'
-      : 'ひとりで正解すると、みんなの力になるよ！';
+    setTextIfChanged(
+      q('#' + prefix + '-team-caption'),
+      done ? '目標達成！みんなで力を合わせたね！' : 'ひとりで正解すると、みんなの力になるよ！',
+    );
     q('#' + prefix + '-team-progress')
       .closest('.team-goal')
       .classList.toggle('goal-complete', done);
@@ -221,6 +226,20 @@ import { createTeacherRaceController } from './race/teacher-controller.js';
     if (panel.hidden) return;
     const learning = s.learning;
     if (!learning) return;
+    const signature = JSON.stringify([
+      data.race.id,
+      data.race.rules,
+      s.score,
+      s.index,
+      s.answered,
+      s.correct,
+      s.bestStreak,
+      learning.independent,
+      learning.words.length,
+      learning.badges,
+    ]);
+    if (panel.dataset.result === signature) return;
+    panel.dataset.result = signature;
     const stats = q('#race-result-stats');
     stats.replaceChildren();
     for (const [label, value] of data.race.rules >= 4
@@ -611,6 +630,11 @@ import { createTeacherRaceController } from './race/teacher-controller.js';
   }
 
   function drawStudent(result) {
+    if (data?.race?.id !== result.race.id || data?.race?.station !== result.race.station)
+      preloader.reset();
+    if (result.race.status === 'running' && result.self.ready !== false && !result.self.done)
+      preloader.warm(feedback ? taskResourceHints(result.self.task) : result.self.lookahead);
+    else preloader.reset();
     if (data?.race?.id === result.race.id && data.race.station !== result.race.station) {
       currentTask = null;
       feedback = null;
@@ -951,6 +975,7 @@ import { createTeacherRaceController } from './race/teacher-controller.js';
         q(session ? '#race-status' : '#entry-message').textContent =
           e.message || '接続を確認してください。';
       }
+      return false;
     } finally {
       polling = false;
     }
@@ -1186,6 +1211,7 @@ import { createTeacherRaceController } from './race/teacher-controller.js';
     };
     q('#change-race').onclick = () => {
       if (busy) return;
+      preloader.reset();
       roulette.cancel();
       lifecycle.epoch++;
       raceSessionCache.save({ ...session, pending });
@@ -1281,13 +1307,8 @@ import { createTeacherRaceController } from './race/teacher-controller.js';
     track.tabIndex = 0;
     track.setAttribute('aria-label', '全員の順位。スワイプでスクロールできます。');
   }
-  let lastPollAt = 0;
-  setInterval(() => {
-    if (['lobby', 'countdown'].includes(data?.race?.status) || Date.now() - lastPollAt >= 2000) {
-      lastPollAt = Date.now();
-      poll();
-    }
-  }, 500);
+  const pollScheduler = createPollScheduler({ run: poll, state: () => data?.race });
+  window.addEventListener('pagehide', () => audio.pause());
   setInterval(() => {
     if (document.hidden) return;
     if (!isTeacher) showtime.clock?.(seconds());
@@ -1297,10 +1318,14 @@ import { createTeacherRaceController } from './race/teacher-controller.js';
       if (startIn() === 0) poll();
     }
     if (isTeacher && data?.players) {
+      const timers = new Map(
+        [...q('#teacher-race-lanes').querySelectorAll('.timing-row')].map((row) => [
+          row.dataset.id,
+          row.querySelector('.timing-time'),
+        ]),
+      );
       for (const player of data.players) {
-        const timer = q('#teacher-race-lanes').querySelector(
-          '[data-id="' + player.id + '"] .timing-time',
-        );
+        const timer = timers.get(player.id);
         if (!timer) continue;
         const remaining = Math.max(
           0,
@@ -1324,20 +1349,22 @@ import { createTeacherRaceController } from './race/teacher-controller.js';
       q('#course-progress').value = seconds();
     const target = isTeacher ? null : q('#race-clock');
     if (target)
-      target.textContent =
+      setTextIfChanged(
+        target,
         isTeacher && data?.race?.status === 'intermission'
           ? '結果発表'
           : data?.race?.status === 'finished' || (!isTeacher && data?.self?.done)
             ? 'FINISH'
             : data?.race?.status === 'countdown'
               ? Math.ceil(startIn() / 1000) || 'GO!'
-              : clock(raceRemainingDisplay());
+              : clock(raceRemainingDisplay()),
+      );
   }, 250);
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
       audio.pause();
       window.speechSynthesis?.cancel();
-    } else poll();
+    }
   });
   window.addEventListener('aomi-reconnect', () => poll());
   if (!isTeacher)
@@ -1371,5 +1398,5 @@ import { createTeacherRaceController } from './race/teacher-controller.js';
         q('[data-answer-key="choice:' + (Number(event.key) - 1) + '"]')?.click();
       }
     });
-  poll();
+  pollScheduler.refresh();
 })();

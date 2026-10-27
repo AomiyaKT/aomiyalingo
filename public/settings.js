@@ -26,8 +26,9 @@ const appSettings = (() => {
   } catch {}
   const dialog = document.querySelector('#settings-dialog');
   const teacherMusic =
-    document.body.classList.contains('teacher-page') ||
-    document.body.classList.contains('race-teacher');
+    !document.body.classList.contains('teaching-tools') &&
+    (document.body.classList.contains('teacher-page') ||
+      document.body.classList.contains('race-teacher'));
   if (teacherMusic) {
     const row = document.createElement('div');
     row.className = 'setting-row';
@@ -35,7 +36,10 @@ const appSettings = (() => {
       '<label for="music-volume">音楽の音量</label><output id="music-volume-value" for="music-volume"></output><input id="music-volume" type="range" min="0" max="100" step="5"><button id="music-play-toggle" class="home-button" type="button">音楽を再生</button><small id="music-status" role="status">先生のページだけで再生します。</small>';
     document.querySelector('#effects-volume').closest('.setting-row').after(row);
   }
-  const panels = mountSettingsPanels({ dialog, teacher: teacherMusic });
+  const panels = mountSettingsPanels({
+    dialog,
+    teacher: teacherMusic || document.body.classList.contains('teaching-tools'),
+  });
   const volumeFields = [
     ['voice-volume', 'voiceVolume'],
     ['effects-volume', 'effectsVolume'],

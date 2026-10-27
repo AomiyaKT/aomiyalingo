@@ -39,6 +39,7 @@ export function createApplication({
     curriculumLabel,
     spellingCharacters,
     raceAvatarCatalog,
+    assetExists: (path) => Object.hasOwn(assets, path),
   };
   return createWorker({
     assets,

@@ -19,7 +19,13 @@ window.raceSessionCache = (() => {
   function save(session) {
     if (!session?.token || !session.raceId || !session.label) return;
     const all = read();
-    all[id(session.raceId, session.label)] = { ...session, saved: Date.now() };
+    const previous = all[id(session.raceId, session.label)];
+    const { saved: ignored, ...content } = session;
+    if (previous) {
+      const { saved, ...priorContent } = previous;
+      if (JSON.stringify(priorContent) === JSON.stringify(content)) return;
+    }
+    all[id(session.raceId, session.label)] = { ...content, saved: Date.now() };
     const entries = Object.entries(all)
       .sort((a, b) => b[1].saved - a[1].saved)
       .slice(0, 60);

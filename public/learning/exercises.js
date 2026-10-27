@@ -62,7 +62,8 @@ export function sentenceFor(word) {
   // Custom examples that do not contain the vocabulary cannot form a valid gap.
   // A quoted-word sentence is an explicit, grammatical fallback for such entries.
   const escaped = word.word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
-  const pattern = new RegExp('\\b' + escaped + '\\b', 'i');
+  // A final period in textbook abbreviations such as P.E. is not a word boundary.
+  const pattern = new RegExp('\\b' + escaped + '(?![a-z])', 'i');
   const sentence =
     example && /^[a-z\s.,!?"'’\-]+$/i.test(example) && pattern.test(example)
       ? example

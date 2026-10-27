@@ -1,0 +1,124 @@
+/* Stage-specific hierarchy: progress controls stay beside each other;
+   admission and reset live with the class/QR they affect. */
+.teacher-page .primary-tools #class-state-button {
+  margin-top: 0;
+  border-color: #ffd0d0;
+  color: #ea2b2b;
+  background: #fff5f5;
+}
+.teacher-page[data-teacher-practice-state='setup'] .primary-tools {
+  display: none;
+}
+.teacher-page[data-teacher-practice-state='setup'] .class-controls {
+  grid-template-columns: minmax(0, 1fr);
+}
+.teacher-page[data-teacher-practice-state='setup'] .qr-panel {
+  display: none;
+}
+.teacher-page:not([data-teacher-practice-state='setup']) #current-class-panel {
+  padding: 20px 24px;
+}
+#current-class-panel:has(#class-select option:only-child) > :is(label, select) {
+  display: none;
+}
+.race-teacher .race-controls {
+  flex-shrink: 0;
+  gap: 12px;
+}
+.race-teacher .race-board-heading {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+.race-teacher .race-board-heading > div:first-child {
+  min-width: 0;
+}
+.race-teacher .race-board-heading h1 {
+  overflow-wrap: anywhere;
+  margin: 0 0 8px;
+}
+.race-teacher .race-controls:has(#race-pause:not([hidden])) :is(#race-pause, #race-end) {
+  min-height: 56px;
+  min-width: 150px;
+  font-weight: 800;
+}
+.race-teacher .race-qr-panel #race-join-toggle {
+  width: 100%;
+  min-height: 50px;
+  margin-top: 18px;
+  white-space: normal;
+}
+.race-secondary-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 2px solid #e5e5e5;
+}
+.race-secondary-controls:has(> button:only-child[hidden]),
+.race-secondary-controls:not(:has(> button:not([hidden]))) {
+  display: none;
+}
+.race-secondary-controls button {
+  width: 100%;
+  white-space: normal;
+  min-height: 48px;
+  font-size: 16px;
+}
+.race-teacher #board-race-status,
+.teacher-page #room-state {
+  font-weight: 800;
+}
+.race-teacher[data-teacher-race-state='lobby'] .race-board-heading {
+  align-items: center;
+}
+.race-teacher[data-teacher-race-state='intermission'] #race-start,
+.race-teacher[data-teacher-race-state='finished'] #race-again {
+  min-height: 58px;
+}
+.race-teacher:is(
+    [data-teacher-race-state='running'],
+    [data-teacher-race-state='countdown'],
+    [data-teacher-race-state='paused']
+  )
+  .race-board-heading {
+  padding: 18px 24px;
+  margin-bottom: 20px;
+}
+.teacher-tools-links {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin: 24px 0;
+}
+.teacher-tools-links a {
+  flex: 1;
+  min-width: 160px;
+  white-space: normal;
+  text-align: center;
+}
+@media (max-width: 760px) {
+  .race-teacher .race-board-heading {
+    align-items: stretch;
+    flex-direction: column;
+    gap: 16px;
+  }
+  .race-teacher .race-controls {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    width: 100%;
+  }
+  .race-teacher .race-controls > button {
+    min-width: 0 !important;
+    width: 100%;
+    white-space: normal;
+  }
+  .race-teacher .race-controls #race-start,
+  .race-teacher .race-controls #race-again {
+    grid-column: 1/-1;
+  }
+}

@@ -122,19 +122,6 @@
             ><button id="race-start" class="submit" hidden>レースを開始</button
             ><button id="race-pause" class="home-button" hidden>一時停止</button>
             <button id="race-end" class="race-danger" hidden>レースを終了</button>
-            <button id="race-reset" class="home-button" hidden>レースをリセット</button>
-            <button id="race-join-toggle" type="button" class="home-button" hidden>
-              参加受付を締め切る
-            </button>
-            <button
-              id="delete-race"
-              type="button"
-              class="race-danger"
-              data-help="このレースと成績を回収箱に移します。後から戻せます。"
-              hidden
-            >
-              このレースを削除
-            </button>
           </div>
         </div>
         <p id="race-lifecycle-result" role="status"></p>
@@ -187,7 +174,12 @@
               target="_blank"
               >生徒用ページを開く</a
             ><strong id="race-player-count">0人</strong>
+            <button id="race-join-toggle" type="button" class="home-button" hidden>参加受付を締め切る</button>
             <a id="race-export-summary" class="home-button" hidden>成績CSVを保存</a>
+            <div class="race-secondary-controls">
+              <button id="race-reset" class="home-button" hidden>レースをリセット</button>
+              <button id="delete-race" type="button" class="race-danger" data-help="このレースと成績を回収箱に移します。後から戻せます。" hidden>このレースを削除</button>
+            </div>
           </aside>
         </div>
         <details id="new-race-panel" class="race-config">
@@ -205,7 +197,14 @@
                   <option value="6-6">6年生 · Unit 6</option>
                   <option value="6-7">6年生 · Unit 7</option>
                   <option value="6-8">6年生 · Unit 8</option>
+                  <option value="5-1">5年生 · Unit 1</option>
+                  <option value="5-2">5年生 · Unit 2</option>
+                  <option value="5-3">5年生 · Unit 3</option>
+                  <option value="5-4">5年生 · Unit 4</option>
                   <option value="5">5年生 · Unit 5</option>
+                  <option value="5-6">5年生 · Unit 6</option>
+                  <option value="5-7">5年生 · Unit 7</option>
+                  <option value="5-8">5年生 · Unit 8</option>
                   <option value="6">6年生 · Unit 4–5（以前の設定）</option>
                 </select>
               </div>

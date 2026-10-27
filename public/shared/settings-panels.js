@@ -66,6 +66,13 @@ export function mountSettingsPanels({ dialog, teacher }) {
     <button id="settings-check-connection" class="home-button" type="button">接続を確認する</button>
     <p id="settings-check-result" class="settings-note" role="status"></p>
     <p class="settings-version">Aomiyalingo <span>バージョン ${APP_VERSION}</span></p>`;
+  if (teacher) {
+    const tools = document.createElement('div');
+    tools.className = 'teacher-tools-links';
+    tools.innerHTML =
+      '<a class="home-button" href="/teacher-tools.html#quality" target="_blank" rel="noopener">教材チェック</a><a class="home-button" href="/teacher-tools.html#backup" target="_blank" rel="noopener">バックアップと復元</a>';
+    status.append(tools);
+  }
   const buttons = ['音・表示', '使い方', '状態'].map((label, index) => {
     const button = document.createElement('button');
     button.id = 'settings-tab-' + index;

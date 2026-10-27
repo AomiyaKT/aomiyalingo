@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { createHash } from 'node:crypto';
+import { gzipSync } from 'node:zlib';
 import { createAssetResponder, decodeAsset } from '../server/assets.mjs';
 import worker from '../dist/server/index.js';
 import { database } from './database.mjs';
@@ -92,6 +93,39 @@ const uncached = createAssetResponder(assets, {
 for (let i = 0; i < 2; i++)
   await uncached(new Request('https://classroom.test/a.png'), '/a.png').arrayBuffer();
 assert.equal(uncachedDecodes, 2);
+
+// Source-packed audio must remain byte-exact over GET, with lazy HEAD/304 paths.
+const speechBytes = Buffer.concat([Buffer.from('RIFF'), Buffer.alloc(32000, 7)]);
+const packedSpeech = {
+  ...asset(speechBytes, 'audio/wav'),
+  encoding: 'gzip',
+  data: gzipSync(speechBytes).toString('base64'),
+};
+let speechDecodes = 0;
+const speechResponse = createAssetResponder(
+  { '/speech.wav': packedSpeech },
+  {
+    decode(data) {
+      speechDecodes++;
+      return decodeAsset(data);
+    },
+  },
+);
+const speech = (method = 'GET', headers = {}) =>
+  speechResponse(
+    new Request('https://classroom.test/speech.wav', { method, headers }),
+    '/speech.wav',
+  );
+assert.equal(speech('HEAD').headers.get('content-length'), String(speechBytes.length));
+assert.equal(speech('GET', { 'if-none-match': packedSpeech.etag }).status, 304);
+assert.equal(speechDecodes, 0);
+for (let i = 0; i < 2; i++) {
+  const response = speech();
+  assert.equal(response.headers.get('content-encoding'), null);
+  assert.equal(response.headers.get('etag'), packedSpeech.etag);
+  assert.deepEqual(Buffer.from(await response.arrayBuffer()), speechBytes);
+}
+assert.equal(speechDecodes, 1, 'packed bytes use the bounded immutable cache');
 
 // Verify metadata describes the final bundled CSS/JS, not their unbundled source.
 const env = { DB: database(), TEACHER_PASSWORD: 'test-password' };

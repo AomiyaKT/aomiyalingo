@@ -14,6 +14,7 @@
 @import './exercises.css' layer(screens);
 @import './student-layout.css' layer(screens);
 @import './race-events.css' layer(screens);
+@import './teacher-stage.css' layer(screens);
 @import './records.css' layer(screens);
 @import './context-help.css' layer(screens);
 @import './states.css' layer(states);

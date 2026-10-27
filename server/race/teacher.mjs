@@ -1,4 +1,5 @@
 import { createRaceTrash } from './trash.mjs';
+import { compactRaceRecords } from './record-sync.mjs';
 
 export function createTeacherRaceHandler({
   words,
@@ -113,7 +114,7 @@ export function createTeacherRaceHandler({
       ).results;
       return json({
         ...(latest
-          ? await raceBoard(env, await raceRoom(env, latest.id), true)
+          ? compactRaceRecords(await raceBoard(env, await raceRoom(env, latest.id), true), url)
           : { race: null, players: [] }),
         races: (
           await stmt(
@@ -226,7 +227,7 @@ export function createTeacherRaceHandler({
     if (path.endsWith('/board') && req.method === 'GET') {
       const r = await raceRoom(env, id);
       return r
-        ? json(await raceBoard(env, r, true))
+        ? json(compactRaceRecords(await raceBoard(env, r, true), url))
         : json({ error: 'レースが見つかりません。' }, 404);
     }
     if (path.endsWith('/export') && req.method === 'GET') {

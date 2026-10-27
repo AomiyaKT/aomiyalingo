@@ -15,3 +15,4 @@ export const racers=sqliteTable('racers',{id:text('id').primaryKey(),raceId:text
 
 export const appConfig=sqliteTable('app_config',{id:integer('id').primaryKey(),data:text('data').notNull(),revision:integer('revision').notNull().default(1)});
 export const configAudio=sqliteTable('config_audio',{id:text('id').primaryKey(),mime:text('mime').notNull(),data:text('data').notNull()});
+export const teachingBackup=sqliteTable('teaching_backup',{id:integer('id').primaryKey(),data:text('data').notNull(),created:integer('created').notNull()});

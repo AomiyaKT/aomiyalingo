@@ -33,9 +33,9 @@ function syncPracticeFlow() {
   tq('#current-class-panel').hidden = preparingClass || !room;
   tq('#class-results').hidden = preparingClass || !room || lastData?.classroom?.id !== classId;
   tq('#new-class-panel').open = preparingClass;
-  tq('#new-class-panel').hidden = !preparingClass && !!room && !room.active;
+  tq('#new-class-panel').hidden = !preparingClass;
   tq('#current-class-panel h2').textContent = room?.active ? '現在のクラス' : '授業の記録';
-  tq('#prepare-class').hidden = preparingClass || !room || !!room.active;
+  tq('#prepare-class').hidden = preparingClass || !room;
   tq('#class-setup-cancel').textContent = state.back;
   tq('#class-setup-cancel').hidden = !room;
   tq('#projection-records').hidden = !document.body.classList.contains('projection');
