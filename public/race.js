@@ -704,7 +704,11 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
             ? 'ダブルヒントは選択肢を2つ減らす／最初の2文字。'
             : '') +
           (rules.items.includes('double') ? 'ダブルスターは次の独立正解の基本得点を2倍に。' : '') +
-          (rules.items.includes('lucky') ? 'クローバーは次の独立正解に20〜80点追加。' : '')
+          (rules.items.includes('lucky') ? 'クローバーは次の独立正解に20〜80点追加。' : '') +
+          rules.items
+            .filter((id) => ['shield', 'swap', 'treasure', 'magnet'].includes(id))
+            .map((id) => itemArt[id].name + '：' + itemArt[id].description)
+            .join(' ')
         : '道具なし。') +
       (result.race.endless
         ? '各自の回答時間が終わると結果発表。先生が次のコースを開始します。教科書を見てもOK。'
@@ -779,10 +783,12 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
         : '',
       s.double ? '🌟 ダブルスター：残り1回・基本得点2倍' : '',
       s.lucky ? '🍀 クローバー：残り1回・自力正解に＋' + s.lucky + ' pt' : '',
+      s.shield ? '🛡️ コンボシールド：残り1回' : '',
+      s.treasure ? '💎 宝箱チャレンジ：' + s.treasure.progress + '/3・達成で＋150 pt' : '',
     ]
       .filter(Boolean)
       .join(' · ');
-    q('#boost-status').hidden = !(s.boost || s.double || s.lucky);
+    q('#boost-status').hidden = !(s.boost || s.double || s.lucky || s.shield || s.treasure);
     q('#item-description').textContent = s.item ? itemArt[s.item].description : '';
     const stage = r.rules >= 5 ? r.station : Math.min(2, Math.floor((s.index * 3) / r.total)),
       scenes = [
@@ -1289,7 +1295,7 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
         const result = await api('/api/race/item', { questionId: currentTask.id }, true);
         drawStudent({ ...result, board: result.board || data?.board || [] });
         interactionEffects.pulse(q('#boost-status'), 'success');
-        showtime.item(usedItem);
+        showtime.item(usedItem, result.itemEffect);
       } catch (e) {
         q('#race-save-error').textContent = e.message;
         q('#race-save-error').hidden = false;

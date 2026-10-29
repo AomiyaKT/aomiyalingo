@@ -2,6 +2,17 @@
 
 **English** | [日本語](CHANGELOG.ja.md)
 
+## Release 76 - 2026-10-29
+
+- Replaced the long combined material dropdown with Elementary school / Blue Sky, grade buttons and eight grade-specific units. Practice, race and material editing use one picker; saved profile IDs and legacy sessions remain compatible.
+- Added Combo Shield, Swap Card, Treasure Challenge and Catch-up Magnet (ten items total). Item settings, roulette, active effects, scoring, course podiums and Japanese/English explanations are connected. Default six-item selections expand; restricted teacher selections remain restricted.
+- Added teacher update checks under gear > Status. The server reads public GitHub release/version metadata without forwarding credentials or student data. Reloading requires a newer already deployed server version and passes live class/race, version and unsaved-work guards. GitHub-only releases are shown as awaiting deployment.
+- Cached immutable race task JSON in a bounded exact-content LRU, serialized player saves once, and avoided parsing/writing unchanged practice content and translated labels. Live authorization, player state and timers remain uncached.
+- Expanded both teacher PDFs to 15 pages, with all ten items, the new material picker and an accurate explanation of update/deployment boundaries.
+- 81 regression suites passed. Rendered and visually reviewed all 30 guide pages. GitHub publication does not redeploy the hosted app or change its database.
+
+Details: [Release 76](docs/release-76.md).
+
 ## Release 75 - 2026-10-27
 
 - Rewrote the Japanese teacher guide and added an English edition, 11 pages each, with large text, numbered steps and clickable app links.

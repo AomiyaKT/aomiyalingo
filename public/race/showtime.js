@@ -273,8 +273,8 @@ export function createRaceShowtime({
       { duration: 240, easing: 'cubic-bezier(.16,1,.3,1)' },
     );
   }
-  function item(kind) {
-    spectacle.item(kind);
+  function item(kind, effect) {
+    spectacle.item(kind, effect);
     burst(q('#use-race-item'), 'sky');
     animate(
       actor,

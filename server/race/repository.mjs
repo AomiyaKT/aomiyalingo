@@ -28,11 +28,12 @@ export function createRaceRepository({
   }
   async function raceSave(env, p, state, r, running = true) {
     const personal = running && raceAccuracy(r),
-      stamp = now();
+      stamp = now(),
+      serialized = JSON.stringify(state);
     const result = await stmt(
       env,
       `UPDATE racers SET state=?,revision=revision+1,last_seen=? WHERE id=? AND revision=?${running ? " AND EXISTS (SELECT 1 FROM races WHERE id=? AND deleted_at=0 AND status='running' AND started_at<=? AND remaining_ms-(?-started_at)>0" + (personal ? ' AND elapsed_ms+MAX(0,?-started_at)-?<?' : '') + ')' : ''}`,
-      JSON.stringify(state),
+      serialized,
       stamp,
       p.id,
       p.revision,
@@ -46,7 +47,7 @@ export function createRaceRepository({
         : []),
     ).run();
     if (!Number(result.meta?.changes)) return null;
-    return { ...p, state: JSON.stringify(state), revision: p.revision + 1 };
+    return { ...p, state: serialized, revision: p.revision + 1 };
   }
 
   return { raceRoom, raceRacers, raceSave };

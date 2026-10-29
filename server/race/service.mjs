@@ -161,6 +161,9 @@ export function createRaceService({
         boost: state.boost,
         double: !!state.double,
         lucky: state.lucky || 0,
+        shield: !!state.shield,
+        treasure: state.treasure || null,
+        stationItemBonus: state.itemScores?.[r.station || 0] || 0,
         itemBox: state.itemBox || null,
         ...(!unchanged
           ? {
@@ -191,6 +194,7 @@ export function createRaceService({
                   ...state,
                   index: state.index + (state.reviewTask ? 0 : 1),
                   reviewTask: null,
+                  swapTask: state.reviewTask ? state.swapTask : null,
                   hintFor: null,
                 };
                 if (

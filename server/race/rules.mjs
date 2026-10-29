@@ -2,18 +2,11 @@ import { stationModes, materializeExercise } from './exercises.mjs';
 import { endlessTask, endlessMode } from './endless.mjs';
 import { createRaceHistoryReader } from './history.mjs';
 import { raceItemNames as raceItems } from '../../public/shared/race-items.js';
+import { createRaceTaskReader } from './task-reader.mjs';
 
 export function createRaceRules({ words, raceAvatarCatalog, shuffle, spellingCharacters, now }) {
-  // Database rows are request-local objects; caches do not outlive their rows.
-  const snapshots = new WeakMap();
-  function raceTaskList(r) {
-    if (!r) return [];
-    const cached = snapshots.get(r);
-    if (cached?.raw === r.tasks) return cached.tasks;
-    const tasks = JSON.parse(r.tasks);
-    snapshots.set(r, { raw: r.tasks, tasks });
-    return tasks;
-  }
+  const raceTaskList = createRaceTaskReader();
+  // Mutable learner data is intentionally isolated to the request-local row.
   const states = new WeakMap();
   const raceHistory = createRaceHistoryReader();
   function racePlayerState(player) {
@@ -83,8 +76,30 @@ export function createRaceRules({ words, raceAvatarCatalog, shuffle, spellingCha
   }
   function raceDrawItem(available, behind) {
     const weights = behind
-      ? { hint: 1, boost: 3, review: 4, compass: 3, double: 4, lucky: 2 }
-      : { hint: 3, boost: 2, review: 2, compass: 2, double: 1, lucky: 2 };
+      ? {
+          hint: 1,
+          boost: 3,
+          review: 4,
+          compass: 3,
+          double: 4,
+          lucky: 2,
+          shield: 2,
+          swap: 3,
+          treasure: 2,
+          magnet: 4,
+        }
+      : {
+          hint: 3,
+          boost: 2,
+          review: 2,
+          compass: 2,
+          double: 1,
+          lucky: 2,
+          shield: 3,
+          swap: 2,
+          treasure: 3,
+          magnet: 1,
+        };
     const bag = available.flatMap((i) => Array(weights[i] || 1).fill(i));
     return bag.length ? bag[Math.floor(Math.random() * bag.length)] : null;
   }
@@ -116,7 +131,8 @@ export function createRaceRules({ words, raceAvatarCatalog, shuffle, spellingCha
       : raceSettings(r).modes;
   const finiteTask = (r, state) => raceTaskList(r)[state.taskOrder?.[state.index] ?? state.index];
   const raceMainTask = (r, state) =>
-    raceEndless(r)
+    state.swapTask ||
+    (raceEndless(r)
       ? endlessTask({
           state,
           station: r.station || 0,
@@ -125,7 +141,7 @@ export function createRaceRules({ words, raceAvatarCatalog, shuffle, spellingCha
           taskFactory: raceTask,
           rules: raceTaskList(r)[0].rules,
         })
-      : finiteTask(r, state);
+      : finiteTask(r, state));
   const raceCurrentTask = (r, state) => {
     const task = state.reviewTask || raceMainTask(r, state);
     return task ? materializeExercise(task, state, racePool(r)) : null;
@@ -232,7 +248,8 @@ export function createRaceRules({ words, raceAvatarCatalog, shuffle, spellingCha
         stationIndex: r ? stationIndex(r, p.play) : p.play.index,
         stationScore:
           r && raceStations(r)
-            ? raceHistory(p.play).stations.get(r.station || 0)?.score || 0
+            ? (raceHistory(p.play).stations.get(r.station || 0)?.score || 0) +
+              (p.play.itemScores?.[r.station || 0] || 0)
             : p.play.score,
         correct: p.play.correct,
         accuracy: p.answered ? Math.round((p.play.correct / p.answered) * 1000) / 10 : null,
@@ -272,7 +289,7 @@ export function createRaceRules({ words, raceAvatarCatalog, shuffle, spellingCha
             id: p.id,
             alias: raceAlias(p),
             avatar: state.avatar || 'cat',
-            score: summary?.score || 0,
+            score: (summary?.score || 0) + (state.itemScores?.[station] || 0),
             answered,
             correct,
             accuracy: answered ? Math.round((correct / answered) * 1000) / 10 : null,

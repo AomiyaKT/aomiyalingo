@@ -4,8 +4,10 @@
 
 English practice and multiplayer word races for Japanese elementary classrooms. Teachers manage lessons on a Windows computer; students scan a QR code with their iPads.
 
-**Current version: Release 75 · 27 October 2026**  
-[Open the app](https://aomiyalingo.minamiyakk.chatgpt.site/) · [Changelog](CHANGELOG.md) · [Release 75 details](docs/release-75.md)
+**Current version: Release 76 · 29 October 2026**
+[Open the app](https://aomiyalingo.minamiyakk.chatgpt.site/) · [Changelog](CHANGELOG.md) · [Release 76 details](docs/release-76.md)
+
+**Source release:** this repository contains Release 76. The hosted website is deployed separately; a GitHub upload does not update the running classroom server.
 
 ## Features
 
@@ -17,20 +19,24 @@ English practice and multiplayer word races for Japanese elementary classrooms. 
 - Teacher controls for pausing, ending, resetting, joining, reviewing errors, CSV export, and record deletion/restoration.
 - Content checks, JSON backup/restore for teaching materials, rules and custom audio, plus a complete-project ZIP script.
 
+- Shorter material selection: Elementary school / Blue Sky, Grade 5 or 6 buttons, then eight units for that grade; each mode remembers its selection.
+- Ten race items, including Combo Shield, Swap Card, Treasure Challenge and Catch-up Magnet, with teacher switches and Japanese/English explanations.
+- Teacher-only update checks under gear > Status: compare with GitHub, reload an already deployed newer version, and report releases awaiting server deployment. Active classes and unsaved work block reloads.
+
 ## Teacher guides
 
 - [English PDF](public/help/teacher-guide-en.pdf)
 - [Japanese PDF](public/help/teacher-guide.pdf)
 
-Each guide has 11 pages and covers the current classroom workflow. The gear menu opens the guide matching the selected interface language.
+Each guide has 15 pages and covers the current classroom workflow. The gear menu opens the guide matching the selected interface language.
 
 ## Recent updates
 
-Release 75 updates both teacher guides and their language-aware download link. Release 74 adds student incremental synchronization, next-task media prefetch, stage-based teacher controls, content checks and teaching backups. Release 73 reduces repeated teacher refresh/rendering work. Release 72 completes all Grade 5 units and media. See the [changelog](CHANGELOG.md).
+Release 76 adds the Blue Sky/grade/unit picker, four new items (ten total), teacher update checks, and new 15-page Japanese/English guides. It also reduces repeated race-task parsing and unchanged practice-text rendering. Existing classroom records and restricted teacher item selections remain intact. See the [changelog](CHANGELOG.md) and [Release 76 notes](docs/release-76.md).
 
 ## Verification
 
-- 75 regression suites passed.
+- 81 regression suites passed, including ten-item scoring, all ten swap question types, settings migration, update/version guards and exact delivery of both PDFs.
 - 17 curriculum profiles / 387 configured entries passed content checks with zero errors or warnings. These include legacy compatibility profiles; the count does not represent 387 unique vocabulary words.
 - Accelerated 30-minute classroom simulation with 35 learners: 30,452 requests, 3,209 race answer submissions, 200 replayed requests and zero unexpected errors.
 - The simulation used local Worker APIs and SQLite. It does not replace physical iPad, classroom Wi-Fi or frame-rate testing.
@@ -77,7 +83,7 @@ The existing deployment identity is retained in `.openai/hosting.json`. Uploadin
 
 ## Source and privacy
 
-Application snapshot: `5a04ce1f40d4bad9e2e2178d5690d8fbe0965a8c` (interface Release 75). Hosting version numbers are separate from interface release numbers. Earlier development notes are preserved in `docs/project-history.md`.
+Application source: interface Release 76; see the repository commit history for the exact snapshot. Hosting version numbers are separate from interface release numbers. Earlier development notes are preserved in `docs/project-history.md`.
 
 Production student records, attendance exports, passwords, dependency folders, build output, runtime caches and temporary packages are excluded. Teaching JSON backups exclude student results and passwords; use CSV for results. Built-in media remain in this repository.
 

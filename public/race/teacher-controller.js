@@ -1,6 +1,7 @@
 import { createRaceReset } from './reset.js';
 import { recordSyncQuery, restoreRaceRecords } from '../shared/race-record-sync.js';
 import { curriculumSelection, curriculumProfile, curriculumValue } from '../shared/curriculum.js';
+import { mountCurriculumPicker } from '../shared/curriculum-picker.js';
 
 // Teacher setup, confirmation and lifecycle controls never initialize on a student page.
 export function createTeacherRaceController({
@@ -16,6 +17,9 @@ export function createTeacherRaceController({
   effects,
   events = window,
 }) {
+  const materialPicker = mountCurriculumPicker(q('#race-grade'));
+  const focusMaterial = () =>
+    materialPicker ? materialPicker.focus() : q('#race-grade').focus({ preventScroll: true });
   let selectedRace = null,
     teacherReset = null,
     confirmRaceLifecycle;
@@ -47,6 +51,7 @@ export function createTeacherRaceController({
     return promise;
   }
   function showRaceGrade(resetTitle = true) {
+    materialPicker?.sync();
     if (!raceGradeRoot) return;
     const choice = curriculumSelection(q('#race-grade').value),
       profile = curriculumProfile(raceGradeRoot, q('#race-grade').value),
@@ -93,7 +98,7 @@ export function createTeacherRaceController({
     try {
       await confirmation();
       q('#race-confirm').close();
-      if (teacherReset?.preparing) q('#race-grade').focus({ preventScroll: true });
+      if (teacherReset?.preparing) focusMaterial();
     } catch (e) {
       q('#race-confirm-error').textContent = e.message;
     } finally {
@@ -133,7 +138,7 @@ export function createTeacherRaceController({
         behavior: settings.values.reduceMotion ? 'auto' : 'smooth',
         block: 'start',
       });
-      q('#race-grade').focus({ preventScroll: true });
+      focusMaterial();
     },
     onReturn() {
       lifecycle.epoch++;
@@ -300,7 +305,7 @@ export function createTeacherRaceController({
     lifecycle.busy = true;
     lifecycle.epoch++;
     for (const b of q('.race-controls').querySelectorAll('button')) b.disabled = true;
-    for (const id of ['#race-join-toggle','#race-reset','#delete-race']) q(id).disabled=true;
+    for (const id of ['#race-join-toggle', '#race-reset', '#delete-race']) q(id).disabled = true;
     q('#board-race-status').textContent = '変更を保存しています…';
     try {
       const result = await api('/api/teacher/race/state', {

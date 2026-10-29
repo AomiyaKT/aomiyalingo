@@ -1,6 +1,7 @@
 import { makeElement as make } from './shared/dom.js';
 import { readAudioFile } from './editor/audio.js';
 import { createEditorViews } from './editor/views.js';
+import { mountCurriculumPicker } from './shared/curriculum-picker.js';
 (() => {
   const q = (s) => document.querySelector(s);
   const params = new URLSearchParams(location.search);
@@ -17,6 +18,7 @@ import { createEditorViews } from './editor/views.js';
     for (const link of document.querySelectorAll('.editor-tabs a'))
       link.hidden = !allowedSections.includes(link.hash.slice(1));
   }
+  const materialPicker = mountCurriculumPicker(q('#editor-grade'), { restore: !embedded });
   function reportState(saved = false) {
     window.aomiRuntimeStatus?.editor({ dirty, saving });
     if (embedded)
@@ -86,6 +88,7 @@ import { createEditorViews } from './editor/views.js';
     for (const panel of document.querySelectorAll('.editor-section')) panel.inert = value;
     q('#editor-reload').disabled = value;
     q('#editor-grade').disabled = value;
+    materialPicker?.sync();
   }
   function changed() {
     dirty = true;

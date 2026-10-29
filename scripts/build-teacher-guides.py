@@ -18,16 +18,14 @@ from pypdf import PdfReader
 
 ROOT = Path(__file__).resolve().parents[1]
 BASE = 'https://aomiyalingo.minamiyakk.chatgpt.site/'
-EDITION = '2026-10-27'
-# The guide documents Release 74 features; subsequent guide-only UI release 75
-# does not change classroom behaviour.
-RELEASE = '75'
+EDITION = '2026-10-29'
+RELEASE = '76'
 PAGES = [
     (
         ('まずは、ここから', 'ログインしたあと、学び方を選びます。'),
         ('Start here', 'Sign in first, then choose how your class will learn.'),
         [
-            ('先生のホームを開く', 'ブラウザーで下のリンクを開きます。配布フォルダーの先生用HTMLから開いても同じサイトにつながります。', 'Open the teacher home', 'Open the link below in your browser. The teacher HTML launcher in your delivery folder opens the same website.'),
+            ('先生のホームを開く', '下のリンクをブラウザーで開きます。このガイドはRelease 76用です。公開サイトへの新機能の反映は、管理者が別途行います。', 'Open the teacher home', 'Open the link below. This guide covers Release 76. New features reach the hosted website after a separate administrator deployment.'),
             ('パスワードを入力する', '先生用パスワードを入力してログインします。生徒にパスワードを伝える必要はありません。', 'Enter the teacher password', 'Sign in with your teacher password. Students do not need this password; they use the QR code for your class.'),
             ('学び方を選ぶ', '「単語練習」または「単語レース」を選びます。教材とルールは、それぞれのモードで設定します。', 'Choose a learning mode', 'Choose Vocabulary Practice or Word Race. Select the material and adjust the rules within that mode.'),
             ('日本語・英語を切り替える', '歯車の「表示言語」で切り替えます。初期表示は日本語です。設定は使っているブラウザーに保存されます。', 'Switch Japanese / English', 'In the gear menu, change Interface language. Japanese is the default. This preference is saved in the current browser.'),
@@ -37,7 +35,7 @@ PAGES = [
         ('通常の練習を始める', '生徒が自分のペースで、短いレッスンを進めます。'),
         ('Start Vocabulary Practice', 'Students work through short lessons at their own pace.'),
         [
-            ('教材と範囲を選ぶ', '単語練習で新しいクラスを準備します。学年・単元・単語の範囲とクラス名を確認してください。', 'Select the material', 'Prepare a new class in Vocabulary Practice. Check the grade, unit, word range and class name.'),
+            ('Blue Sky・学年・単元を確認', '「小学校・Blue Sky」を確認し、5年生か6年生のボタンを押します。その学年の8単元から選び、単語の範囲とクラス名を確認します。', 'Choose Blue Sky, grade and unit', 'Check Elementary school / Blue Sky. Press Grade 5 or Grade 6, then choose from that grade\'s eight units. Check the word range and class name.'),
             ('ルールを確認して開始する', '必要なら「ルールを変更」で調整します。標準は1レッスン6問。設定を確認してクラスを開始します。', 'Check the rules and start', 'Use Change rules if needed. The default is six main questions per lesson. Review the settings and start the class.'),
             ('授業のQRを見せる', '生徒はiPadでQRを読み取り、出席番号を確認して参加します。教材やモードを生徒が選ぶ必要はありません。', 'Show this class QR code', 'Students scan it with their iPads and confirm their student number. They do not need to select a unit or learning mode.'),
             ('進み具合を見る', '回答数・正答率・ヒントや間違いを確認します。短いレッスンの区切りで休めます。復習が追加されることもあります。', 'Monitor progress', 'Check answers, accuracy, hints and mistakes. Students can pause between short lessons. Review questions may be added.'),
@@ -57,7 +55,7 @@ PAGES = [
         ('単語レースを準備する', '先生が開始するまで、生徒は待機画面で準備します。'),
         ('Prepare a Word Race', 'Students prepare in the lobby until you start the race.'),
         [
-            ('教材とルールを決める', 'ホームから単語レースを選びます。教材とレース名を確認し、必要ならルールを変更します。', 'Choose material and rules', 'Select Word Race from the teacher home. Check the material and race name, then change the rules if needed.'),
+            ('教材とルールを決める', '単語レースでBlue Sky・学年・単元を選びます。6年生の最初はPre Unit-Unit 1です。前回の選択はモードごとに記憶されます。', 'Choose material and rules', 'In Word Race, choose Blue Sky, the grade and unit. Grade 6 starts with Pre Unit-Unit 1. Each mode remembers its last selection.'),
             ('参加受付を始める', '参加受付を開き、生徒にQRを見せます。生徒は出席番号で参加し、好きな動物を選びます。', 'Open the lobby and show the QR', 'Press Open lobby. Students scan the QR, enter their student number and choose an animal avatar.'),
             ('準備完了を確認して開始', '生徒が「準備完了」を押すと、先生の画面に準備状況が表示されます。確認後、レースを開始します。', 'Check readiness, then start', 'Students press Ready after choosing their avatar. Check readiness on your screen, then start the race.'),
             ('遅れた生徒も参加できます', '参加受付が開いていれば途中参加できます。受付の開閉はQR付近で操作します。レースを作り直す必要はありません。', 'Allow late joiners', 'Students can join while joining remains open. Use the joining control beside the QR. You do not need to restart the race.'),
@@ -130,10 +128,56 @@ PAGES = [
             ('画面をテレビに映す', 'Windows標準のキャスト機能で接続します。先生はEdgeやChrome、生徒はiPadのSafariで使えます。追加ソフトは不要です。', 'Show your screen on the TV', 'Use the built-in Windows Cast feature. Use Edge or Chrome on the teacher PC and Safari on iPads. No extra student app is needed.'),
             ('通信が切れたら', 'Wi-Fiを確認し、画面を閉じずに再送信します。同じiPad・同じブラウザーで開き直し、サイトデータは消さないでください。', 'If the connection fails', 'Check Wi-Fi and retry without closing the page. Reopen in the same browser on the same iPad. Do not clear the website data.'),
             ('授業前に1台で試す', '先生のログイン・テレビ表示・QR参加を確認します。iPadで音声を聞き、2問答え、先生の画面に反映されるか確認します。', 'Test with one iPad before class', 'Check teacher login, TV display and QR joining. Play audio, answer two questions and confirm that the teacher screen updates.'),
-            ('使える教材', '5年生Unit 1〜8、6年生Pre Unit〜Unit 8。以前のUnit 4–5などの互換教材も残っています。教材選択で範囲を確認してください。', 'Available teaching material', 'Grade 5 Units 1-8 and Grade 6 Pre Unit-Unit 8. Legacy profiles such as Units 4-5 remain available. Check the selected scope before starting.'),
+            ('使える教材', '小学校Blue Sky：5年生Unit 1〜8、6年生Pre Unit-Unit 1〜Unit 8。以前の授業・レースは、作成時の教材とルールを保持します。', 'Available teaching material', 'Elementary Blue Sky: Grade 5 Units 1-8 and Grade 6 Pre Unit-Unit 1 through Unit 8. Earlier classes and races retain their original material and rules.'),
         ],
     ),
 ]
+
+# Keep four large, readable cards per page. Item effects are grouped separately
+# rather than compressing ten descriptions into a small table.
+ITEM_PAGES = [
+    (
+        ('道具ガイド 1：ヒントと復習', '標準は6問ごとに抽選。答える前に道具を使います。'),
+        ('Items 1: hints and recovery', 'Default: one item draw every six main answers. Use it before answering.'),
+        [
+            ('ヒントライト', '選択肢を1つ減らします。スペリングは最初の1文字。題型に合うヒントが出ます。使って正解した場合は、標準70点です。', 'Hint Light', 'Removes one wrong choice or reveals the first spelling letter. Other tasks receive matching support. A correct answer with a hint earns 70 points by default.'),
+            ('ダブルヒント', '選択肢を2つ減らします。スペリングは最初の2文字。ヒントでの正解は自力正解と分けて記録し、標準70点です。', 'Double Hint', 'Removes two wrong choices or reveals the first two spelling letters. Hinted answers are recorded separately from independent answers and earn 70 points by default.'),
+            ('ダッシュ', '次の2回の自力正解に、それぞれ40点を追加します。間違いやヒントで答えても、残りの加点回数は減りません。', 'Dash', 'Adds 40 points to each of the next two independent correct answers by default. A mistake or hinted answer does not consume a remaining boosted answer.'),
+            ('復習スター', '間違えたことばに再挑戦し、正解すると標準60点です。復習することばがあるときに抽選されます。連続正解数には含みません。', 'Review Star', 'Retries a previously missed word for 60 points by default. It is drawn only when a missed word is available. Review answers do not build the main combo.'),
+        ],
+    ),
+    (
+        ('道具ガイド 2：ボーナスと守り', '道具で得点が変わっても、学習の正誤記録は残ります。'),
+        ('Items 2: bonuses and protection', 'Items can change game points; learning answers remain recorded.'),
+        [
+            ('ダブルスター', '次の自力正解の基本得点を2倍にします。標準では100点を追加します。連続正解ボーナスを丸ごと2倍にする道具ではありません。', 'Double Star', 'Doubles the base points of the next independent correct answer: an extra 100 points by default. It does not double the entire combo bonus.'),
+            ('ラッキークローバー', '次の自力正解に20・40・60・80点のいずれかを追加します。間違い・ヒントでは効果を消費しません。', 'Lucky Clover', 'Adds a random 20, 40, 60 or 80 points to the next independent correct answer. A mistake or hinted answer does not consume it.'),
+            ('コンボシールド', '間違い・ヒントで連続正解がリセットされるのを1回防ぎます。間違いの得点は0点のまま。正誤や自力正解率は変えません。', 'Combo Shield', 'Prevents one combo reset caused by a mistake or hint. A wrong answer still earns zero points. Correctness and independent accuracy do not change.'),
+            ('チェンジカード', '今の問題を、同じ種類の別の問題に交換します。交換だけでは得点・回答数・正解率・連続正解は変わりません。', 'Swap Card', 'Replaces this question with another of the same type. Swapping alone does not change points, answer count, accuracy or combo.'),
+        ],
+    ),
+    (
+        ('道具ガイド 3：挑戦と追い上げ', '使う道具は、先生がレースのルールで選べます。'),
+        ('Items 3: challenge and catch-up', 'Teachers choose which items are enabled in the race rules.'),
+        [
+            ('宝箱チャレンジ', '使ったあと、自力で3問連続正解すると150点を追加。途中の間違い・ヒントで0/3に戻ります。1回の発動で1回だけ加点します。', 'Treasure Challenge', 'After activation, three consecutive independent correct main answers earn 150 extra points. A mistake or hint resets progress to 0/3. Each activation pays out once.'),
+            ('追い上げマグネット', 'すぐ上の人との得点差に応じて20〜150点を追加します。相手の得点は減りません。使用時に追い越していた場合は20点です。', 'Catch-up Magnet', 'Immediately adds 20-150 points based on the gap to the next higher score. Nobody loses points. If you have already overtaken that player, it grants 20 points.'),
+            ('抽選とコースの切り替わり', '標準は6問ごとに抽選します。成績に応じて補助道具が出やすくなります。シールドや宝箱などの効果は、次のコースで解除されます。', 'Draws and course changes', 'Items are drawn every six main answers by default, with extra support weighted toward learners who need it. Active shields, treasure and other effects reset at the next course.'),
+            ('道具を選ぶ・得点を調整する', 'レースのルールで10種類を個別にON/OFFできます。正解・ヒント・復習・ダッシュの点数などは変更可能。設定は新しいレースから使います。', 'Enable items and adjust scoring', 'Turn each of the ten items on or off in race rules. Base, hint, review and Dash points can be adjusted. Saved settings apply to newly created races.'),
+        ],
+    ),
+]
+PAGES[6:6] = ITEM_PAGES
+PAGES.insert(-1, (
+    ('更新を確認する', '歯車 →「状態」→「更新を確認」。教師だけの機能です。'),
+    ('Check for updates', 'Teacher only: gear menu > Status > Check for updates.'),
+    [
+        ('現在の版とGitHubの版を比べる', 'サーバーがGitHubの公開版を確認します。この画面の版、公開版、最終確認時刻を表示します。先生のGitHubアカウントは不要です。', 'Compare this page with GitHub', 'The server checks the public GitHub version. View this page\'s version, the public version and the last check time. No teacher GitHub account is needed.'),
+        ('公開済みの新しい版に切り替える', 'サーバーに新しい版があれば更新ボタンが出ます。授業・レースを終え、未保存の操作がないことを確認してから押します。', 'Load a newly deployed version', 'When this server has a newer version, an Update button appears. End active lessons or races and confirm that all work is saved before pressing it.'),
+        ('GitHubにだけ新しい版がある場合', '「サーバーへの公開待ち」と表示します。管理者による公開が必要です。このボタンでGitHubのソースをサーバーへ自動配備はしません。', 'If only GitHub has a newer version', 'The panel says deployment is pending. An administrator must publish it to the server. This button does not automatically deploy GitHub source.'),
+        ('確認できない・開発版と表示された', '通信できない場合は「最新版か未確認」と表示します。接続を確認して再実行してください。公開版より新しい作業版は「開発版」と表示します。', 'If checking fails or says development', 'A connection failure means the latest version is unverified. Check the network and retry. A local version newer than the public release is labelled a development version.'),
+    ],
+))
 
 
 def build(language, destination):

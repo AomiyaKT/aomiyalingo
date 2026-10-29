@@ -199,7 +199,18 @@ assert.equal(
 );
 assert.equal(document.body.children.length, 0);
 
-const ids = ['hint', 'boost', 'review', 'compass', 'double', 'lucky'];
+const ids = [
+  'hint',
+  'boost',
+  'review',
+  'compass',
+  'double',
+  'lucky',
+  'shield',
+  'swap',
+  'treasure',
+  'magnet',
+];
 assert.deepEqual(Object.keys(raceItemCatalog), ids);
 const rules = createRaceRules({ words: [], raceAvatarCatalog: [] });
 assert.equal(rules.raceItems, raceItemNames);

@@ -9,6 +9,7 @@ import { createClassroomLessons } from './classroom/lessons.mjs';
 import { createClassroomAuth } from './classroom/auth.mjs';
 import { createClassroomRoute } from './classroom/routes.mjs';
 import { createRaceRoute } from '../race-server.mjs';
+import { createTeacherUpdateRoute } from './updates.mjs';
 
 // The application owns service composition. The build supplies immutable content only.
 export function createApplication({
@@ -48,5 +49,6 @@ export function createApplication({
     classroomRoute: createClassroomRoute(runtime),
     editorRoute: createEditorRoute(runtime),
     raceRoute: createRaceRoute(runtime),
+    updatesRoute: createTeacherUpdateRoute(runtime),
   });
 }

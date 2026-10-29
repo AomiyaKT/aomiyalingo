@@ -5,7 +5,7 @@ const env={DB:database(),TEACHER_PASSWORD:'test-password'};
 async function req(path,data,headers={}){const r=await worker.fetch(new Request('https://classroom.test'+path,{method:data===undefined?'GET':'POST',headers:{'content-type':'application/json',...headers},...(data===undefined?{}:{body:JSON.stringify(data)})}),env);return {status:r.status,body:await r.json(),r}}
 const login=await req('/api/teacher/login',{password:'test-password'}),teacher={cookie:login.r.headers.get('set-cookie').split(';')[0]};
 const original=(await req('/api/teacher/config',undefined,teacher)).body;
-assert.equal(original.config.race.items.length,6);assert.equal(original.config.race.order,'mixed');
+assert.equal(original.config.race.items.length,10);assert.equal(original.config.race.order,'mixed');
 const raceId=(await req('/api/teacher/race/create',{title:'Mixed'},teacher)).body.raceId;
 const tasks=JSON.parse((await env.DB.prepare('SELECT tasks FROM races WHERE id=?').bind(raceId).first()).tasks);
 assert.equal(tasks[0].rules,5);for(const mode of ['text','voice','spelling'])assert.equal(tasks.filter(t=>t.mode===mode).length,24);

@@ -6,6 +6,7 @@ const sourceFiles = [
   'worker.mjs',
   'server/assets.mjs',
   'server/application.mjs',
+  'server/updates.mjs',
   'race-server.mjs',
   'editor-server.mjs',
   'public/course.js',

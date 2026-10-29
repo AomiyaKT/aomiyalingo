@@ -1,6 +1,14 @@
 import { APP_VERSION } from './public/shared/release.js';
 import { createAssetResponder } from './server/assets.mjs';
-export function createWorker({ assets, authRoute, editorRoute, raceRoute, classroomRoute, json }) {
+export function createWorker({
+  assets,
+  authRoute,
+  editorRoute,
+  raceRoute,
+  classroomRoute,
+  updatesRoute = () => null,
+  json,
+}) {
   const assetResponse = createAssetResponder(assets);
   async function route(req, env) {
     const url = new URL(req.url),
@@ -15,6 +23,8 @@ export function createWorker({ assets, authRoute, editorRoute, raceRoute, classr
       return json({ error: 'アクセスできません。' }, 403);
     const authResponse = await authRoute(req, env, url);
     if (authResponse) return authResponse;
+    if (p === '/api/teacher/updates' || p === '/api/teacher/updates/ready')
+      return updatesRoute(req, env, url);
     if (p.startsWith('/api/teacher/config') || p.startsWith('/api/audio/'))
       return editorRoute(req, env, url);
     if (p.startsWith('/api/race/') || p.startsWith('/api/teacher/race/'))

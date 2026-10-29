@@ -1,5 +1,28 @@
 # Aomiyalingo architecture
 
+## Release 76 - teacher update checks
+
+`server/updates.mjs` reads public release metadata only from the fixed AomiyaKT
+GitHub repository, with bounded responses, a timeout and a coalesced five-minute
+cache. Live teacher authentication and active lesson/race checks remain uncached.
+`public/shared/settings-updates.js` keeps release checking separate from a user
+initiated reload of a newer, already deployed server version. It rechecks the
+server version and live classroom state before reloading and blocks unsaved work.
+GitHub-only releases are reported as awaiting deployment; browser code never
+executes downloaded source or deploys a Worker. See `docs/updates-local-76.md`.
+
+## Release 76 - bounded race snapshots and stable practice text
+
+Immutable race task JSON uses an exact-content, recursively frozen LRU shared
+across request-local room rows (four entries, 524,288 source characters total).
+Live lifecycle fields and mutable learner states remain request-local. Successful
+race saves serialize once. Ordinary practice reuses unchanged material decoding
+and avoids redundant teacher text writes in both interface languages while keeping
+Japanese source text available to the existing reversible translator.
+
+This work is included in the Release 76 source snapshot. Hosted deployment remains separate. See
+`docs/optimization-local-2026-10-27.md` for reproducible work counters and limits.
+
 ## v63 · Coherent race snapshots and owned practice playback
 
 The race service assembles an internal snapshot containing both the authoritative

@@ -110,6 +110,20 @@
 .race-page[data-race-effect='double'] .scene-racer {
   filter: drop-shadow(0 0 10px #ce82ff);
 }
+.race-page[data-race-effect='shield'] .scene-racer {
+  filter: drop-shadow(0 0 12px #1cb0f6) drop-shadow(0 0 3px #fff);
+}
+.race-page[data-race-effect='swap'] .race-scene::after {
+  background: radial-gradient(circle at 50% 50%, #ce82ff66, transparent 70%);
+  mask-image: none;
+}
+.race-page[data-race-effect='treasure'] .race-scene::after {
+  background: radial-gradient(circle, #ffc800aa 0 3px, transparent 4px) 0 0 / 28px 28px;
+  mask-image: none;
+}
+.race-page[data-race-effect='magnet'] .scene-racer {
+  filter: drop-shadow(-10px 0 8px #ff9600) drop-shadow(10px 0 8px #1cb0f6);
+}
 .race-student .reward-combo {
   display: inline-flex;
   align-items: center;

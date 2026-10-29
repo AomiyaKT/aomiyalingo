@@ -1,4 +1,5 @@
 import { gradeExercise } from './exercises.mjs';
+import { answerItemEffects, magnetPoints } from './item-effects.mjs';
 
 export function createRaceGradingHandler({
   raceTaskList,
@@ -77,26 +78,25 @@ export function createRaceGradingHandler({
             ? cfg.hintPoints
             : cfg.correctPoints
         : 0;
-      if (state.boost > 0 && !isReview) {
-        if (correct && !hinted) {
-          points += cfg.boostPoints;
-          state.boost--;
-        } else if ((raceTaskList(r)[0]?.rules || 1) < 2) state.boost--;
-      }
-      if (correct && !hinted && !isReview) {
-        if (state.double) {
-          points += cfg.correctPoints;
-          state.double = false;
-        }
-        if (state.lucky) {
-          points += state.lucky;
-          state.lucky = 0;
-        }
-      }
+      const itemEffect = answerItemEffects(state, {
+        correct,
+        hinted,
+        review: isReview,
+        config: cfg,
+      });
+      points += itemEffect.bonus;
+      if (
+        state.boost > 0 &&
+        !isReview &&
+        (!correct || hinted) &&
+        (raceTaskList(r)[0]?.rules || 1) < 2
+      )
+        state.boost--;
       let streakBonus = 0;
       if (raceAccuracy(r)) {
-        if (!correct || hinted) state.streak = 0;
-        else if (!isReview) {
+        if (!correct || hinted) {
+          if (!itemEffect.shielded) state.streak = 0;
+        } else if (!isReview) {
           state.streak = (state.streak || 0) + 1;
           state.bestStreak = Math.max(state.bestStreak || 0, state.streak);
           streakBonus = Math.min(
@@ -121,6 +121,8 @@ export function createRaceGradingHandler({
         points,
         streak: state.streak || 0,
         streakBonus,
+        ...(itemEffect.shielded ? { shielded: true } : {}),
+        ...(itemEffect.treasureBonus ? { treasureBonus: itemEffect.treasureBonus } : {}),
         ...(task.rules === 6
           ? {
               level: task.level,
@@ -142,6 +144,7 @@ export function createRaceGradingHandler({
             (q) => q.word !== w.word || q.mode !== (task.reviewMode || task.mode),
           );
       } else {
+        state.swapTask = null;
         state.index++;
         if (!correct && !state.wrong.some((q) => q.word === w.word && q.mode === task.mode))
           state.wrong.push({ word: w.word, mode: task.mode });
@@ -169,7 +172,13 @@ export function createRaceGradingHandler({
             : state.wrong.length
               ? 'boost'
               : 'hint';
-          const available = cfg.items.filter((x) => x !== 'review' || state.wrong.length);
+          const available = cfg.items.filter(
+            (x) =>
+              (x !== 'review' || state.wrong.length) &&
+              (x !== 'shield' || !state.shield) &&
+              (x !== 'treasure' || !state.treasure) &&
+              (x !== 'magnet' || peers.some((p) => p.score > state.score)),
+          );
           state.item =
             raceTaskList(r)[0]?.rules >= 3
               ? raceDrawItem(available, behind)
@@ -202,13 +211,33 @@ export function createRaceGradingHandler({
         s.reviewTask
       )
         return json({ error: '今は道具を使えません。' }, 409);
+      const effect = { kind: s.item };
       if (s.item === 'hint' || s.item === 'compass') {
         s.hintFor = task.id;
         s.hintStrength = s.item === 'compass' ? 2 : 1;
       } else if (s.item === 'boost') s.boost = cfg.boostCount;
       else if (s.item === 'double') s.double = true;
       else if (s.item === 'lucky') s.lucky = 20 + 20 * Math.floor(Math.random() * 4);
-      else {
+      else if (s.item === 'shield') s.shield = true;
+      else if (s.item === 'treasure') s.treasure = { progress: 0 };
+      else if (s.item === 'magnet') {
+        effect.points = magnetPoints(s.score, raceRanking(await raceRacers(env, r.id), r));
+        s.score += effect.points;
+        // A zero-answer bonus belongs to the course score, never to learning accuracy/history.
+        s.itemScores ??= {};
+        s.itemScores[r.station || 0] = (s.itemScores[r.station || 0] || 0) + effect.points;
+      } else if (s.item === 'swap') {
+        const pool = racePool(r);
+        const candidates = pool.filter((w) => w.word !== task.word);
+        if (!candidates.length) return json({ error: '交換できる問題がありません。' }, 409);
+        s.swapTask = {
+          ...raceTask(candidates[Math.floor(Math.random() * candidates.length)], task.mode, pool),
+          rules: task.rules,
+          station: r.station || 0,
+        };
+        s.hintFor = null;
+        s.hintStrength = 0;
+      } else {
         const old = s.wrong[0];
         if (!old) return json({ error: '復習する問題がありません。' }, 409);
         s.reviewTask = raceTask(
@@ -222,7 +251,7 @@ export function createRaceGradingHandler({
       s.usedSegment = segment;
       const saved = await raceSave(env, p, s, r);
       return saved
-        ? json(await raceSession(env, saved, r))
+        ? json({ ...(await raceSession(env, saved, r)), itemEffect: effect })
         : json({ error: '保存状態が変わりました。表示を更新してください。' }, 409);
     }
     return json({ error: '見つかりません。' }, 404);

@@ -1,4 +1,5 @@
 import { curriculumProfileKeys } from '../../public/shared/curriculum.js';
+import { raceItemIds } from '../../public/shared/race-items.js';
 
 function configError(message) {
   throw Object.assign(Error(message), { configuration: true });
@@ -114,7 +115,7 @@ export function validateConfig(c) {
   if (
     !Array.isArray(c.race.items) ||
     new Set(c.race.items).size !== c.race.items.length ||
-    c.race.items.some((i) => !['hint', 'boost', 'review', 'compass', 'double', 'lucky'].includes(i))
+    c.race.items.some((i) => !raceItemIds.includes(i))
   )
     configError('道具の種類を確認してください。');
   if (c.race.order !== undefined && !['mixed', 'grouped'].includes(c.race.order))
@@ -125,6 +126,6 @@ export function validateConfig(c) {
         configError('教材の設定を確認してください。');
       validateConfig(c[key]);
     }
-  c.race.itemVersion = 2;
+  c.race.itemVersion = 3;
   return c;
 }

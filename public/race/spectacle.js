@@ -167,6 +167,14 @@ export function createRaceSpectacle({ make, isTeacher, settings, effects, host =
     if (!value || receipts.has(value.id)) return;
     receipts.add(value.id);
     if (receipts.size > 120) receipts.delete(receipts.values().next().value);
+    if (value.shielded) {
+      announce('item', '🛡️', '連続正解を守った！', '得点と正誤はそのまま。次の問題へ。', 'powerup');
+      return;
+    }
+    if (value.treasureBonus) {
+      announce('item', '💎', '宝箱オープン！', '3問連続で自力正解！ ＋150 pt', 'itemReveal');
+      return;
+    }
     if (
       value.correct &&
       !value.hinted &&
@@ -175,10 +183,18 @@ export function createRaceSpectacle({ make, isTeacher, settings, effects, host =
     )
       announce('combo', '🔥', value.streak + '問連続で正解！', 'この調子！ 自分の記録を伸ばそう。');
   }
-  function item(kind) {
+  function item(kind, effect) {
     const art = Object.hasOwn(raceItemCatalog, kind) && raceItemCatalog[kind];
     if (!art) return;
-    announce('item', art.icon, art.name + ' 発動！', '道具を味方に、次の1問へ。', 'powerup');
+    announce(
+      'item',
+      art.icon,
+      art.name + ' 発動！',
+      kind === 'magnet' && effect?.points
+        ? '追い上げボーナス ＋' + effect.points + ' pt'
+        : art.description,
+      'powerup',
+    );
     if (motion()) {
       host.clearTimeout(effectTimer);
       document.body.dataset.raceEffect = kind;

@@ -10,6 +10,10 @@ export function raceBriefing(race, curriculum) {
     review: `間違えたことばにもう一度挑戦。正解すると${c.reviewPoints}点。復習することばがあるときに出ます。`,
     double: `次の自力正解の基本得点が2倍（＋${c.correctPoints}点）。`,
     lucky: '次の自力正解に＋20〜80点。何点かはお楽しみ！',
+    shield: raceItemCatalog.shield.description,
+    swap: raceItemCatalog.swap.description,
+    treasure: raceItemCatalog.treasure.description,
+    magnet: raceItemCatalog.magnet.description,
   };
   return {
     curriculum,

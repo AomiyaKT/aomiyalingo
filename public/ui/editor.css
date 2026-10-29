@@ -10,3 +10,4 @@
 @import './motion.css' layer(screens);
 @import './exercises.css' layer(screens);
 @import './states.css' layer(states);
+@import './curriculum-picker.css' layer(screens);

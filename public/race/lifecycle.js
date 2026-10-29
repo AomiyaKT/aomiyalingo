@@ -34,7 +34,9 @@ export function courseSummary(result) {
     answered: history.length,
     independent,
     accuracy: history.length ? Math.round((independent / history.length) * 100) : null,
-    points: courseHistory.reduce((sum, h) => sum + (h.points || 0), 0),
+    points:
+      courseHistory.reduce((sum, h) => sum + (h.points || 0), 0) +
+      (result.self.stationItemBonus || 0),
     review: [
       ...new Map(history.filter((h) => !h.correct || h.hinted).map((h) => [h.word, h])).values(),
     ],

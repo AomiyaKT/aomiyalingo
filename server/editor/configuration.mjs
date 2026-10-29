@@ -1,6 +1,7 @@
 import { gradeSixContent } from './grade6-content.mjs';
 import { gradeFiveContent } from './grade5-content.mjs';
 import { allCurriculumProfiles, curriculumCatalog } from '../../public/shared/curriculum.js';
+import { raceItemIds } from '../../public/shared/race-items.js';
 
 function editableWord(word, recorded = true) {
   return {
@@ -34,9 +35,9 @@ function defaultProfile(source, { format, recorded = true } = {}) {
       minutes: 6,
       countdown: 3,
       itemEvery: 6,
-      itemVersion: 2,
+      itemVersion: 3,
       order: 'mixed',
-      items: ['hint', 'boost', 'review', 'compass', 'double', 'lucky'],
+      items: [...raceItemIds],
       streakStep: 20,
       streakCap: 100,
       correctPoints: 100,
@@ -124,6 +125,16 @@ export function createConfigurationStore({
       config.race.itemVersion = 2;
     }
     for (const profile of allCurriculumProfiles(config)) {
+      const previousItems = ['hint', 'boost', 'review', 'compass', 'double', 'lucky'];
+      // Expand the previous full default only; a teacher's restricted selection stays intact.
+      if ((profile.race.itemVersion || 0) < 3) {
+        if (
+          profile.race.items.length === previousItems.length &&
+          previousItems.every((id) => profile.race.items.includes(id))
+        )
+          profile.race.items = [...raceItemIds];
+        profile.race.itemVersion = 3;
+      }
       profile.race.streakStep ??= 20;
       profile.race.streakCap ??= 100;
     }

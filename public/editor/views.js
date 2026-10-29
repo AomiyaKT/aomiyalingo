@@ -1,14 +1,11 @@
+import { raceItemCatalog, raceItemNames, raceItemIds } from '../shared/race-items.js';
+
 export function createEditorViews({ q, make, getConfig, getSelected, select, changed }) {
   const names = {
     text: '単語の意味',
     voice: 'リスニング',
     spelling: 'スペリング',
-    hint: 'ヒントライト',
-    boost: 'ダッシュ',
-    review: '復習スター',
-    compass: 'ダブルヒント',
-    double: 'ダブルスター',
-    lucky: 'ラッキークローバー',
+    ...raceItemNames,
   };
   function list() {
     const config = getConfig(),
@@ -125,6 +122,10 @@ export function createEditorViews({ q, make, getConfig, getSelected, select, cha
       const label = make('label'),
         input = make('input');
       input.type = 'checkbox';
+      if (field === 'items') {
+        label.title = raceItemCatalog[value].description;
+        input.setAttribute('aria-description', raceItemCatalog[value].description);
+      }
       input.checked = config[key][field].includes(value);
       input.onchange = () => {
         config[key][field] = input.checked
@@ -160,7 +161,7 @@ export function createEditorViews({ q, make, getConfig, getSelected, select, cha
     };
     showCourseFormat();
     checks('race', 'modes', ['text', 'voice', 'spelling']);
-    checks('race', 'items', ['hint', 'boost', 'review', 'compass', 'double', 'lucky']);
+    checks('race', 'items', raceItemIds);
     const format = q('#race-format');
     format.value = config.race.format || 'adaptive-four';
     const showFormat = () => {

@@ -1,0 +1,200 @@
+.has-curriculum-picker.grade-field {
+  background: #fff;
+  border: 2px solid #e5e5e5;
+  border-radius: 20px;
+  padding: 22px;
+  margin: 0 0 24px;
+  min-width: 0;
+}
+[data-curriculum-source],
+.has-curriculum-picker > label[hidden] {
+  display: none !important;
+}
+.curriculum-picker {
+  min-width: 0;
+}
+.teacher-page:has(#current-class-panel[hidden]) #new-class-form {
+  grid-template-areas: 'grade grade' 'name round' 'scope scope' 'modes modes' 'summary summary' 'actions actions';
+}
+.teacher-page:has(#current-class-panel[hidden]) .has-curriculum-picker.grade-field {
+  padding: 20px;
+  background: #fff;
+}
+.curriculum-book {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding-bottom: 20px;
+  margin-bottom: 20px;
+  border-bottom: 2px solid #f1f1f1;
+}
+.curriculum-book-icon {
+  display: grid;
+  place-items: center;
+  width: 50px;
+  height: 50px;
+  flex: 0 0 50px;
+  color: #58a700;
+  background: #eefadc;
+  border-radius: 15px;
+}
+.curriculum-book-icon svg {
+  width: 30px;
+  height: 30px;
+}
+.curriculum-book-text {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+.curriculum-caption {
+  color: #777;
+  font-size: calc(15px * var(--font-scale, 1));
+  font-weight: 800;
+  line-height: 1.5;
+}
+.curriculum-book-title {
+  color: #3c3c3c;
+  font-size: calc(25px * var(--font-scale, 1));
+  font-weight: 900;
+  line-height: 1.2;
+}
+.curriculum-school {
+  margin-left: auto;
+  padding: 7px 12px;
+  border-radius: 10px;
+  color: #168aca;
+  background: #e7f6ff;
+  font-size: calc(15px * var(--font-scale, 1));
+  font-weight: 800;
+  line-height: 1.4;
+  text-align: center;
+}
+.curriculum-fields {
+  display: grid;
+  grid-template-columns: minmax(200px, 1fr) minmax(210px, 1.1fr);
+  gap: 20px;
+  align-items: end;
+}
+.curriculum-grades {
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+.curriculum-grades legend {
+  padding: 0 0 9px;
+}
+.curriculum-picker :is(.curriculum-grades legend, .curriculum-unit-field label) {
+  margin: 0;
+  color: #777;
+  font-size: calc(15px * var(--font-scale, 1));
+  font-weight: 800;
+  line-height: 1.5;
+}
+.curriculum-grade-buttons {
+  display: flex;
+  gap: 10px;
+}
+.curriculum-picker .curriculum-grade-button {
+  flex: 1;
+  min-height: 58px;
+  padding: 10px;
+  margin: 0;
+  border: 2px solid #e5e5e5;
+  border-bottom-width: 4px;
+  border-radius: 14px;
+  background: #fff;
+  color: #777;
+  font: inherit;
+  font-size: calc(19px * var(--font-scale, 1));
+  font-weight: 900;
+  line-height: 1.3;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.curriculum-picker .curriculum-grade-button[aria-pressed='true'] {
+  background: #f1fce5;
+  color: #58a700;
+  border-color: #a5e76c;
+}
+.curriculum-picker .curriculum-grade-button:hover:not(:disabled) {
+  border-color: #a5e76c;
+}
+.curriculum-picker .curriculum-grade-button:active:not(:disabled) {
+  transform: translateY(2px);
+}
+.curriculum-unit-field {
+  min-width: 0;
+  display: grid;
+  gap: 9px;
+}
+.curriculum-picker .curriculum-unit {
+  box-sizing: border-box;
+  width: 100%;
+  min-width: 0;
+  min-height: 58px;
+  margin: 0;
+  padding: 12px 14px;
+  border: 2px solid #e5e5e5;
+  border-bottom-width: 4px;
+  border-radius: 14px;
+  background: #f7f7f7;
+  color: #4b4b4b;
+  font: inherit;
+  font-size: calc(19px * var(--font-scale, 1));
+  font-weight: 800;
+  line-height: 1.3;
+  cursor: pointer;
+}
+.curriculum-picker :is(button, select):disabled {
+  cursor: default;
+  opacity: 0.55;
+}
+.race-teacher .race-setup-fields {
+  grid-template-columns: minmax(0, 1fr);
+  align-items: start;
+}
+.race-teacher .race-setup-fields .has-curriculum-picker {
+  margin: 0;
+  padding: 20px;
+}
+.race-teacher .race-name-field {
+  padding-top: 4px;
+}
+.race-teacher .curriculum-fields {
+  grid-template-columns: minmax(200px, 1fr) minmax(210px, 1.1fr);
+  gap: 16px;
+}
+.embedded-editor .has-curriculum-picker.grade-field {
+  display: block;
+  padding: 18px;
+}
+.embedded-editor .curriculum-book {
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+}
+@media (max-width: 980px) {
+  .race-teacher .race-setup-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .race-teacher .curriculum-fields {
+    grid-template-columns: minmax(200px, 1fr) minmax(210px, 1.1fr);
+  }
+}
+@media (max-width: 650px) {
+  .teacher-page:has(#current-class-panel[hidden]) #new-class-form {
+    grid-template-areas: 'grade' 'name' 'scope' 'round' 'modes' 'summary' 'actions';
+  }
+  .curriculum-fields,
+  .race-teacher .curriculum-fields {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 16px;
+  }
+  .has-curriculum-picker.grade-field {
+    padding: 18px;
+  }
+  .curriculum-school {
+    max-width: 120px;
+  }
+}

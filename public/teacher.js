@@ -4,9 +4,15 @@ import { createTeacherAnalysis } from './practice/teacher-analysis.js';
 import { createTeacherPracticePanels } from './practice/teacher-panels.js';
 import { practiceFlow, createClassLauncher } from './practice/teacher-flow.js';
 import { installContextHelp } from './shared/context-help.js';
+import { createClassVocabularyReader, setTeacherText } from './practice/teacher-render-state.js';
+import { mountCurriculumPicker } from './shared/curriculum-picker.js';
 installContextHelp();
 const tq = (s) => document.querySelector(s),
   modeNames = course.exerciseNames;
+const materialPicker = mountCurriculumPicker(tq('#class-grade'));
+const readClassVocabulary = createClassVocabularyReader({ fallback: builtinVocabulary });
+const interfaceText = (selector, text) =>
+  setTeacherText(tq(selector), text, document.documentElement?.lang || 'ja');
 let practiceFormat = 'adaptive-four';
 let classes = [],
   classId = null,
@@ -27,16 +33,16 @@ function syncPracticeFlow() {
   const state = practiceFlow(room, preparingClass);
   preparingClass = state.phase === 'setup';
   document.body.dataset.teacherPracticeState = state.phase;
-  tq('#practice-title').textContent = state.title;
+  interfaceText('#practice-title', state.title);
   tq('#practice-title').translate = preparingClass || !room;
   tq('#practice-next-step').dataset.help = state.next;
   tq('#current-class-panel').hidden = preparingClass || !room;
   tq('#class-results').hidden = preparingClass || !room || lastData?.classroom?.id !== classId;
   tq('#new-class-panel').open = preparingClass;
   tq('#new-class-panel').hidden = !preparingClass;
-  tq('#current-class-panel h2').textContent = room?.active ? '現在のクラス' : '授業の記録';
+  interfaceText('#current-class-panel h2', room?.active ? '現在のクラス' : '授業の記録');
   tq('#prepare-class').hidden = preparingClass || !room;
-  tq('#class-setup-cancel').textContent = state.back;
+  interfaceText('#class-setup-cancel', state.back);
   tq('#class-setup-cancel').hidden = !room;
   tq('#projection-records').hidden = !document.body.classList.contains('projection');
   aomiClassroomLink(
@@ -46,16 +52,20 @@ function syncPracticeFlow() {
     'practice',
     state.canJoin ? room.id : null,
   );
-  tq('.qr-panel h2').textContent = state.canJoin ? '生徒用QR' : '記録保存済み';
-  tq('.qr-empty-note').textContent = room
-    ? 'この授業は終了しました。次の授業を始めると、新しいQRが表示されます。'
-    : 'クラスを開始すると、この授業専用のQRが表示されます。';
+  interfaceText('.qr-panel h2', state.canJoin ? '生徒用QR' : '記録保存済み');
+  interfaceText(
+    '.qr-empty-note',
+    room
+      ? 'この授業は終了しました。次の授業を始めると、新しいQRが表示されます。'
+      : 'クラスを開始すると、この授業専用のQRが表示されます。',
+  );
 }
 function prepareClass() {
   if (controlsBusy || recordsBusy) return;
   preparingClass = true;
   syncPracticeFlow();
-  tq('#class-grade').focus({ preventScroll: true });
+  if (materialPicker) materialPicker.focus();
+  else tq('#class-grade').focus({ preventScroll: true });
   tq('#new-class-panel').scrollIntoView({
     behavior: appSettings.values.reduceMotion ? 'auto' : 'smooth',
     block: 'start',
@@ -71,7 +81,7 @@ function el(tag, text, className) {
   return node;
 }
 function message(text, bad = false) {
-  tq('#connection-status').textContent = text;
+  interfaceText('#connection-status', text);
   tq('#connection-status').classList.toggle('sync-error', bad);
 }
 function loggedIn(value) {
@@ -82,7 +92,8 @@ function loggedIn(value) {
 }
 let editorDefaultsLoaded = false,
   configuredWords = builtinVocabulary,
-  gradeRoot = null;
+  gradeRoot = null,
+  lastRenderedVocabulary = null;
 async function loadClasses() {
   if (!editorDefaultsLoaded) {
     const saved = await teacherApi('config');
@@ -280,35 +291,40 @@ const renderRoster = createTeacherRoster({
   },
 });
 function render(data) {
-  vocabulary.splice(
-    0,
-    vocabulary.length,
-    ...(data.classroom?.vocabulary ? JSON.parse(data.classroom.vocabulary) : builtinVocabulary),
-  );
+  const words = readClassVocabulary(data.classroom?.vocabulary);
+  // The legacy course facade owns this array; replace its contents only when
+  // the classroom's immutable material snapshot actually changes.
+  if (words !== lastRenderedVocabulary) {
+    vocabulary.splice(0, vocabulary.length, ...words);
+    lastRenderedVocabulary = words;
+  }
   lastData = data;
   const room = data.classroom || classes.find((c) => c.id === classId);
   document.body.dataset.practiceFormat = course.practiceSettings(room?.modes).format;
   if (room) {
     classes = classes.map((c) => (c.id === room.id ? room : c));
     const option = tq('#class-select').querySelector('option[value="' + room.id + '"]');
-    if (option) option.textContent = roomName(room);
+    if (option) setTeacherText(option, roomName(room), document.documentElement?.lang || 'ja');
   }
-  tq('#class-scope-summary').textContent = classScope(room);
-  tq('#room-state').textContent = !room?.active
-    ? '終了 · 記録保存済み'
-    : room.paused
-      ? '一時停止中'
-      : room.accepting
-        ? '練習中 · 参加受付中'
-        : '練習中 · 参加締切';
+  interfaceText('#class-scope-summary', classScope(room));
+  interfaceText(
+    '#room-state',
+    !room?.active
+      ? '終了 · 記録保存済み'
+      : room.paused
+        ? '一時停止中'
+        : room.accepting
+          ? '練習中 · 参加受付中'
+          : '練習中 · 参加締切',
+  );
   tq('#room-state').dataset.state = !room?.active ? 'ended' : room.paused ? 'paused' : 'active';
   tq('#delete-ended-class').hidden = !room || !!room.active;
   tq('#class-state-button').hidden = !room;
-  tq('#class-state-button').textContent = room?.active ? '授業を終了' : '授業を再開';
+  interfaceText('#class-state-button', room?.active ? '授業を終了' : '授業を再開');
   tq('#joining-button').hidden = !room?.active;
   tq('#pause-button').hidden = !room?.active;
-  tq('#joining-button').textContent = room?.accepting ? '参加を締め切る' : '参加を再開';
-  tq('#pause-button').textContent = room?.paused ? '練習を再開' : '練習を一時停止';
+  interfaceText('#joining-button', room?.accepting ? '参加を締め切る' : '参加を再開');
+  interfaceText('#pause-button', room?.paused ? '練習を再開' : '練習を一時停止');
   tq('#pause-button').dataset.help = room?.paused
     ? '参加済みの生徒が、続きから練習を再開します。'
     : '生徒の回答を一時停止します。記録は保存され、後から再開できます。';
@@ -319,19 +335,23 @@ function render(data) {
   tq('#export-results').href = '/api/teacher/export?class=' + encodeURIComponent(classId);
   tq('#class-state-button').classList.toggle('reopen', !room?.active);
   tq('.qr-panel').classList.toggle('room-closed', !room?.active || !room?.accepting);
-  tq('#joined-count').textContent = data.students.length;
-  tq('#finished-count').textContent = data.students.filter((s) => s.done).length;
+  interfaceText('#joined-count', data.students.length);
+  interfaceText('#finished-count', data.students.filter((s) => s.done).length);
   const projecting = document.body.classList.contains('projection');
   const errors = data.attempts.filter((a) => !a.correct),
     summary = course.teachingSummary(data.students, vocabulary);
-  tq('#mistake-summary-label').textContent = projecting ? '確認したい単語' : '間違えた回答';
-  tq('#mistake-count').textContent = projecting
-    ? summary.filter((w) => w.remaining || w.firstWrong || w.hinted).length
-    : errors.length;
+  interfaceText('#mistake-summary-label', projecting ? '確認したい単語' : '間違えた回答');
+  interfaceText(
+    '#mistake-count',
+    projecting
+      ? summary.filter((w) => w.remaining || w.firstWrong || w.hinted).length
+      : errors.length,
+  );
   tq('#waiting-students').hidden = data.students.length > 0;
-  tq('#waiting-students').textContent = room?.active
-    ? '生徒の参加を待っています…'
-    : 'この授業の参加記録はありません。';
+  interfaceText(
+    '#waiting-students',
+    room?.active ? '生徒の参加を待っています…' : 'この授業の参加記録はありません。',
+  );
   renderRoster(room?.id || classId, data.students);
   renderPracticePanels(data, summary);
   renderRecovery(data.recovery || []);

@@ -36,7 +36,8 @@ export function createRewardFeedback({ q, make, settings }) {
     if (!receipt || receipt.id === lastReceipt) return;
     lastReceipt = receipt.id;
     panel.replaceChildren();
-    panel.hidden = !receipt.correct;
+    panel.hidden = !receipt.correct && !receipt.shielded;
+    if (receipt.shielded) panel.append(make('span', '🛡️ 連続正解を守った！', 'reward-combo'));
     if (!receipt.correct) return;
     panel.append(make('strong', '+' + receipt.points + ' pt', 'reward-points'));
     if (receipt.streak > 1 && !receipt.hinted && !receipt.review) {
@@ -44,12 +45,18 @@ export function createRewardFeedback({ q, make, settings }) {
     }
     if (receipt.streakBonus)
       panel.append(make('small', '連続正解ボーナス +' + receipt.streakBonus + ' pt（合計に含む）'));
+    if (receipt.treasureBonus)
+      panel.append(make('span', '💎 宝箱オープン！ ＋150 pt', 'reward-combo'));
     const base = receipt.review
       ? rules.reviewPoints
       : receipt.hinted
         ? rules.hintPoints
         : rules.correctPoints;
-    const itemBonus = receipt.points - (base ?? receipt.points) - (receipt.streakBonus || 0);
+    const itemBonus =
+      receipt.points -
+      (base ?? receipt.points) -
+      (receipt.streakBonus || 0) -
+      (receipt.treasureBonus || 0);
     if (itemBonus > 0)
       panel.append(make('small', '道具ボーナス +' + itemBonus + ' pt（合計に含む）'));
     if (receipt.review) panel.append(make('small', '復習できたね！'));

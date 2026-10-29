@@ -650,6 +650,54 @@ input[type='range'] {
   font-weight: 500;
   margin-top: 4px;
 }
+.settings-updates {
+  padding: 18px;
+  margin: 0 0 24px;
+  border: 2px solid #e5e5e5;
+  border-radius: 18px;
+  background: #f7fcf1;
+}
+.settings-panel:has(.settings-updates) {
+  overflow-anchor: none;
+}
+.settings-updates h3 {
+  margin-top: 0;
+}
+.settings-update-versions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  margin: 16px 0;
+}
+.settings-update-versions dt {
+  color: var(--muted);
+  font-size: 14px;
+}
+.settings-update-versions dd {
+  margin: 4px 0 0;
+  font-weight: 900;
+  font-size: 20px;
+  overflow-wrap: anywhere;
+}
+.settings-update-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+.settings-update-actions button {
+  flex: 1 1 150px;
+  min-height: 52px;
+  margin: 0;
+  font-size: 16px;
+}
+.settings-updates pre {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  font: inherit;
+  font-size: 14px;
+  max-height: 220px;
+  overflow-y: auto;
+}
 .teacher-account-settings {
   margin-top: 20px;
   padding-top: 16px;

@@ -1,5 +1,64 @@
 // UI strings only. Curriculum meanings and student answers are never translated.
 export const englishUI = {
+  アプリの更新: 'App updates',
+  この画面: 'This page',
+  GitHubの公開版: 'Public GitHub version',
+  更新を確認: 'Check for updates',
+  最新版に更新: 'Update to latest version',
+  更新内容とGitHub: 'Release notes & GitHub',
+  'GitHubで確認 ↗': 'View on GitHub ↗',
+  'GitHubの公開版と、このサーバーのバージョンを確認します。':
+    'Check the public GitHub version and this server.',
+  '最新の公開版を使用しています。': 'You are using the latest public version.',
+  'このサーバーで新しいバージョンを利用できます。': 'A newer version is ready on this server.',
+  'GitHubに新しい版があります。サーバーへの公開を待っています。':
+    'A newer version is on GitHub. It is waiting to be deployed to this server.',
+  '公開版より新しい開発版を使用しています。':
+    'You are using a development version newer than the public release.',
+  'サーバーが以前の版に戻っています。管理者に確認してください。':
+    'This server is running an older version. Please contact the administrator.',
+  'GitHubの更新情報を取得できません。最新版かどうかは未確認です。':
+    'GitHub could not be reached. The latest version has not been verified.',
+  '更新情報を取得できませんでした。': 'Update information could not be loaded.',
+  '先生としてログインしてから更新を確認してください。':
+    'Sign in as a teacher to check for updates.',
+  '更新を確認できませんでした。接続を確認して、もう一度お試しください。':
+    'Could not check for updates. Check your connection and try again.',
+  '更新を開始できませんでした。もう一度更新を確認してください。':
+    'Could not start the update. Check for updates again.',
+  'バージョンが変わりました。もう一度更新を確認してください。':
+    'The server version changed. Check for updates again.',
+  '授業・レースを終了してから更新してください。': 'End the lesson or race before updating.',
+  '保存中・未保存の操作があります。保存を確認してから更新してください。':
+    'An operation is saving or has not been saved. Confirm it is saved before updating.',
+  '最終確認：{{0}}': 'Last checked: {{0}}',
+  コンボシールド: 'Combo Shield',
+  チェンジカード: 'Swap Card',
+  宝箱チャレンジ: 'Treasure Challenge',
+  追い上げマグネット: 'Catch-up Magnet',
+  '間違い・ヒントによる連続正解のリセットを1回防ぐ。得点と正誤は変わりません。':
+    'Protects your combo once after a mistake or hint. Points and answer accuracy stay unchanged.',
+  '今の問題を、同じ種類の別の問題に交換。得点・正解率・連続正解は変わりません。':
+    'Replaces this question with another of the same type. Your points, accuracy and combo stay unchanged.',
+  '自力で3問連続正解すると＋150点。間違い・ヒントで宝箱のカウントは0に戻ります。':
+    'Earn +150 points for 3 consecutive independent correct answers. A mistake or hint resets the treasure counter.',
+  'すぐに＋20〜150点。前の人との得点差が大きいほど増えます。相手の得点は減りません。':
+    'Instantly adds 20–150 points based on the gap to the next player ahead. Nobody loses points.',
+  '使用する道具を選べます。道具の名前に触れると効果を確認できます。':
+    'Choose which items to use. Hover over an item name to see its effect.',
+  '交換できる問題がありません。': 'No replacement question is available.',
+  '連続正解を守った！': 'Combo protected!',
+  '得点と正誤はそのまま。次の問題へ。':
+    'Your score and accuracy stay unchanged. On to the next question!',
+  '宝箱オープン！': 'Treasure unlocked!',
+  '3問連続で自力正解！ ＋150 pt': '3 independent correct answers in a row! +150 pt',
+  '🛡️ コンボシールド：残り1回': '🛡️ Combo Shield: 1 protection left',
+  '💎 宝箱チャレンジ：{{0}}/3・達成で＋150 pt': '💎 Treasure Challenge: {{0}}/3 · Reward: +150 pt',
+  '追い上げボーナス ＋{{0}} pt': 'Catch-up bonus +{{0}} pt',
+  小学校: 'Elementary school',
+  教材: 'Textbook',
+  学年: 'Grade',
+  単元: 'Unit',
   '例文の主語とbe動詞の組み合わせを確認してください。':
     'Check the subject and be-verb agreement in this example.',
   '例文に同じことばが続いています。': 'An example contains a repeated word.',

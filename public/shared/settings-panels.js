@@ -1,6 +1,7 @@
 import { APP_VERSION } from './release.js';
 import { describeRuntimeStatus } from './runtime-status.js';
 import { teacherGuidePath } from './teacher-guide.js';
+import { mountSettingsUpdates } from './settings-updates.js';
 
 const teacherHelp = `
   <h3>授業を始めるには</h3>
@@ -80,6 +81,8 @@ export function mountSettingsPanels({ dialog, teacher }) {
     <p id="settings-check-result" class="settings-note" role="status"></p>
     <p class="settings-version">Aomiyalingo <span>バージョン ${APP_VERSION}</span></p>`;
   if (teacher) {
+    status.querySelector('.settings-version').remove();
+    mountSettingsUpdates({ host: status, dialog });
     const tools = document.createElement('div');
     tools.className = 'teacher-tools-links';
     tools.innerHTML =
