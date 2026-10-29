@@ -37,7 +37,7 @@ export function createTimingTower({ make, avatarArt, getData, appSettings }) {
     const columns = Math.min(
         4,
         Math.ceil(players.length / 9),
-        Math.max(1, Math.floor(panel.clientWidth / 290)),
+        Math.max(1, Math.floor(panel.clientWidth / (panel.clientWidth >= 960 ? 240 : 290))),
       ),
       rows = Math.ceil(players.length / columns);
     if (layoutColumns.get(panel) !== columns) {
@@ -110,8 +110,7 @@ export function createTimingTower({ make, avatarArt, getData, appSettings }) {
       );
       row.classList.toggle('timing-ready', data.race?.status === 'lobby' && p.prepared);
       row.classList.toggle('timing-not-ready', data.race?.status === 'lobby' && !p.prepared);
-      setTextIfChanged(
-        row.querySelector('.timing-driver small'),
+      const detail =
         data.race?.status === 'lobby'
           ? p.prepared
             ? '✓ 準備完了'
@@ -136,8 +135,10 @@ export function createTimingTower({ make, avatarArt, getData, appSettings }) {
                   ? '完了'
                   : p.done
                     ? '時間終了'
-                    : exerciseNames[p.mode] || '回答中'),
-      );
+                    : exerciseNames[p.mode] || '回答中');
+      const detailNode = row.querySelector('.timing-driver small');
+      setTextIfChanged(detailNode, detail);
+      setAttributeIfChanged(detailNode, 'title', detail);
       const time = row.querySelector('.timing-time');
       timers.set(p.id, time);
       setTextIfChanged(

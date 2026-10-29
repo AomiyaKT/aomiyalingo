@@ -41,15 +41,6 @@
 .race-heading-help h2 {
   margin: 0;
 }
-.race-qr-panel .race-heading-help {
-  position: relative;
-  display: block;
-}
-.race-qr-panel .race-heading-help .help-trigger {
-  position: absolute;
-  top: -28px;
-  right: -12px;
-}
 .race-archive-picker {
   width: 100%;
   margin-top: 18px;
@@ -80,12 +71,17 @@
 .teacher-page .board-heading .help-trigger:hover {
   background: #fff2;
 }
+.race-qr-panel .race-heading-help,
 .teacher-page .qr-panel > .context-help-heading {
-  position: relative;
-  display: block;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 44px;
+  align-items: center;
+  gap: 8px;
 }
-.teacher-page .qr-panel > .context-help-heading .help-trigger {
-  position: absolute;
-  right: -12px;
-  top: -28px;
+.race-qr-panel .race-heading-help h2,
+.teacher-page .qr-panel > .context-help-heading h2 {
+  min-width: 0;
+  margin: 0;
+  text-align: left;
+  overflow-wrap: anywhere;
 }

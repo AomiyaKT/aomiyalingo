@@ -33,7 +33,7 @@ export function createRaceService({
       await stmt(
         env,
         "UPDATE races SET status=?,remaining_ms=?,elapsed_ms=?,started_at=NULL,revision=revision+1 WHERE id=? AND deleted_at=0 AND status='running' AND revision=?",
-        raceStations(r) && (r.station || 0) < 2 ? 'intermission' : 'finished',
+        courseEndStatus(r.station || 0, raceStations(r) ? 3 : 1),
         raceRemaining(r),
         raceElapsed(r),
         r.id,
@@ -222,3 +222,4 @@ export function createRaceService({
 
   return { raceBoard, raceSession };
 }
+import { courseEndStatus } from '../../public/race/lifecycle.js';

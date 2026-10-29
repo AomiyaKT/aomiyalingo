@@ -8,7 +8,8 @@ import { createTeacherRaceView } from './race/teacher.js';
 import { createItemRoulette } from './race/items.js';
 import { createRaceApi } from './race/api.js';
 import { createRaceViews } from './race/views.js';
-import { studentPhase } from './race/lifecycle.js';
+import { createStudentRaceLifecycle, createRacePlayback } from './race/lifecycle.js';
+import { createStudentRaceController } from './race/student-controller.js';
 import { createWaitingReview } from './race/review.js';
 import { renderRaceBriefing } from './race/briefing.js';
 import { createTeacherRaceController } from './race/teacher-controller.js';
@@ -85,6 +86,28 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
     finished: 'レース終了',
   };
   const api = createRaceApi({ getSession: () => session });
+  const playback = !isTeacher
+    ? createRacePlayback({
+        audio,
+        volume: () => appSettings.values.voiceVolume / 100,
+        owner: () =>
+          [session?.token, data?.race?.id, data?.race?.station, currentTask?.id].join(':'),
+        enabled: () =>
+          !document.hidden &&
+          data?.race?.status === 'running' &&
+          document.body.dataset.racePhase === 'question',
+        onError: () => {
+          q('#race-save-error').textContent =
+            '音声を再生できませんでした。もう一度押してください。';
+          q('#race-save-error').hidden = false;
+        },
+      })
+    : null;
+  function stopAudio() {
+    if (playback) playback.stop();
+    else audio.pause();
+    waitingReview?.stop();
+  }
   const waitingReview = !isTeacher
     ? createWaitingReview({
         q,
@@ -105,16 +128,7 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
             interactionEffects.sound(cue);
           }
         },
-        play: (v) =>
-          playWordAudio(
-            audio,
-            { word: v.spoken, audio: v.audio },
-            appSettings.values.voiceVolume / 100,
-          ).catch(() => {
-            q('#race-save-error').textContent =
-              '音声を再生できません。設定で音声を確認してください。';
-            q('#race-save-error').hidden = false;
-          }),
+        play: (v) => playback.play({ word: v.spoken, audio: v.audio }),
         submit: () => {
           if (!q('#race-submit').disabled) q('#race-submit').click();
         },
@@ -197,6 +211,30 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
     syncAnswer,
   });
   const { itemArt, spinItem } = roulette;
+  const studentLifecycle = !isTeacher
+    ? createStudentRaceLifecycle({
+        onBoundary() {
+          lifecycle.epoch++;
+          studentController?.invalidate();
+          currentTask = null;
+          feedback = null;
+          selected = [];
+          pending = null;
+          lastStage = null;
+          lastItem = null;
+          store('aomi.race.pending', null);
+          rewards.clear();
+        },
+        onSuspend() {
+          stopAudio();
+          clearTimeout(autoNext);
+          autoNext = null;
+          roulette.cancel();
+          preloader.reset();
+          showtime.update(null);
+        },
+      })
+    : null;
   function drawTeam(team, prefix) {
     if (!team) return;
     const target = Math.max(1, team.target),
@@ -292,6 +330,7 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
     clearTimeout(autoNext);
     autoNext = null;
     if (busy || data?.race?.status === 'paused') return;
+    stopAudio();
     feedback = null;
     currentTask = null;
     drawStudent(data);
@@ -461,7 +500,7 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
     if (!t) return;
     const changed = currentTask?.id !== t.id;
     if (changed) {
-      audio.pause();
+      stopAudio();
       currentTask = t;
       const draft = read('aomi.race.draft.' + t.id);
       if (t.exercise) exercises.set(t, draft?.exercise);
@@ -588,6 +627,7 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
             )
           )
             return;
+          lifecycle.epoch++;
           busy = true;
           drawAvatars();
           q('#race-avatar-status').textContent = '保存中…';
@@ -631,33 +671,13 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
   }
 
   function drawStudent(result) {
+    const phase = studentLifecycle.update(result, !!feedback);
     if (data?.race?.id !== result.race.id || data?.race?.station !== result.race.station)
       preloader.reset();
     if (result.race.status === 'running' && result.self.ready !== false && !result.self.done)
       preloader.warm(feedback ? taskResourceHints(result.self.task) : result.self.lookahead);
     else preloader.reset();
-    if (data?.race?.id === result.race.id && data.race.station !== result.race.station) {
-      currentTask = null;
-      feedback = null;
-      selected = [];
-      clearTimeout(autoNext);
-      roulette.cancel();
-    }
-    if (data?.race?.id === result.race.id && data.race.station !== result.race.station) {
-      pending = null;
-      store('aomi.race.pending', null);
-    }
     data = result;
-    const phase = studentPhase(result, !!feedback);
-    if (
-      ['paused', 'finished', 'results', 'courseDone'].includes(phase) &&
-      document.body.dataset.racePhase !== phase
-    ) {
-      audio.pause();
-      window.speechSynthesis?.cancel();
-      clearTimeout(autoNext);
-      roulette.cancel();
-    }
     document.body.dataset.racePhase = phase;
     showtime.update(result);
     const rules = result.race.settings;
@@ -966,8 +986,9 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
         else q('#board-race-status').textContent = '接続を確認してください。記録は保持しています。';
       } else {
         if (e.status === 401 || e.status === 404) {
-          clearTimeout(autoNext);
-          audio.pause();
+          studentLifecycle.leave();
+          studentController.invalidate();
+          lifecycle.epoch++;
           if (session) raceSessionCache.remove(session);
           session = null;
           currentTask = null;
@@ -987,90 +1008,99 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
       polling = false;
     }
   }
-  async function submitPending() {
-    if (busy || !pending) return;
-    busy = true;
-    const epoch = lifecycle.epoch;
-    const request = pending;
-    drawAnswer();
-    q('#race-save-error').hidden = true;
-    try {
-      const result = await api('/api/race/answer', request, true);
-      if (epoch !== lifecycle.epoch) return;
-      pending = null;
-      store('aomi.race.pending', null);
-      feedback = result.receipt;
-      rewards.show(feedback, result.race.settings);
-      showtime.receipt(feedback);
-      drawStudent({ ...result, board: result.board || data?.board || [] });
-      q('#race-feedback').textContent = feedback
-        ? feedback.correct
-          ? '正解！'
-          : 'もう一度覚えよう。正解：' + feedback.expected
-        : '保存しました。';
-      q('#race-feedback').className = feedback?.correct ? 'correct-feedback' : 'wrong-feedback';
-      q('#race-submit').hidden = true;
-      q('#race-next').hidden = false;
-      q('#race-next').textContent = result.self.done ? 'コースの記録を見る' : '次へ';
-      interactionEffects.answer({
-        correct: !!feedback?.correct,
-        streak: feedback?.hinted || feedback?.review ? 0 : feedback?.streak || 0,
-        key: feedback?.id,
-        target: q('#race-feedback'),
-        burst: false,
-      });
-      if (feedback?.correct) {
-        interactionEffects.pulse(q('#self-score'), 'success');
-        clearTimeout(autoNext);
-        autoNext = setTimeout(() => {
-          if (
-            feedback?.id === result.receipt?.id &&
-            data?.race?.status === 'running' &&
-            !document.hidden
-          )
-            nextQuestion();
-        }, 1100);
-      } else if (currentTask) {
-        const word = { word: currentTask.spoken, audio: currentTask.audio };
-        clearTimeout(autoNext);
-        autoNext = setTimeout(() => {
-          if (
-            epoch !== lifecycle.epoch ||
-            feedback?.id !== result.receipt?.id ||
-            data?.race?.status !== 'running' ||
-            document.hidden ||
-            q('#settings-dialog').open
-          )
-            return;
-          playWordAudio(audio, word, appSettings.values.voiceVolume / 100).catch(() => {});
-        }, 340);
-      }
-    } catch (e) {
-      if (epoch !== lifecycle.epoch) return;
-      q('#race-save-error').textContent =
-        e.message + ' 回答は保存待ちです。「答えを確認」で再送できます。';
-      q('#race-save-error').hidden = false;
-      if ([400, 409, 423].includes(e.status)) {
-        try {
-          const latest = await api('/api/race/me', undefined, true);
-          if (epoch !== lifecycle.epoch) return;
-          if (latest.self.task?.id === request.questionId && latest.race.status === 'paused')
-            pending = request;
-          else {
-            pending = null;
-            currentTask = null;
-          }
-          store('aomi.race.pending', pending);
-          drawStudent(latest);
-        } catch {
-          pending = request;
-          store('aomi.race.pending', pending);
-        }
-      }
-    } finally {
-      busy = false;
-      drawAnswer();
+  function feedbackActive(result, epoch) {
+    return (
+      epoch === lifecycle.epoch &&
+      feedback?.id === result.receipt?.id &&
+      data?.race?.status === 'running' &&
+      !document.hidden &&
+      !q('#settings-dialog').open
+    );
+  }
+  function showAnswerResult(result, epoch = lifecycle.epoch) {
+    feedback = result.receipt;
+    rewards.show(feedback, result.race.settings);
+    showtime.receipt(feedback);
+    drawStudent({ ...result, board: result.board || data?.board || [] });
+    q('#race-feedback').textContent = feedback
+      ? feedback.correct
+        ? '正解！'
+        : 'もう一度覚えよう。正解：' + feedback.expected
+      : '保存しました。';
+    q('#race-feedback').className = feedback?.correct ? 'correct-feedback' : 'wrong-feedback';
+    q('#race-submit').hidden = true;
+    q('#race-next').hidden = false;
+    q('#race-next').textContent = result.self.done ? 'コースの記録を見る' : '次へ';
+    interactionEffects.answer({
+      correct: !!feedback?.correct,
+      streak: feedback?.hinted || feedback?.review ? 0 : feedback?.streak || 0,
+      key: feedback?.id,
+      target: q('#race-feedback'),
+      burst: false,
+    });
+    if (feedback?.correct) {
+      interactionEffects.pulse(q('#self-score'), 'success');
+      clearTimeout(autoNext);
+      autoNext = setTimeout(() => {
+        if (feedbackActive(result, epoch)) nextQuestion();
+      }, 1100);
+    } else if (currentTask) {
+      const word = { word: currentTask.spoken, audio: currentTask.audio };
+      clearTimeout(autoNext);
+      autoNext = setTimeout(() => {
+        if (!feedbackActive(result, epoch)) return;
+        playback.play(word, 1, false);
+      }, 340);
     }
+  }
+  const studentController = !isTeacher
+    ? createStudentRaceController({
+        api,
+        getSession: () => session,
+        getEpoch: () => lifecycle.epoch,
+        getPending: () => pending,
+        setPending: (answer) => {
+          pending = answer;
+          store('aomi.race.pending', pending);
+          raceSessionCache.save({ ...session, pending });
+        },
+        isBusy: () => busy,
+        onBusy: (value) => {
+          busy = value;
+          if (value) q('#race-save-error').hidden = true;
+          drawAnswer();
+        },
+        onAccepted: showAnswerResult,
+        onError: (error) => {
+          q('#race-save-error').textContent =
+            error.message + ' 回答は保存待ちです。「答えを確認」で再送できます。';
+          q('#race-save-error').hidden = false;
+        },
+        onSynchronized: (result, discardTask) => {
+          if (discardTask) currentTask = null;
+          drawStudent(result);
+        },
+      })
+    : null;
+  function submitPending() {
+    if (busy || !pending || !session?.token) return;
+    // An earlier poll must not replace this mutation's newer snapshot.
+    lifecycle.epoch++;
+    return studentController?.submit();
+  }
+  function acceptJoined(joined) {
+    studentLifecycle.leave();
+    studentController.invalidate();
+    session = joined.session;
+    currentTask = null;
+    feedback = null;
+    selected = [];
+    lastStage = null;
+    lastItem = null;
+    pending = session.pending || null;
+    store('aomi.race.pending', pending);
+    drawStudent(joined.result);
+    interactionEffects.sound('welcome');
   }
   if (isTeacher) {
     teacherController = createTeacherRaceController({
@@ -1118,6 +1148,7 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
     }
     q('#race-ready').onclick = async () => {
       if (busy) return;
+      lifecycle.epoch++;
       busy = true;
       q('#race-ready').disabled = true;
       try {
@@ -1136,6 +1167,7 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
     };
     q('#briefing-avatar-change').onclick = async () => {
       if (busy) return;
+      lifecycle.epoch++;
       busy = true;
       try {
         drawStudent(await api('/api/race/avatar', { avatar: data.self.avatar }, true));
@@ -1156,14 +1188,7 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
         const current = await api(currentRacePath);
         if (!current.race) throw Error('先生の参加受付を待ってください。');
         const joined = await raceSessionCache.join(api, current.race.id, q('#race-number').value);
-        const result = joined.result;
-        session = joined.session;
-        feedback = null;
-        currentTask = null;
-        pending = joined.session.pending || null;
-        store('aomi.race.pending', pending);
-        drawStudent(result);
-        interactionEffects.sound('welcome');
+        acceptJoined(joined);
       } catch (err) {
         q('#entry-message').textContent = err.message;
       } finally {
@@ -1196,17 +1221,7 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
           data.self.label,
           data.self.avatar,
         );
-        const result = joined.result;
-        clearTimeout(autoNext);
-        session = joined.session;
-        feedback = null;
-        currentTask = null;
-        pending = joined.session.pending || null;
-        lastStage = null;
-        lastItem = null;
-        store('aomi.race.pending', pending);
-        drawStudent(result);
-        interactionEffects.sound('welcome');
+        acceptJoined(joined);
       } catch (e) {
         q('#next-race-message').textContent = e.message;
       } finally {
@@ -1218,13 +1233,11 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
     };
     q('#change-race').onclick = () => {
       if (busy) return;
-      preloader.reset();
-      roulette.cancel();
+      studentLifecycle.leave();
+      studentController.invalidate();
       lifecycle.epoch++;
       raceSessionCache.save({ ...session, pending });
       q('#race-number').value = data?.self?.label || '';
-      clearTimeout(autoNext);
-      audio.pause();
       session = null;
       currentTask = null;
       feedback = null;
@@ -1236,30 +1249,12 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
       q('#change-race').hidden = true;
       poll();
     };
-    q('#race-audio').onclick = () => {
-      if (!currentTask) return;
-      playWordAudio(
-        audio,
-        { word: currentTask.spoken, audio: currentTask.audio },
-        appSettings.values.voiceVolume / 100,
-        1,
-      ).catch(() => {
-        q('#race-save-error').textContent = '音声を再生できませんでした。もう一度押してください。';
-        q('#race-save-error').hidden = false;
-      });
+    const playCurrent = (rate = 1) => {
+      if (currentTask)
+        return playback.play({ word: currentTask.spoken, audio: currentTask.audio }, rate);
     };
-    q('#race-slow').onclick = () => {
-      if (!currentTask) return;
-      playWordAudio(
-        audio,
-        { word: currentTask.spoken, audio: currentTask.audio },
-        appSettings.values.voiceVolume / 100,
-        0.75,
-      ).catch(() => {
-        q('#race-save-error').textContent = '音声を再生できませんでした。もう一度押してください。';
-        q('#race-save-error').hidden = false;
-      });
-    };
+    q('#race-audio').onclick = () => playCurrent();
+    q('#race-slow').onclick = () => playCurrent(0.75);
     q('#race-undo').onclick = () => {
       if (q('#race-undo').disabled) return;
       interactionEffects.sound('remove');
@@ -1289,6 +1284,7 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
     };
     q('#use-race-item').onclick = async () => {
       if (busy || roulette.rolling || !currentTask || q('#use-race-item').disabled) return;
+      lifecycle.epoch++;
       busy = true;
       drawAnswer();
       try {
@@ -1315,7 +1311,7 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
     track.setAttribute('aria-label', '全員の順位。スワイプでスクロールできます。');
   }
   const pollScheduler = createPollScheduler({ run: poll, state: () => data?.race });
-  window.addEventListener('pagehide', () => audio.pause());
+  window.addEventListener('pagehide', stopAudio);
   setInterval(() => {
     if (document.hidden) return;
     if (!isTeacher) showtime.clock?.(seconds());
@@ -1343,8 +1339,7 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
   }, 250);
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) {
-      audio.pause();
-      window.speechSynthesis?.cancel();
+      stopAudio();
     }
   });
   window.addEventListener('aomi-reconnect', () => poll());

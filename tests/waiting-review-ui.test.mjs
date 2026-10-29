@@ -88,6 +88,14 @@ try {
   reject(Error('current playback'));
   await current;
   assert.match(q('#review-status').textContent, /再生できません/);
+  const hiddenPlayback = q('#review-listen').onclick();
+  const hiddenRejection = reject;
+  review.stop();
+  // The tab is already visible again when a delayed media rejection arrives.
+  hiddenRejection(Error('playback canceled in background'));
+  await hiddenPlayback;
+  assert.equal(q('#review-status').textContent, '');
+  assert.ok(q('#waiting-review-card').textContent.includes('猫'));
   const pending = q('#review-listen').onclick();
   const abandoned = reject;
   data = { ...data, race: { ...data.race, status: 'paused' } };
@@ -105,9 +113,9 @@ try {
   review.update();
   q('#review-next').onclick();
   assert.equal(q('#student-course-summary').hidden, true);
-  assert.equal(plays, 3);
+  assert.equal(plays, 4);
   console.log(
-    'Review UI: live summary points, retained card position, stale audio rejection, pause cleanup and empty navigation passed.',
+    'Review UI: live summary points, retained card position, stale/background audio rejection, pause cleanup and empty navigation passed.',
   );
 } finally {
   globalThis.playWordAudio = original;

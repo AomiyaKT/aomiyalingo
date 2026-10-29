@@ -1,5 +1,6 @@
 import { gradeExercise } from './exercises.mjs';
 import { answerItemEffects, magnetPoints } from './item-effects.mjs';
+import { spellingCharacters, formatSpellingAnswer } from '../../public/shared/curriculum.js';
 
 export function createRaceGradingHandler({
   raceTaskList,
@@ -63,7 +64,11 @@ export function createRaceGradingHandler({
           ? !graded.valid
           : task.mode === 'spelling'
             ? answer.length !== w.word.length ||
-              !/^[a-z]+(?:['’][a-z]*)?(?:[ -][a-z]+(?:['’][a-z]*)?)*$/i.test(answer)
+              !(
+                /^[a-z]+(?:['’][a-z]*)?(?:[ -][a-z]+(?:['’][a-z]*)?)*$/i.test(answer) ||
+                (/^[a-z]+$/i.test(spellingCharacters(answer)) &&
+                  formatSpellingAnswer(w.word, spellingCharacters(answer)) === answer)
+              )
             : !task.options.includes(answer)
       )
         return json({ error: '答えを選んでください。' }, 400);

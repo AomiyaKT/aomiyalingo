@@ -13,7 +13,7 @@ export function createRaceRepository({
       await stmt(
         env,
         "UPDATE races SET status=?,remaining_ms=0,elapsed_ms=?,started_at=NULL,revision=revision+1 WHERE id=? AND deleted_at=0 AND status='running' AND revision=?",
-        raceStations(r) && (r.station || 0) < 2 ? 'intermission' : 'finished',
+        courseEndStatus(r.station || 0, raceStations(r) ? 3 : 1),
         raceElapsed(r),
         id,
         r.revision,
@@ -52,3 +52,4 @@ export function createRaceRepository({
 
   return { raceRoom, raceRacers, raceSave };
 }
+import { courseEndStatus } from '../../public/race/lifecycle.js';

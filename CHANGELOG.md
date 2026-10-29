@@ -2,6 +2,18 @@
 
 **English** | [日本語](CHANGELOG.ja.md)
 
+## Release 79 - 2026-10-30
+
+- Unified start, pause/resume, course transition and end policies. Student lifecycle cleanup stops audio, feedback timers, roulette and transient presentation while preserving an answer during a pause.
+- Gave pending answers one request owner and captured credential. Obsolete polls, replies and recovery attempts cannot replace a newer course or release a newer submission's busy state.
+- Shared owned playback between questions and review. Leaving a review screen or changing its card invalidates obsolete audio callbacks.
+- Preserved remaining/elapsed time when replacing an unfinished race, preventing an early final-course cancellation from appearing as a normal course clear.
+- Refined compact 35-student TV columns and QR heading alignment; QR images now fit their panel width.
+- Fixed classic race spelling for punctuated words such as `P.E.`, retaining existing answer compatibility and using the shared spelling formatter.
+- 92 regression suites passed. Local browser QA covered 35-student TV boards, Japanese/English layouts, iPad portrait/landscape and a short-height viewport. No scoring or schema changes; both 15-page Release 76 teacher guides remain applicable.
+
+Details: [Release 79](docs/release-79.md).
+
 ## Release 78 - 2026-10-29
 
 - Fixed modern lobby readiness: students who have not pressed Ready retain their personal time when the teacher starts early. Avatar changes require preparation again; saves disable Ready until acknowledged. Old API join behavior stays compatible.

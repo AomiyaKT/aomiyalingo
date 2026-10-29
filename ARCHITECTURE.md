@@ -10,6 +10,26 @@ serialized state and current room. Revision/authentication guards remain beside
 their database writes. Structural refactors do not change release numbers or
 teaching behavior.
 
+## Release 79 - race lifecycle and request ownership
+
+`public/race/lifecycle.js` owns legal server command transitions, automatic
+course-end status, student phase boundaries and scoped playback. A pause stops
+transient audio/timers/roulette without discarding the draft or pending answer;
+changing the race, course or racer invalidates that student's transient owner.
+Question and review playback share the same stale-callback guard.
+
+`public/race/student-controller.js` owns one durable answer flight, its captured
+credential and navigation epoch, duplicate exclusion and authoritative recovery.
+The page retains rendering and invalidates older polls before applying mutation
+responses. Superseded success, failure and finally handlers cannot change the new
+screen or unlock another submission. Replacing a live room freezes its remaining
+and elapsed time instead of converting cancellation into a false course clear.
+
+Live TV geometry remains in `public/ui/teacher-stage.css`; the timing tower keeps
+stable rows and readable attendance/score values in compact columns. Responsive QR
+images and shared heading alignment apply across practice and race. No database
+or scoring migration is required. See `docs/release-79.md` for verification limits.
+
 ## Release 78 - readiness and transition consistency
 
 Modern browser joins request explicit preparation while legacy API clients keep

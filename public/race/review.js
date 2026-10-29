@@ -1,19 +1,25 @@
 import { progressMessages } from './rewards.js';
-import { courseSummary } from './lifecycle.js';
+import { courseSummary, createRacePlayback } from './lifecycle.js';
 
 export function createWaitingReview({ q, make, getData, audio, volume }) {
   let key = null,
     summaryKey = null,
-    playback = 0,
     cards = [],
     index = 0,
     revealed = false;
   const panel = q('#waiting-review');
   const card = q('#waiting-review-card');
+  const playback = createRacePlayback({
+    audio,
+    volume,
+    owner: () => key + ':' + index,
+    enabled: () => !panel.hidden && !globalThis.document?.hidden,
+    onError: () => {
+      q('#review-status').textContent = '再生できませんでした。もう一度押してください。';
+    },
+  });
   function stopPlayback() {
-    playback++;
-    audio.pause();
-    globalThis.speechSynthesis?.cancel();
+    playback.stop();
     q('#review-status').textContent = '';
   }
   function drawCard() {
@@ -95,14 +101,8 @@ export function createWaitingReview({ q, make, getData, audio, volume }) {
   };
   q('#review-listen').onclick = async () => {
     if (!cards.length) return;
-    const owner = ++playback;
     q('#review-status').textContent = '';
-    try {
-      await playWordAudio(audio, cards[index], volume());
-    } catch {
-      if (owner === playback && !panel.hidden)
-        q('#review-status').textContent = '再生できませんでした。もう一度押してください。';
-    }
+    await playback.play(cards[index]);
   };
-  return { update };
+  return { update, stop: stopPlayback };
 }

@@ -21,14 +21,14 @@ import { createConfigurationStore } from '../server/editor/configuration.mjs';
 import { gradeFiveContent } from '../server/editor/grade5-content.mjs';
 
 const env = { DB: database(), TEACHER_PASSWORD: 'test-password' };
-async function req(path, data, headers = {}) {
+async function req(path, data, headers = {}, runtime = env) {
   const response = await worker.fetch(
     new Request('https://classroom.test' + path, {
       method: data === undefined ? 'GET' : 'POST',
       headers: { 'content-type': 'application/json', ...headers },
       ...(data === undefined ? {} : { body: JSON.stringify(data) }),
     }),
-    env,
+    runtime,
   );
   return {
     response,
@@ -171,6 +171,64 @@ assert.equal(
 assert.equal(initial.config.grade5unit7.words.at(-1).word, 'turn left');
 const pe = initial.config.grade5unit1.words.find((w) => w.word === 'P.E.');
 assert.equal(sentenceFor(pe).answer, 'P.E.');
+// The classic letter UI inserts punctuation itself. Grade its canonical shape,
+// including P.E., through the actual Worker, not only the adaptive exercise model.
+{
+  const runtime = { DB: database(), TEACHER_PASSWORD: 'test-password' };
+  const call = (path, data, headers) => req(path, data, headers, runtime);
+  const login = await call('/api/teacher/login', { password: 'test-password' });
+  const teacher = { cookie: login.response.headers.get('set-cookie').split(';')[0] };
+  const settings = (await call('/api/teacher/config', undefined, teacher)).body;
+  Object.assign(settings.config.grade5unit1.race, { modes: ['spelling'], countdown: 0 });
+  assert.equal((await call('/api/teacher/config', settings, teacher)).response.status, 200);
+  const race = (
+    await call('/api/teacher/race/create', { grade: 5, unit: '1', format: 'classic' }, teacher)
+  ).body;
+  const students = await Promise.all(
+    [1, 2].map((label) => call('/api/race/join', { raceId: race.raceId, label: String(label) })),
+  );
+  await call('/api/teacher/race/state', { raceId: race.raceId, action: 'start' }, teacher);
+  for (const [index, joined] of students.entries()) {
+    const student = { authorization: 'Bearer ' + joined.body.token };
+    let snapshot = (await call('/api/race/me', undefined, student)).body;
+    let checked = false;
+    // Each course contains all fourteen words before personal question shuffling.
+    for (let n = 0; n < settings.config.grade5unit1.race.questions; n++) {
+      const task = snapshot.self.task;
+      assert.equal(task.mode, 'spelling');
+      if (task.spoken === 'P.E.') {
+        assert.equal(task.spellingPattern, '_._.');
+        assert.equal(task.length, 2);
+        for (const answer of ['PE', 'P.E', 'P.E. ', 'P..E.', '_.E.', 'P-E.', 'P.E.<script>']) {
+          const invalid = await call('/api/race/answer', { questionId: task.id, answer }, student);
+          assert.equal(invalid.response.status, 400, answer);
+        }
+        checked = true;
+      }
+      const answer = formatSpellingAnswer(
+        task.spellingPattern,
+        spellingCharacters(task.spoken).toLowerCase(),
+      );
+      const result = await call(
+        '/api/race/answer',
+        {
+          questionId: task.id,
+          answer: task.spoken === 'P.E.' && index === 1 ? 'x.x.' : answer,
+        },
+        student,
+      );
+      assert.equal(result.response.status, 200, JSON.stringify(result.body));
+      assert.equal(result.body.receipt.correct, !(task.spoken === 'P.E.' && index === 1));
+      snapshot = result.body;
+      if (checked) break;
+    }
+    assert.equal(
+      checked,
+      true,
+      'Classic race includes and accepts the canonical P.E. letter answer',
+    );
+  }
+}
 assert.equal(sentenceFor({ ...pe, example: 'I like P.E. today.' }).after, ' today.');
 assert.equal(
   sentenceFor({ word: 'in', example: 'This is interesting.' }).sentence,
@@ -224,5 +282,5 @@ for (const file of ['teacher.html', 'race-teacher.html', 'teacher-editor.html'])
     assert.ok(html.includes('value="' + curriculumValue(5, unit) + '"'));
 }
 console.log(
-  'PASS: all eight Grade 5 units, 159 picture/audio mappings, 477 authoritative student answers, all adaptive families, P.E. punctuation and legacy teacher settings.',
+  'PASS: all eight Grade 5 units, 159 picture/audio mappings, 477 authoritative student answers, adaptive families, classic P.E. punctuation/invalid-shape grading and legacy teacher settings.',
 );

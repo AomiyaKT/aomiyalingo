@@ -1,5 +1,6 @@
 import { createRaceTrash } from './trash.mjs';
 import { compactRaceRecords } from './record-sync.mjs';
+import { raceTransition } from '../../public/race/lifecycle.js';
 
 export function createTeacherRaceHandler({
   words,
@@ -62,10 +63,13 @@ export function createTeacherRaceHandler({
         profile.words.filter((w) => w.enabled && profile.race.wordIds.includes(w.word)).length < 4
       )
         return json({ error: '使用する単語を4語以上選んでください。' }, 400);
+      const stamp = now();
       await db(env).batch([
         stmt(
           env,
-          "UPDATE races SET status='finished',remaining_ms=0,started_at=NULL,revision=revision+1 WHERE deleted_at=0 AND status<>'finished'",
+          "UPDATE races SET remaining_ms=CASE WHEN status='running' THEN MAX(0,MIN(remaining_ms,remaining_ms-(?-started_at))) ELSE remaining_ms END,elapsed_ms=elapsed_ms+CASE WHEN status='running' THEN MAX(0,?-started_at) ELSE 0 END,status='finished',started_at=NULL,revision=revision+1 WHERE deleted_at=0 AND status<>'finished'",
+          stamp,
+          stamp,
         ),
         stmt(
           env,
@@ -74,7 +78,7 @@ export function createTeacherRaceHandler({
           title,
           JSON.stringify(raceTasks(config)),
           config.race.minutes * 60000,
-          now(),
+          stamp,
         ),
       ]);
       return json({ raceId: id });
@@ -144,7 +148,7 @@ export function createTeacherRaceHandler({
           : json({ error: '状態が変わりました。もう一度お試しください。' }, 409);
       }
       if (data.action === 'nextStation') {
-        if (!raceStations(r) || r.status !== 'intermission' || (r.station || 0) >= 2)
+        if (!raceStations(r) || !raceTransition(r.status, 'nextStation') || (r.station || 0) >= 2)
           return json({ error: '次のコースはまだ開始できません。' }, 409);
         const station = (r.station || 0) + 1,
           players = await raceRacers(env, r.id),
@@ -204,16 +208,13 @@ export function createTeacherRaceHandler({
           return json({ error: '状態が変わりました。表示を更新してください。' }, 409);
         return json(await raceBoard(env, await raceRoom(env, r.id), true));
       }
-      const valid = { start: 'lobby', pause: 'running', resume: 'paused' };
-      if (data.action !== 'end' && r.status !== valid[data.action])
+      const status = raceTransition(r.status, data.action);
+      if (data.action !== 'end' && !status)
         return json({ error: 'レースの状態が変わりました。表示を更新してください。' }, 409);
       if (data.action === 'end' && data.confirm !== true)
         return json({ error: '終了するレースを確認してください。' }, 400);
       if (data.action === 'start' && !(await raceRacers(env, r.id)).length)
         return json({ error: '生徒の参加を待ってから開始してください。' }, 409);
-      const status = { start: 'running', pause: 'paused', resume: 'running', end: 'finished' }[
-        data.action
-      ];
       if (!status) return json({ error: '操作を確認してください。' }, 400);
       const result = await stmt(
         env,
