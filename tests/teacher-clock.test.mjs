@@ -5,6 +5,9 @@ let writes = 0,
   toggles = 0,
   lang = 'ja';
 const node = () => ({
+  get textContent() {
+    return this.text;
+  },
   set textContent(value) {
     writes++;
     this.text = value;
@@ -71,6 +74,16 @@ view.bind(new Map());
 writes = attributes = toggles = 0;
 view.update(players, running, 0);
 assert.equal(writes + attributes + toggles, 0, 'Removed race nodes are released');
+view.bind(rows);
+view.update(players, running, 1250);
+rows.get('0').textContent = '5:00';
+view.bind(rows);
+view.update(players, running, 1250);
+assert.equal(
+  rows.get('0').text,
+  '4:59',
+  'A server redraw cannot leave the local clock stuck on stale text',
+);
 console.log(
   'Teacher clock: 35 cached references, second-level writes, English labels, pause/finish/late-join/reset and zero unchanged work passed.',
 );

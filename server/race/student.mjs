@@ -47,7 +47,8 @@ export function createStudentRaceHandler({
         value = token(),
         state = {
           prepared: false,
-          ready: r.status === 'lobby',
+          ready: r.status === 'lobby' && data.waitForReady !== true,
+          requiresReady: data.waitForReady === true,
           joinedElapsed: 0,
           streak: 0,
           bestStreak: 0,
@@ -130,7 +131,10 @@ export function createStudentRaceHandler({
         return json({ error: 'レースが始まりました。アバターは次のレースで変更できます。' }, 409);
       const state = JSON.parse(p.state);
       state.avatar = data.avatar;
-      if (r.status === 'lobby') state.prepared = false;
+      if (r.status === 'lobby') {
+        state.prepared = false;
+        if (state.requiresReady) state.ready = false;
+      }
       const saved = await stmt(
         env,
         "UPDATE racers SET state=?,revision=revision+1,last_seen=? WHERE id=? AND revision=? AND EXISTS (SELECT 1 FROM races WHERE id=? AND deleted_at=0 AND (status='lobby' OR (?=1 AND status IN ('running','paused'))))",
@@ -144,7 +148,11 @@ export function createStudentRaceHandler({
       if (!Number(saved.meta?.changes))
         return json({ error: '状態が変わりました。もう一度確認してください。' }, 409);
       return json(
-        await raceSession(env, { ...p, state: JSON.stringify(state) }, await raceRoom(env, r.id)),
+        await raceSession(
+          env,
+          { ...p, revision: p.revision + 1, state: JSON.stringify(state) },
+          await raceRoom(env, r.id),
+        ),
       );
     }
     if (path.endsWith('/ready') && req.method === 'POST') {
@@ -157,6 +165,7 @@ export function createStudentRaceHandler({
         if (s.prepared === true && s.avatar === data.avatar)
           return json(await raceSession(env, p, r));
         s.prepared = true;
+        s.ready = true;
         s.avatar = data.avatar;
         const saved = await stmt(
           env,
@@ -171,7 +180,11 @@ export function createStudentRaceHandler({
         if (!Number(saved.meta?.changes))
           return json({ error: '状態が変わりました。もう一度準備ボタンを押してください。' }, 409);
         return json(
-          await raceSession(env, { ...p, state: JSON.stringify(s) }, await raceRoom(env, r.id)),
+          await raceSession(
+            env,
+            { ...p, revision: p.revision + 1, state: JSON.stringify(s) },
+            await raceRoom(env, r.id),
+          ),
         );
       }
       if (!raceAccuracy(r)) return json({ error: '次のレースを待ってください。' }, 409);
@@ -212,7 +225,13 @@ export function createStudentRaceHandler({
         ]);
       if (results.some((x) => !Number(x.meta?.changes)))
         return json({ error: '状態が変わりました。もう一度参加ボタンを押してください。' }, 409);
-      return json(await raceSession(env, { ...p, state }, await raceRoom(env, r.id)));
+      return json(
+        await raceSession(
+          env,
+          { ...p, revision: p.revision + 1, state },
+          await raceRoom(env, r.id),
+        ),
+      );
     }
     return grade(req, env, url, p, r);
   };

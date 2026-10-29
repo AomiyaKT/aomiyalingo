@@ -1,5 +1,15 @@
 # Aomiyalingo architecture
 
+## Release 78 - readiness and transition consistency
+
+Modern browser joins request explicit preparation while legacy API clients keep
+existing behavior. Ready/avatar acknowledgements carry the actual saved revision.
+Next-course batches compare the complete participant revision/count snapshot in
+the room update; dependent player updates run only under that successful token.
+Shared request handling preserves HTTP failures even when their body is not JSON.
+Review summaries and playback callbacks own their separate invalidation scopes.
+See `docs/bugfix-78.md` for reproductions, compatibility and verification limits.
+
 ## Release 77 - bounded presentation and speech work
 
 `public/race/teacher-clock.js` reuses tower-owned timer references and writes only

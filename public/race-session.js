@@ -2,9 +2,21 @@
 // Only this browser's bearer credentials can restore an existing racer.
 window.raceSessionCache = (() => {
   const key = 'aomi.race.sessions';
+  const valid = (s) =>
+    s &&
+    typeof s === 'object' &&
+    !Array.isArray(s) &&
+    typeof s.token === 'string' &&
+    s.token.length > 0 &&
+    typeof s.raceId === 'string' &&
+    s.raceId.length > 0 &&
+    /^\d{1,3}$/.test(String(s.label)) &&
+    Number(s.label) >= 1 &&
+    Number(s.label) <= 999;
   const read = () => {
     try {
-      return JSON.parse(localStorage.getItem(key)) || {};
+      const value = JSON.parse(localStorage.getItem(key));
+      return value && typeof value === 'object' && !Array.isArray(value) ? value : {};
     } catch {
       return {};
     }
@@ -17,7 +29,7 @@ window.raceSessionCache = (() => {
   const label = (value) => String(Number(String(value).trim()));
   const id = (raceId, number) => raceId + ':' + label(number);
   function save(session) {
-    if (!session?.token || !session.raceId || !session.label) return;
+    if (!valid(session)) return;
     const all = read();
     const previous = all[id(session.raceId, session.label)];
     const { saved: ignored, ...content } = session;
@@ -27,14 +39,19 @@ window.raceSessionCache = (() => {
     }
     all[id(session.raceId, session.label)] = { ...content, saved: Date.now() };
     const entries = Object.entries(all)
-      .sort((a, b) => b[1].saved - a[1].saved)
+      .filter(([, session]) => valid(session))
+      .sort((a, b) => (Number(b[1].saved) || 0) - (Number(a[1].saved) || 0))
       .slice(0, 60);
     write(Object.fromEntries(entries));
   }
   function find(raceId, number) {
-    return read()[id(raceId, number)] || null;
+    const saved = read()[id(raceId, number)];
+    return valid(saved) && saved.raceId === raceId && label(saved.label) === label(number)
+      ? saved
+      : null;
   }
   function remove(session) {
+    if (!valid(session)) return;
     const all = read();
     delete all[id(session.raceId, session.label)];
     write(all);
@@ -55,6 +72,7 @@ window.raceSessionCache = (() => {
     const result = await api('/api/race/join', {
       raceId,
       label: number,
+      waitForReady: true,
       ...(avatar ? { avatar } : {}),
     });
     const session = { token: result.token, raceId: result.race.id, label: result.self.label };

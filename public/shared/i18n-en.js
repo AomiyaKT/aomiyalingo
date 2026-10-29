@@ -712,6 +712,8 @@ export const englishUI = {
   '変更を保存しています…': 'Saving changes…',
   まだ準備中の生徒がいます: 'Some students are still getting ready',
   'は準備中です。このまま開始しますか？': ' are not ready yet. Start anyway?',
+  '出席番号 {{0}} は準備中です。このまま開始しますか？':
+    'Still getting ready: {{0}}. Start anyway?',
   このまま開始: 'Start anyway',
   'レースを終了しますか？': 'End the race?',
   '」の受付と回答を停止します。ここまでの成績を保存します。':
@@ -988,7 +990,9 @@ export const englishUI = {
     'Correct answers and streaks add points. Independent accuracy breaks ties. There is no speed bonus.',
   '問連続正解！ 次の自力正解で＋': ' correct in a row! Next independent correct answer: +',
   暫定: 'Provisional',
-  '位 /': ' place /',
+  '「{{0}}」参加受付中': '"{{0}}" Open for joining',
+  '「{{0}}」途中参加できます。自分のペースで挑戦しよう！':
+    '"{{0}}" You can join late. Go at your own pace!',
   'このコースを終えました。結果発表を待とう！': 'You finished this course. Wait for the results!',
   '回答を終えました。みんなを応援しよう！': 'You finished answering. Cheer everyone on!',
   あと: 'Just ',

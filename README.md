@@ -4,10 +4,10 @@
 
 English practice and multiplayer word races for Japanese elementary classrooms. Teachers manage lessons on a Windows computer; students scan a QR code with their iPads.
 
-**Current version: Release 77 · 29 October 2026**
-[Open the app](https://aomiyalingo.minamiyakk.chatgpt.site/) · [Changelog](CHANGELOG.md) · [Release 77 details](docs/optimization-77.md)
+**Current version: Release 78 · 29 October 2026**
+[Open the app](https://aomiyalingo.minamiyakk.chatgpt.site/) · [Changelog](CHANGELOG.md) · [Release 78 details](docs/bugfix-78.md)
 
-**Source release:** this repository contains Release 77. The hosted website is deployed separately; a GitHub upload does not update the running classroom server.
+**Source release:** this repository contains Release 78. The hosted website is deployed separately; a GitHub upload does not update the running classroom server.
 
 ## Features
 
@@ -32,11 +32,11 @@ Each guide has 15 pages and covers the current classroom workflow. The gear menu
 
 ## Recent updates
 
-Release 77 targets classroom stutter: cached personal-clock nodes, batched rank animations, bounded English translation reuse, shared small-audio expansion, minified browser bundles and retryable resource preloading. Scores, student records and teaching controls remain compatible. The 15-page Release 76 Japanese/English guides still apply. See the [performance notes](docs/optimization-77.md) and [changelog](CHANGELOG.md).
+Release 78 fixes explicit student preparation and personal time, atomic course transitions, session recovery from malformed error pages or local caches, stale review summaries/audio errors, timer redraws and English rank/title presentation. Existing scores and records remain compatible. Release 77 performance improvements are retained. The 15-page Release 76 Japanese/English guides still apply. See the [bug-fix notes](docs/bugfix-78.md) and [changelog](CHANGELOG.md).
 
 ## Verification
 
-- 84 regression suites passed, including ten-item scoring, all ten swap question types, settings migration, update/version guards and exact delivery of both PDFs.
+- 88 regression suites passed, including ten-item scoring, all ten swap question types, settings migration, update/version guards and exact delivery of both PDFs.
 - 17 curriculum profiles / 387 configured entries passed content checks with zero errors or warnings. These include legacy compatibility profiles; the count does not represent 387 unique vocabulary words.
 - Accelerated 30-minute classroom simulation with 35 learners: 30,452 requests, 3,209 race answer submissions, 200 replayed requests and zero unexpected errors.
 - The simulation used local Worker APIs and SQLite. It does not replace physical iPad, classroom Wi-Fi or frame-rate testing.
@@ -83,7 +83,7 @@ The existing deployment identity is retained in `.openai/hosting.json`. Uploadin
 
 ## Source and privacy
 
-Application source: interface Release 77; see the repository commit history for the exact snapshot. Hosting version numbers are separate from interface release numbers. Earlier development notes are preserved in `docs/project-history.md`.
+Application source: interface Release 78; see the repository commit history for the exact snapshot. Hosting version numbers are separate from interface release numbers. Earlier development notes are preserved in `docs/project-history.md`.
 
 Production student records, attendance exports, passwords, dependency folders, build output, runtime caches and temporary packages are excluded. Teaching JSON backups exclude student results and passwords; use CSV for results. Built-in media remain in this repository.
 

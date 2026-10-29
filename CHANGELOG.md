@@ -2,6 +2,16 @@
 
 **English** | [日本語](CHANGELOG.ja.md)
 
+## Release 78 - 2026-10-29
+
+- Fixed modern lobby readiness: students who have not pressed Ready retain their personal time when the teacher starts early. Avatar changes require preparation again; saves disable Ready until acknowledged. Old API join behavior stays compatible.
+- Made course transitions validate the full racer revision/count snapshot before advancing the room, preventing partial transitions on concurrent player edits.
+- Corrected avatar/readiness revision acknowledgements, non-JSON HTTP error handling, corrupt saved-session recovery, review-summary invalidation, obsolete review audio callbacks and clock redraw invalidation.
+- Corrected English provisional ordinals, pre-start grammar and opaque teacher titles in lobby/late-entry messages.
+- 88 regression suites passed, including reproductions that failed against the original source. Local browser QA confirmed early teacher start, preserved preparation time, Ready and question entry. No schema or scoring changes; existing teacher guides remain applicable.
+
+Details: [Release 78 fixes](docs/bugfix-78.md).
+
 ## Release 77 - 2026-10-29
 
 - Reused personal-clock nodes and second-level display state instead of querying the entire timing tower every quarter second. Batched rank layout reads before animation writes and removed unchanged avatar position writes.

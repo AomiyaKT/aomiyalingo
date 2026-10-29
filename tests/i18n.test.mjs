@@ -20,6 +20,17 @@ assert.equal(translateUI('2位'), '2nd place');
 assert.equal(translateUI('3位'), '3rd place');
 assert.equal(translateUI('12位 出席番号 99'), '12th place Student number 99');
 assert.equal(translateUI('22位'), '22nd place');
+assert.equal(translateUI('暫定 1位 / 36人'), 'Provisional 1st place / 36 students');
+assert.equal(translateUI('暫定 12位 / 36人'), 'Provisional 12th place / 36 students');
+assert.equal(
+  translateUI('出席番号 1 は準備中です。このまま開始しますか？'),
+  'Still getting ready: 1. Start anyway?',
+);
+assert.equal(
+  translateUI('「性能検証用 · 35人」途中参加できます。自分のペースで挑戦しよう！'),
+  '"性能検証用 · 35人" You can join late. Go at your own pace!',
+  'Teacher titles remain opaque in late-entry messages',
+);
 for (const name of Object.values(exerciseNames)) {
   assert.equal(
     translateUI('0/24 · ' + name),

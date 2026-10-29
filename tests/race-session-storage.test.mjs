@@ -31,6 +31,24 @@ cache.save({ ...session, token: 'rotated', pending: null });
 assert.equal(writes, 4);
 cache.remove(session);
 assert.equal(cache.find('r1', '1'), null);
+for (const corrupt of ['[]', '123', '"text"', 'null', '{bad']) {
+  disk.set('aomi.race.sessions', corrupt);
+  cache.save(session);
+  assert.equal(
+    cache.find('r1', '1').token,
+    session.token,
+    'Malformed storage roots recover safely',
+  );
+}
+disk.set(
+  'aomi.race.sessions',
+  JSON.stringify({ broken: null, bad: { token: 'missing identity' } }),
+);
+cache.save(session);
+assert.equal(cache.find('r1', '1').token, session.token);
+disk.set('aomi.race.sessions', JSON.stringify({ 'r1:1': { ...session, raceId: 'other' } }));
+assert.equal(cache.find('r1', '1'), null, 'A corrupt index cannot restore another race credential');
+cache.remove(null);
 console.log(
   'Session storage: 1,000 unchanged polls write zero times; pending answers, acknowledgement, token changes and removal remain durable.',
 );

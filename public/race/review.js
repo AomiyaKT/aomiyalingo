@@ -3,11 +3,19 @@ import { courseSummary } from './lifecycle.js';
 
 export function createWaitingReview({ q, make, getData, audio, volume }) {
   let key = null,
+    summaryKey = null,
+    playback = 0,
     cards = [],
     index = 0,
     revealed = false;
   const panel = q('#waiting-review');
   const card = q('#waiting-review-card');
+  function stopPlayback() {
+    playback++;
+    audio.pause();
+    globalThis.speechSynthesis?.cancel();
+    q('#review-status').textContent = '';
+  }
   function drawCard() {
     card.replaceChildren();
     if (!cards.length) return;
@@ -27,18 +35,31 @@ export function createWaitingReview({ q, make, getData, audio, volume }) {
       allowed,
       data?.self?.reviewCards,
     ]);
-    if (key === nextKey) return;
-    key = nextKey;
-    cards = data?.self?.reviewCards || [];
-    index = 0;
-    revealed = false;
-    panel.hidden = !allowed || !cards.length;
-    drawCard();
+    if (key !== nextKey) {
+      stopPlayback();
+      key = nextKey;
+      cards = data?.self?.reviewCards || [];
+      index = 0;
+      revealed = false;
+      panel.hidden = !allowed || !cards.length;
+      drawCard();
+    }
+    const stats = allowed ? courseSummary(data) : null;
+    const messages = allowed ? progressMessages(data.self.history, data.race.station || 0) : [];
+    const nextSummary = JSON.stringify([
+      data?.race?.id,
+      data?.race?.station,
+      allowed,
+      stats,
+      messages,
+      cards.length,
+    ]);
+    if (summaryKey === nextSummary) return;
+    summaryKey = nextSummary;
     const summary = q('#student-course-summary');
     summary.hidden = !allowed;
     summary.replaceChildren();
     if (allowed) {
-      const stats = courseSummary(data);
       summary.append(make('h2', '今回のコースの記録'));
       const row = make('div', undefined, 'course-summary-stats');
       for (const [value, label] of [
@@ -53,8 +74,7 @@ export function createWaitingReview({ q, make, getData, audio, volume }) {
       summary.append(row);
       if (stats.answered) {
         const progress = make('div', undefined, 'course-growth');
-        for (const text of progressMessages(data.self.history, data.race.station || 0))
-          progress.append(make('p', text));
+        for (const text of messages) progress.append(make('p', text));
         progress.append(make('small', 'コースごとに問題が違うので、今回の記録の目安です。'));
         summary.append(progress);
       }
@@ -67,15 +87,22 @@ export function createWaitingReview({ q, make, getData, audio, volume }) {
     drawCard();
   };
   q('#review-next').onclick = () => {
+    if (!cards.length) return;
+    stopPlayback();
     index = (index + 1) % cards.length;
     revealed = false;
     drawCard();
   };
-  q('#review-listen').onclick = () => {
+  q('#review-listen').onclick = async () => {
     if (!cards.length) return;
-    playWordAudio(audio, cards[index], volume()).catch(() => {
-      q('#review-status').textContent = '再生できませんでした。もう一度押してください。';
-    });
+    const owner = ++playback;
+    q('#review-status').textContent = '';
+    try {
+      await playWordAudio(audio, cards[index], volume());
+    } catch {
+      if (owner === playback && !panel.hidden)
+        q('#review-status').textContent = '再生できませんでした。もう一度押してください。';
+    }
   };
   return { update };
 }

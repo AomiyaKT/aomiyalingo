@@ -23,7 +23,12 @@ export function createRequest({
       try {
         result = await response.json();
       } catch {
-        throw Error('接続を確認して、もう一度お試しください。');
+        if (response.ok) throw Error('接続を確認して、もう一度お試しください。');
+        result = {};
+      }
+      if (!result || typeof result !== 'object' || Array.isArray(result)) {
+        if (response.ok) throw Error('接続を確認して、もう一度お試しください。');
+        result = {};
       }
       onConnection(true);
       if (!response.ok) {

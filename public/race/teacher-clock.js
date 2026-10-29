@@ -10,6 +10,12 @@ export function createTeacherClock({
   return {
     bind(next) {
       rows = next;
+      // A fresh board render may have replaced the locally extrapolated text.
+      // Revalidate once per snapshot, without reading nodes on every clock tick.
+      for (const node of rows.values()) {
+        const previous = drawn.get(node);
+        if (previous && node.textContent !== previous.text) drawn.delete(node);
+      }
     },
     update(players, race, elapsed = 0) {
       const lang = language();

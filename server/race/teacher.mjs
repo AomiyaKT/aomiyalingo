@@ -153,13 +153,17 @@ export function createTeacherRaceHandler({
           changes = [
             stmt(
               env,
-              "UPDATE races SET station=?,station_token=?,status='running',remaining_ms=?,elapsed_ms=0,started_at=?,revision=revision+1 WHERE id=? AND revision=? AND status='intermission'",
+              "UPDATE races SET station=?,station_token=?,status='running',remaining_ms=?,elapsed_ms=0,started_at=?,revision=revision+1 WHERE id=? AND revision=? AND status='intermission' AND (SELECT COUNT(*) FROM racers WHERE race_id=?)=? AND NOT EXISTS (SELECT 1 FROM json_each(?) expected WHERE NOT EXISTS (SELECT 1 FROM racers p WHERE p.race_id=? AND p.id=json_extract(expected.value,'$[0]') AND p.revision=json_extract(expected.value,'$[1]')))",
               station,
               transition,
               raceSettings(r).minutes * 60000,
               stamp + raceSettings(r).countdown * 1000,
               r.id,
               r.revision,
+              r.id,
+              players.length,
+              JSON.stringify(players.map((p) => [p.id, p.revision])),
+              r.id,
             ),
           ];
         for (const player of players) {

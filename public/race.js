@@ -540,6 +540,7 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
     }
   }
   function drawAvatars() {
+    q('#race-ready').disabled = busy || (data?.race?.status === 'lobby' && !!data?.self?.prepared);
     const shelf = q('#race-sticker-shelf'),
       collection = read('aomi.race.stickers.' + data?.self?.label) || [];
     shelf.hidden = !collection.length;
@@ -870,7 +871,7 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
                       ? 'レース終了！'
                       : r.total + '問クリア！';
       q('#wait-caption').textContent =
-        s.ready === false && r.status !== 'finished'
+        s.ready === false && !['lobby', 'finished'].includes(r.status)
           ? '途中からでも大丈夫。準備完了ボタンを押してから、' +
             rules.minutes +
             '分間チャレンジできます。'
