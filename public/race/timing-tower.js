@@ -1,11 +1,15 @@
 import { exerciseNames } from '../learning/exercises.js';
 import { setTextIfChanged, setAttributeIfChanged } from '../shared/dom.js';
+import { createTeacherClock } from './teacher-clock.js';
 
 export function createTimingTower({ make, avatarArt, getData, appSettings }) {
-  return function timingTower(panel, players) {
+  const clock = createTeacherClock();
+  const layoutColumns = new WeakMap();
+  function timingTower(panel, players) {
     const data = getData();
     if (!players.length) {
       if (panel.children.length) panel.replaceChildren();
+      clock.bind(new Map());
       return;
     }
     const reduced =
@@ -36,7 +40,10 @@ export function createTimingTower({ make, avatarArt, getData, appSettings }) {
         Math.max(1, Math.floor(panel.clientWidth / 290)),
       ),
       rows = Math.ceil(players.length / columns);
-    panel.style.setProperty('--tower-columns', columns);
+    if (layoutColumns.get(panel) !== columns) {
+      panel.style.setProperty('--tower-columns', columns);
+      layoutColumns.set(panel, columns);
+    }
     for (let i = panel.children.length; i < columns; i++) {
       const col = make('section', undefined, 'tower-column'),
         head = make('div', undefined, 'tower-heading');
@@ -47,6 +54,7 @@ export function createTimingTower({ make, avatarArt, getData, appSettings }) {
     const existing = new Map(
       [...panel.querySelectorAll('.timing-row')].map((row) => [row.dataset.id, row]),
     );
+    const timers = new Map();
     players.forEach((p, i) => {
       let row = existing.get(p.id);
       if (!row) {
@@ -131,6 +139,7 @@ export function createTimingTower({ make, avatarArt, getData, appSettings }) {
                     : exerciseNames[p.mode] || '回答中'),
       );
       const time = row.querySelector('.timing-time');
+      timers.set(p.id, time);
       setTextIfChanged(
         time,
         data.race.status === 'finished' || p.done
@@ -156,6 +165,10 @@ export function createTimingTower({ make, avatarArt, getData, appSettings }) {
     for (const row of panel.querySelectorAll('.timing-row'))
       if (!incomingRanks.has(row.dataset.id)) row.remove();
     while (panel.children.length > columns) panel.lastChild.remove();
+    clock.bind(timers);
+    // Finish every layout read before starting any animation. Interleaving them
+    // can force a separate layout pass for each overtaking student.
+    const moves = [];
     if (!reduced)
       for (const row of panel.querySelectorAll('.timing-row')) {
         const old = previous.get(row.dataset.id);
@@ -164,15 +177,20 @@ export function createTimingTower({ make, avatarArt, getData, appSettings }) {
           x = old.rect.left - rect.left,
           y = old.rect.top - rect.top;
         if (x || y) {
-          row.getAnimations().forEach((a) => a.cancel());
-          row.animate(
-            [
-              { transform: 'translate(' + x + 'px,' + y + 'px)', background: '#ddf4ff' },
-              { transform: 'translate(0,0)', background: 'transparent' },
-            ],
-            { duration: 650, easing: 'cubic-bezier(.2,.8,.3,1)' },
-          );
+          moves.push({ row, x, y });
         }
       }
-  };
+    for (const { row, x, y } of moves) {
+      row.getAnimations().forEach((a) => a.cancel());
+      row.animate(
+        [
+          { transform: 'translate(' + x + 'px,' + y + 'px)', background: '#ddf4ff' },
+          { transform: 'translate(0,0)', background: 'transparent' },
+        ],
+        { duration: 650, easing: 'cubic-bezier(.2,.8,.3,1)' },
+      );
+    }
+  }
+  timingTower.clock = (players, race, elapsed) => clock.update(players, race, elapsed);
+  return timingTower;
 }

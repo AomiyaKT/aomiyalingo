@@ -1323,34 +1323,8 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
       if (!isTeacher) q('#start-countdown').textContent = Math.ceil(startIn() / 1000) || 'GO!';
       if (startIn() === 0) poll();
     }
-    if (isTeacher && data?.players) {
-      const timers = new Map(
-        [...q('#teacher-race-lanes').querySelectorAll('.timing-row')].map((row) => [
-          row.dataset.id,
-          row.querySelector('.timing-time'),
-        ]),
-      );
-      for (const player of data.players) {
-        const timer = timers.get(player.id);
-        if (!timer) continue;
-        const remaining = Math.max(
-          0,
-          player.remaining -
-            (data.race.status === 'running' && player.ready !== false && !player.done
-              ? Date.now() - received
-              : 0),
-        );
-        setTextIfChanged(
-          timer,
-          data.race.status === 'finished' || player.done ? '0:00' : clock(remaining),
-        );
-        timer.classList.toggle(
-          'time-low',
-          remaining <= 60000 && data.race.status === 'running' && player.ready !== false,
-        );
-        setAttributeIfChanged(timer, 'aria-label', '残り ' + clock(remaining));
-      }
-    }
+    if (isTeacher && data?.players)
+      timingTower.clock(data.players, data.race, Date.now() - received);
     if (!isTeacher && data?.race?.endless && q('#course-progress'))
       q('#course-progress').value = seconds();
     const target = isTeacher ? null : q('#race-clock');

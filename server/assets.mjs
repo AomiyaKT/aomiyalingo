@@ -8,10 +8,36 @@ export function decodeAsset(data) {
 
 export function createAssetResponder(
   assets,
-  { maxBytes = 4 * 1024 * 1024, maxEntryBytes = 256 * 1024, decode = decodeAsset } = {},
+  {
+    maxBytes = 4 * 1024 * 1024,
+    maxEntryBytes = 256 * 1024,
+    decode = decodeAsset,
+    inflate = async (bytes) =>
+      new Uint8Array(
+        await new Response(
+          new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip')),
+        ).arrayBuffer(),
+      ),
+  } = {},
 ) {
   const cache = new Map();
+  const pending = new Map();
   let usedBytes = 0;
+
+  function retain(key, bytes) {
+    if (bytes.byteLength > maxEntryBytes || bytes.byteLength > maxBytes) return;
+    if (cache.has(key)) {
+      usedBytes -= cache.get(key).byteLength;
+      cache.delete(key);
+    }
+    while (cache.size && usedBytes + bytes.byteLength > maxBytes) {
+      const oldest = cache.keys().next().value;
+      usedBytes -= cache.get(oldest).byteLength;
+      cache.delete(oldest);
+    }
+    cache.set(key, bytes);
+    usedBytes += bytes.byteLength;
+  }
 
   function read(key, asset) {
     const cached = cache.get(key);
@@ -22,16 +48,56 @@ export function createAssetResponder(
     }
     const bytes = decode(asset.data);
     // Music/fonts larger than one entry bypass the cache rather than displacing pictures.
-    if (bytes.byteLength <= maxEntryBytes && bytes.byteLength <= maxBytes) {
-      while (cache.size && usedBytes + bytes.byteLength > maxBytes) {
-        const oldest = cache.keys().next().value;
-        usedBytes -= cache.get(oldest).byteLength;
-        cache.delete(oldest);
-      }
-      cache.set(key, bytes);
-      usedBytes += bytes.byteLength;
-    }
+    retain(key, bytes);
     return bytes;
+  }
+
+  function packedBody(key, asset) {
+    const decodedKey = 'decoded:' + key;
+    const cached = cache.get(decodedKey);
+    if (cached) {
+      cache.delete(decodedKey);
+      cache.set(decodedKey, cached);
+      return cached;
+    }
+    let work = pending.get(key);
+    // Bound in-flight retained work separately from the completed LRU. Large
+    // recordings and burst overflow keep the original streaming-only path.
+    if (!work && (asset.size > maxEntryBytes || asset.size > maxBytes || pending.size >= 8))
+      return new Blob([read(key, asset)]).stream().pipeThrough(new DecompressionStream('gzip'));
+    if (!work) {
+      work = Promise.resolve()
+        .then(() => inflate(read(key, asset)))
+        .then((bytes) => {
+          if (bytes.byteLength !== asset.size) throw Error('Invalid packed asset size');
+          // Retain one representation, charged by its actual expanded byte count.
+          if (cache.has(key)) {
+            usedBytes -= cache.get(key).byteLength;
+            cache.delete(key);
+          }
+          retain(decodedKey, bytes);
+          return bytes;
+        })
+        .finally(() => pending.delete(key));
+      pending.set(key, work);
+    }
+    let cancelled = false;
+    return new ReadableStream({
+      async start(controller) {
+        try {
+          const bytes = await work;
+          if (!cancelled) {
+            controller.enqueue(bytes.slice());
+            controller.close();
+          }
+        } catch (error) {
+          if (!cancelled) controller.error(error);
+        }
+      },
+      cancel() {
+        cancelled = true;
+      },
+    });
   }
 
   return function assetResponse(req, key) {
@@ -59,13 +125,9 @@ export function createAssetResponder(
     // HEAD and unchanged browser requests never decode or allocate a response body.
     let body = null;
     if (req.method !== 'HEAD') {
-      const bytes = read(key, asset);
       // Compression is a source-bundle detail. Browsers receive the original WAV,
       // including the same size/ETag, without an audio codec or playback change.
-      body =
-        asset.encoding === 'gzip'
-          ? new Blob([bytes]).stream().pipeThrough(new DecompressionStream('gzip'))
-          : bytes;
+      body = asset.encoding === 'gzip' ? packedBody(key, asset) : read(key, asset);
     }
     return new Response(body, { headers });
   };

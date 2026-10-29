@@ -38,7 +38,7 @@ function catalog() {
 
 // Pure presentation translation. Captured values are opaque: a student's answer
 // or a teacher's title must never be translated as if it were an interface label.
-export function translateUI(value, language = 'en') {
+function resolveUI(value, language = 'en') {
   const raw = String(value ?? '');
   if (language !== 'en' || !/[\u3040-\u30ff\u3400-\u9fff]/.test(raw)) return raw;
   const source = normalize(raw),
@@ -87,6 +87,40 @@ export function translateUI(value, language = 'en') {
     .replace(/）/g, ')');
   return leading + result + trailing;
 }
+
+// Dynamic standings repeat the same labels hundreds of times. Bound both entry
+// count and retained characters; arbitrary teacher titles cannot grow this cache.
+export function createUITranslator({
+  maxEntries = 512,
+  maxChars = 131072,
+  resolve = resolveUI,
+} = {}) {
+  const cache = new Map();
+  let chars = 0;
+  return function translate(value, language = 'en') {
+    const raw = String(value ?? '');
+    if (language !== 'en' || !/[\u3040-\u30ff\u3400-\u9fff]/.test(raw)) return raw;
+    if (cache.has(raw)) {
+      const hit = cache.get(raw);
+      cache.delete(raw);
+      cache.set(raw, hit);
+      return hit;
+    }
+    const result = resolve(raw, language),
+      size = raw.length + result.length;
+    if (maxEntries > 0 && size <= maxChars) {
+      while (cache.size && (cache.size >= maxEntries || chars + size > maxChars)) {
+        const key = cache.keys().next().value;
+        chars -= key.length + cache.get(key).length;
+        cache.delete(key);
+      }
+      cache.set(raw, result);
+      chars += size;
+    }
+    return result;
+  };
+}
+export const translateUI = createUITranslator();
 
 // Content boundaries are deliberately explicit. This layer never reads/writes
 // form values, answer models, datasets used by scoring, storage records or APIs.
@@ -169,8 +203,10 @@ export function installLanguageUI(host = globalThis) {
       if (!previous || value !== previous.rendered)
         originals.set(node, (previous = { source: value }));
     }
+    if (value === previous.rendered && previous.language === language) return;
     const next = translateUI(previous.source, language);
     previous.rendered = next;
+    previous.language = language;
     if (value !== next) {
       if (attribute) node.setAttribute(attribute, next);
       else node.data = next;
@@ -214,12 +250,21 @@ export function installLanguageUI(host = globalThis) {
   const observer = new host.MutationObserver((records) => {
     if (language === 'ja') return;
     const roots = new Set();
+    for (const record of records)
+      if (record.type === 'childList') for (const node of record.addedNodes) roots.add(node);
+    const covered = (node) => {
+      for (let parent = node?.parentElement; parent; parent = parent.parentElement)
+        if (roots.has(parent)) return true;
+      return false;
+    };
+    // A fragment may report both an added parent and all its descendants. Scan
+    // only the outer roots, and handle their text/attributes in that same walk.
     for (const record of records) {
+      if (roots.has(record.target) || covered(record.target)) continue;
       if (record.type === 'attributes') present(record.target, record.attributeName);
       else if (record.type === 'characterData') present(record.target);
-      else for (const node of record.addedNodes) roots.add(node);
     }
-    for (const root of roots) scan(root);
+    for (const root of roots) if (!covered(root)) scan(root);
   });
   const row = doc.createElement('div');
   row.className = 'setting-line language-setting';

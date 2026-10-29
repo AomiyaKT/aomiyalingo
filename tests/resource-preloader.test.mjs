@@ -8,6 +8,7 @@ const timers = new Map(),
   events = new Map(),
   requests = [];
 let serial = 0,
+  now = 0,
   pending;
 const host = {
   document: {
@@ -26,6 +27,7 @@ const host = {
 };
 const warm = createResourcePreloader({
   host,
+  now: () => now,
   fetch: (url, options) => {
     requests.push({ url, options });
     return new Promise((resolve, reject) => {
@@ -86,6 +88,19 @@ const big = tick();
 pending.resolve(new Response(new Uint8Array(1), { headers: { 'content-length': '600000' } }));
 await big;
 assert.equal(timers.size, 0, 'Oversized audio is not downloaded speculatively');
+warm.warm(['/assets/words/retry.wav']);
+const failed = tick();
+pending.reject(Error('temporary Wi-Fi loss'));
+await failed;
+warm.warm(['/assets/words/retry.wav']);
+assert.equal(timers.size, 0, 'Transient failures back off instead of hammering Wi-Fi');
+now = 30001;
+warm.warm(['/assets/words/retry.wav']);
+const recovered = tick();
+pending.resolve(new Response(new Uint8Array(44)));
+await recovered;
+warm.warm(['/assets/words/retry.wav']);
+assert.equal(timers.size, 0, 'A recovered resource is cached after retry');
 warm.warm(['/assets/words/new.wav']);
 const disposed = tick();
 warm.dispose();

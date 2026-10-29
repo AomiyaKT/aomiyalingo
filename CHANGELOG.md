@@ -2,6 +2,16 @@
 
 **English** | [日本語](CHANGELOG.ja.md)
 
+## Release 77 - 2026-10-29
+
+- Reused personal-clock nodes and second-level display state instead of querying the entire timing tower every quarter second. Batched rank layout reads before animation writes and removed unchanged avatar position writes.
+- Added bounded browser-local translation reuse and deduplicated nested mutation scans. Preserved language switching, draft values and opaque learning content.
+- Coalesced small packed-speech expansion across simultaneous students, using the existing 4 MiB LRU with expanded-byte accounting, 256 KiB per entry and eight pending shared expansions. Kept exact bytes, validators, HEAD/304, large-file streaming and retry after failures.
+- Minified delivered browser JS/CSS using esbuild and retained content-hash cache invalidation. Temporary failed speculative resources may retry after 30 seconds.
+- 84 regression suites passed; local 35-student and late-joiner browser QA covered clocks, English UI, pause/resume, readiness and answering. No schema, scoring or teacher workflow changes. The 15-page Release 76 guides remain applicable.
+
+Details and reproducible measurements: [Optimization 77](docs/optimization-77.md).
+
 ## Release 76 - 2026-10-29
 
 - Replaced the long combined material dropdown with Elementary school / Blue Sky, grade buttons and eight grade-specific units. Practice, race and material editing use one picker; saved profile IDs and legacy sessions remain compatible.

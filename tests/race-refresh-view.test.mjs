@@ -2,7 +2,8 @@ import assert from 'node:assert/strict';
 const { createRaceViews } = await import(process.env.AOMI_VIEW_MODULE || '../public/race/views.js');
 
 let created = 0,
-  textWrites = 0;
+  textWrites = 0,
+  styleWrites = 0;
 class Node {
   constructor(tag, text = '', cls = '') {
     created++;
@@ -11,7 +12,16 @@ class Node {
     this.className = cls;
     this.children = [];
     this.dataset = {};
-    this.style = {};
+    this.style = new Proxy(
+      {},
+      {
+        set(target, key, value) {
+          styleWrites++;
+          target[key] = value;
+          return true;
+        },
+      },
+    );
     this.attrs = new Map();
     this.classList = { toggle() {}, add() {}, remove() {} };
   }
@@ -99,7 +109,7 @@ const lanes = new Node('div');
 view.lanes(lanes, players, 'p0');
 view.drawWall(players);
 const original = lanes.children[0].querySelector('.lane-score').children[0];
-created = textWrites = 0;
+created = textWrites = styleWrites = 0;
 for (let i = 0; i < 100; i++) {
   view.lanes(lanes, players, 'p0');
   view.drawWall(players);
@@ -114,6 +124,7 @@ console.log(
 );
 assert.equal(created, 0, '100 unchanged 35-person polls create zero lane/participant nodes');
 assert.equal(textWrites, 0, 'Unchanged lane labels/scores/participant captions are retained');
+assert.equal(styleWrites, 0, 'Unchanged polls do not rewrite avatar positions');
 assert.equal(lanes.children[0].querySelector('.lane-score').children[0], original);
 const podium = new Node('div');
 podium.hidden = true;

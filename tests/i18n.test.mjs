@@ -149,12 +149,14 @@ const disk = new Map(),
   listeners = new Map();
 let callback,
   disconnected = false,
-  saved = 0;
+  saved = 0,
+  walks = 0;
 const doc = {
   documentElement: html,
   createElement: (tag) => new Element(tag),
   querySelector: (selector) => (selector === '#settings-panel-0' ? panel : null),
   createTreeWalker(root, _, filter) {
+    walks++;
     const nodes = [];
     function walk(n) {
       for (const child of n.childNodes) {
@@ -232,6 +234,20 @@ const joined = text('参加する', added);
 body.append(added);
 callback([{ type: 'childList', addedNodes: [added] }]);
 assert.equal(joined.data, 'Join');
+const fragment = new Element('section');
+const nested = new Element('div');
+fragment.append(nested);
+const nestedLabel = text('参加する', nested);
+body.append(fragment);
+const beforeBatch = walks;
+callback([
+  { type: 'childList', target: body, addedNodes: [fragment] },
+  { type: 'childList', target: fragment, addedNodes: [nested] },
+  { type: 'childList', target: nested, addedNodes: [nestedLabel] },
+  { type: 'characterData', target: nestedLabel },
+]);
+assert.equal(walks - beforeBatch, 1, 'Nested mutation batches scan the added subtree once');
+assert.equal(nestedLabel.data, 'Join');
 locale.setLanguage('ja');
 assert.equal(heading.data, '設定');
 assert.equal(status.data, '接続済み');

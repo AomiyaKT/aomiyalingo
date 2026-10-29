@@ -66,7 +66,7 @@ export function createRaceViews({ q, make, isTeacher, avatars, getData, appSetti
         'aria-label',
         p.alias + ' ' + (avatars[p.avatar] || avatars.cat).name,
       );
-      lane.querySelector('.lane-cat').style.left =
+      const left =
         Math.min(
           89,
           4 +
@@ -83,11 +83,12 @@ export function createRaceViews({ q, make, isTeacher, avatars, getData, appSetti
                 )) *
               85,
         ) + '%';
+      if (face.style.left !== left) face.style.left = left;
       if (lane.dataset.score && p.score > Number(lane.dataset.score)) {
         lane.classList.add('lane-moving');
         setTimeout(() => lane.classList.remove('lane-moving'), 650);
       }
-      lane.dataset.score = String(p.score);
+      if (lane.dataset.score !== String(p.score)) lane.dataset.score = String(p.score);
       const score = lane.querySelector('.lane-score');
       if (data?.race?.rules >= 4) {
         if (!score.children.length) score.append(make('span'), make('small'));
@@ -189,6 +190,7 @@ export function createRaceViews({ q, make, isTeacher, avatars, getData, appSetti
     }
     wall.hidden = false;
     const existing = new Map([...wall.children].map((n) => [n.dataset.id, n]));
+    const ids = new Set(players.map((p) => p.id));
     for (const p of players) {
       let card = existing.get(p.id);
       if (!card) {
@@ -211,8 +213,7 @@ export function createRaceViews({ q, make, isTeacher, avatars, getData, appSetti
         data?.race?.endless ? p.done : p.index >= (data?.race?.total || 24),
       );
     }
-    for (const card of [...wall.children])
-      if (!players.some((p) => p.id === card.dataset.id)) card.remove();
+    for (const card of [...wall.children]) if (!ids.has(card.dataset.id)) card.remove();
   }
 
   return { avatarArt, lanes, timingTower, drawStationResults, podium, drawWall };

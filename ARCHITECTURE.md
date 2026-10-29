@@ -1,5 +1,19 @@
 # Aomiyalingo architecture
 
+## Release 77 - bounded presentation and speech work
+
+`public/race/teacher-clock.js` reuses tower-owned timer references and writes only
+changed visible seconds, warnings and language labels. Tower rendering batches
+all final FLIP position reads before animation writes. `public/shared/i18n.js`
+bounds repeated translation work and coalesces nested mutation scans.
+
+`server/assets.mjs` coalesces at most eight small packed-asset expansions and
+retains expanded bytes in the existing 4 MiB LRU (256 KiB per entry). Large
+recordings keep streaming, and API/authentication paths remain uncached.
+Browser JS/CSS is minified during the existing hash-versioned build. Failed
+speculative resources are retryable after a bounded backoff.
+See `docs/optimization-77.md` for reproducible checks and measurement limits.
+
 ## Release 76 - teacher update checks
 
 `server/updates.mjs` reads public release metadata only from the fixed AomiyaKT

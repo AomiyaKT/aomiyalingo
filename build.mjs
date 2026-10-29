@@ -49,6 +49,7 @@ for (const surface of ['home', 'teacher', 'race', 'student', 'editor']) {
   const css = await build({
     entryPoints: ['public/ui/' + surface + '.css'],
     bundle: true,
+    minify: true,
     external: ['/assets/*'],
     write: false,
     legalComments: 'none',
@@ -77,6 +78,7 @@ for (const entryPoint of [
     entryPoints: ['public/' + entryPoint + '.js'],
     bundle: true,
     format: 'iife',
+    minify: true,
     platform: 'browser',
     target: 'es2020',
     write: false,

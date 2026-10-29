@@ -16,6 +16,7 @@ export function practiceResourceHints(lesson, words) {
 export function createResourcePreloader({
   host = globalThis,
   fetch = host.fetch?.bind(host),
+  now = Date.now,
 } = {}) {
   const seen = new Map();
   let queue = [],
@@ -33,9 +34,9 @@ export function createResourcePreloader({
     host.navigator?.onLine !== false &&
     !host.navigator?.connection?.saveData &&
     !/^(slow-)?2g$/.test(host.navigator?.connection?.effectiveType || '');
-  function remember(url) {
+  function remember(url, successful = true) {
     seen.delete(url);
-    seen.set(url, true);
+    seen.set(url, successful ? Infinity : now() + 30000);
     while (seen.size > 64) seen.delete(seen.keys().next().value);
   }
   function reset() {
@@ -83,9 +84,9 @@ export function createResourcePreloader({
         signal: request.controller.signal,
       });
       if (await consume(response, request.controller)) remember(url);
-      else if (!request.controller.signal.aborted) remember(url);
+      else if (!request.controller.signal.aborted) remember(url, false);
     } catch {
-      if (!request.controller.signal.aborted) remember(url);
+      if (!request.controller.signal.aborted) remember(url, false);
     } finally {
       host.clearTimeout(deadline);
       if (active === request) active = null;
@@ -101,7 +102,7 @@ export function createResourcePreloader({
       return;
     }
     queue = [...new Set(urls.filter(allowed))]
-      .filter((url) => !seen.has(url) && active?.url !== url)
+      .filter((url) => !(seen.get(url) > now()) && active?.url !== url)
       .slice(0, 2);
     schedule();
   }
