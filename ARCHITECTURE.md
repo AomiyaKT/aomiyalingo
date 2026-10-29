@@ -1,5 +1,15 @@
 # Aomiyalingo architecture
 
+## Maintenance boundaries
+
+`AGENTS.md` records the repository's consolidation-first maintenance policy.
+The student race handler keeps routing and authentication in one dispatch path;
+join, avatar and readiness operations have named handlers in the same module.
+Successful player writes share one acknowledgement path for the saved revision,
+serialized state and current room. Revision/authentication guards remain beside
+their database writes. Structural refactors do not change release numbers or
+teaching behavior.
+
 ## Release 78 - readiness and transition consistency
 
 Modern browser joins request explicit preparation while legacy API clients keep

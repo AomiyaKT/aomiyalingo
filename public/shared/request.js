@@ -23,8 +23,7 @@ export function createRequest({
       try {
         result = await response.json();
       } catch {
-        if (response.ok) throw Error('接続を確認して、もう一度お試しください。');
-        result = {};
+        // The same payload validation below handles absent and malformed JSON.
       }
       if (!result || typeof result !== 'object' || Array.isArray(result)) {
         if (response.ok) throw Error('接続を確認して、もう一度お試しください。');
