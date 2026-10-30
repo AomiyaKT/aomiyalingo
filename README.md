@@ -199,3 +199,99 @@ Student results, attendance exports, passwords and live databases must stay outs
 Bundled textbook illustrations, recordings, music and other third-party media retain their owners' rights. Public source availability is not a separate redistribution license. Review asset permissions and provenance before reusing the project for another school, textbook or distribution channel.
 
 The existing architecture notes and changelogs are the record of previous decisions, not a requirement to keep adding layers. Prefer consolidating ownership and removing duplication. Future work should explicitly distinguish confirmed defects, measured performance issues and new product scope; changes such as school-specific accounts, new curricula or a different deployment model need their own design and migration plan.
+
+---
+
+## 🎁 Bonus · The story behind Aomiyalingo
+
+### It started with “Could you make a little quiz?”
+
+My JTE—the Japanese English teacher I work with—asked me:
+
+> “Could you make a little quiz app? After the test, we could use the remaining time to review some words and preview the next ones.”
+
+Me: “Sure, no problem!”
+
+<p align="center">
+  <img src="docs/easter-egg/yes-no-problem.jpeg" width="168" alt="An extremely cheerful cat: sure, no problem!" />
+</p>
+
+At that point, I was thinking, “Quizlet can probably handle this.”
+
+Then my JTE added:
+
+> “It would be great if the children could hear the pronunciation whenever a word appears, too.”
+
+<p align="center">
+  <img src="docs/easter-egg/one-more-request.jpeg" width="168" alt="A cat with a suddenly much more complicated expression." />
+</p>
+
+### My wallet had some concerns
+
+I started looking for a classroom app that could combine word review, pronunciation and everyone joining the same activity. I found some promising options. The setups I wanted, though, kept leading to paid plans.
+
+Two textbooks. Sixteen units. All those words.
+
+I was not convinced my wallet would survive until the final unit. LOL.
+
+
+<p align="center">
+  <img src="docs/easter-egg/wallet-reaction.gif" width="160" alt="An animated startled cat reacting to the situation." loading="lazy" />
+</p>
+
+
+So, after a brief moment of being very dramatically annoyed, I thought:
+
+> “It is 2026. How hard can it be to make a Duolingo-like word app with QR entry and pronunciation?”
+
+With help from the great **AI-sama**, I started building it, one piece at a time.
+
+Later, at the **2026 ALT SDC training event**, I met other ALTs who, like me, were mainly working with the textbook content. That made me want to put the project on GitHub so other teachers could use it too.
+
+And that is how “a little quiz” became Aomiyalingo.
+
+### My extremely unofficial wish list
+
+*These are wishes, not a release schedule. Please adjust your expectations accordingly. UwU*
+
+#### 1 · A Nebuta Festival night theme
+
+I would love a darker UI inspired by Aomori's Nebuta Festival. The bright white screen is a bit much for my ageing eyes, and a more comfortable option for the children would be nice too.
+
+Also, I would prefer not to have a certain green owl arrive at my door one day carrying a legal letter.
+
+
+<p align="center">
+  <img src="docs/easter-egg/green-owl-anxiety.gif" width="224" alt="An animated pink-haired character looking increasingly alarmed." loading="lazy" />
+</p>
+
+
+#### 2 · A JLPT version
+
+Quite a few people around me are learning Japanese. I also have a pile of teaching materials from when I taught JLPT classes. Perhaps there is another project hiding in there.
+
+<p align="center">
+  <img src="docs/easter-egg/jlpt-personality.png" width="320" alt="Your MBTI is JLPT: a Japanese-learning personality joke with a textbook-style illustration." loading="lazy" />
+</p>
+
+#### 3 · More voices from real teachers
+
+I would like a smoother way for teachers to record their own voices directly in the app. Custom audio uploads already exist; this wish is about making the recording part easier.
+
+Better TTS is not exactly in my budget. Besides, my fellow ALTs… since you are here anyway~ UwU
+
+#### 4 · A version children can use on their own
+
+A separate self-study experience, so children can practise even when a teacher is not running a class.
+
+#### 5 · Actually getting development funding
+
+Maybe I could introduce the project to the **Aomori Prefectural Board of Education** or the **Tōsei Education Office**… and somehow come back with development funding.
+
+At this point, I am simply reporting whatever happened in my dreams.
+
+<p align="center">
+  <img src="docs/easter-egg/dream-big-sleep-early.png" width="340" alt="A sleeping cat meme: go to bed early and you can have everything in your dreams." loading="lazy" />
+</p>
+
+Thanks for reading all the way down. I hope Aomiyalingo gives your class a few good learning moments—and a few laughs.
