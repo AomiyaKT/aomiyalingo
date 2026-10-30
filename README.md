@@ -1,4 +1,4 @@
-[![ここからすぐに使う / OPEN AOMIYALINGO](docs/teacher-download.svg)](https://aomiyalingo.minamiyakk.chatgpt.site/)
+[![ここからすぐに使う / OPEN AOMIYALINGO](docs/teacher-start.svg)](https://aomiyalingo.minamiyakk.chatgpt.site/)
 
 **ダウンロード・ZIPの解凍・インストールは不要です。 / No download, ZIP extraction or installation needed.**
 
