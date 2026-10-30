@@ -1,11 +1,21 @@
-[![ここをクリックしてダウンロード / CLICK HERE TO DOWNLOAD](docs/teacher-download.svg)](https://github.com/AomiyaKT/aomiyalingo/raw/refs/heads/main/downloads/Aomiyalingo-Teacher-Kit.zip)
+[![ここからすぐに使う / OPEN AOMIYALINGO](docs/teacher-download.svg)](https://aomiyalingo.minamiyakk.chatgpt.site/)
 
-**ZIPを展開 → `START-HERE.html` を開く / Extract the ZIP → open `START-HERE.html`**
+**ダウンロード・ZIPの解凍・インストールは不要です。 / No download, ZIP extraction or installation needed.**
 
-インターネット接続と先生用パスワードが必要です。追加ソフトは不要です。<br>
-Internet access and a teacher password are required. No additional software needed.
+ボタンを押して、先生用パスワードでログインしてください。<br>
+Click the button and sign in with your teacher password. Internet access is required.
 
-[🌐 ダウンロードせずに使う / USE ONLINE](https://aomiyalingo.minamiyakk.chatgpt.site/) · [📖 日本語の説明書 / Japanese PDF](public/help/teacher-guide.pdf) · [📖 English guide / 英語の説明書](public/help/teacher-guide-en.pdf)
+[📖 日本語の説明書 / Japanese PDF](public/help/teacher-guide.pdf) · [📖 English guide / 英語の説明書](public/help/teacher-guide-en.pdf)
+
+<details>
+<summary>予備のダウンロード / Optional download</summary>
+
+[先生用スターターZIP / Teacher starter ZIP](https://github.com/AomiyaKT/aomiyalingo/raw/refs/heads/main/downloads/Aomiyalingo-Teacher-Kit.zip)
+
+入口と日英PDFをパソコンやUSBに保存したい場合だけ使います。ZIPを展開して `START-HERE.html` を開いてください。<br>
+Only needed to keep the launcher and both PDF guides on a computer or USB drive. Extract the ZIP and open `START-HERE.html`. The app still requires internet access.
+
+</details>
 
 ---
 
