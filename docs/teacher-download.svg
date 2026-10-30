@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="900" height="200" viewBox="0 0 900 200" role="img" aria-labelledby="title desc">
+  <title id="title">ここをクリックしてダウンロード / CLICK HERE TO DOWNLOAD</title>
+  <desc id="desc">先生用スターターZIP / Teacher starter ZIP</desc>
+  <rect x="4" y="14" width="892" height="182" rx="28" fill="#58a700"/>
+  <rect x="4" y="4" width="892" height="182" rx="28" fill="#58cc02"/>
+  <path d="M78 52v64m-22-22 22 22 22-22M48 126v18h60v-18" fill="none" stroke="white" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+  <g fill="white" font-family="Arial,'Noto Sans JP',Meiryo,sans-serif" font-weight="bold" text-anchor="middle">
+    <text x="504" y="66" font-size="37">ここをクリックしてダウンロード</text>
+    <text x="504" y="114" font-size="35">CLICK HERE TO DOWNLOAD</text>
+    <text x="504" y="155" font-size="21">先生用スターターZIP / Teacher starter ZIP</text>
+  </g>
+</svg>

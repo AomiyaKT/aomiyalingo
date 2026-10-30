@@ -1,3 +1,14 @@
+[![ここをクリックしてダウンロード / CLICK HERE TO DOWNLOAD](docs/teacher-download.svg)](https://github.com/AomiyaKT/aomiyalingo/raw/refs/heads/main/downloads/Aomiyalingo-Teacher-Kit.zip)
+
+**ZIPを展開 → `START-HERE.html` を開く / Extract the ZIP → open `START-HERE.html`**
+
+インターネット接続と先生用パスワードが必要です。追加ソフトは不要です。<br>
+Internet access and a teacher password are required. No additional software needed.
+
+[🌐 ダウンロードせずに使う / USE ONLINE](https://aomiyalingo.minamiyakk.chatgpt.site/) · [📖 日本語の説明書 / Japanese PDF](public/help/teacher-guide.pdf) · [📖 English guide / 英語の説明書](public/help/teacher-guide-en.pdf)
+
+---
+
 # Aomiyalingo
 
 **English** | [日本語](README.ja.md)
