@@ -23,7 +23,9 @@ Only needed to keep the launcher and both PDF guides on a computer or USB drive.
 
 [English](README.md) | **日本語**
 
-小学校の英語授業向けの単語練習・オンライン単語レースです。先生はWindowsパソコンで授業を管理し、生徒はiPadでQRコードを読み取って参加します。
+Aomiyalingoは、青森県の小学校で使用されている英語教科書 **『Blue Sky』** の学習内容に合わせた、Duolingoのような感覚で学べる英語学習Webアプリです。単語練習やクラスのみんなで楽しむ単語レースを通して、授業の進め方に幅を持たせ、子どもたちが楽しく参加できる学習活動をサポートします。
+
+先生も児童も、インターネットにつながり、対応するWebブラウザーが使えるパソコン・タブレット・スマートフォンなどから利用できます。児童はQRコードを読み取るか、リンクを開くだけで参加できます。
 
 **現在のバージョン：Release 79 · 2026年10月30日**
 [アプリを開く](https://aomiyalingo.minamiyakk.chatgpt.site/) · [更新履歴](CHANGELOG.ja.md) · [Release 79の技術情報（日英）](docs/release-79.md)

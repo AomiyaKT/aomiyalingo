@@ -23,7 +23,9 @@ Only needed to keep the launcher and both PDF guides on a computer or USB drive.
 
 **English** | [日本語](README.ja.md)
 
-English practice and multiplayer word races for Japanese elementary classrooms. Teachers manage lessons on a Windows computer; students scan a QR code with their iPads.
+Aomiyalingo is a Duolingo-style English learning web app tailored to **Blue Sky**, the elementary school English textbook used in Aomori Prefecture, Japan. It helps teachers bring more variety and interaction into their lessons through vocabulary practice and multiplayer word races.
+
+Teachers and students can use any internet-connected device with a compatible web browser—including computers, tablets and smartphones. Students simply scan a QR code or open a link to join.
 
 **Current version: Release 79 · 30 October 2026**
 [Open the app](https://aomiyalingo.minamiyakk.chatgpt.site/) · [Changelog](CHANGELOG.md) · [Release 79 details](docs/release-79.md)
