@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { createRaceRecords } from '../public/race/records.js';
 const { createRaceViews } = await import(process.env.AOMI_VIEW_MODULE || '../public/race/views.js');
 
 let created = 0,
@@ -24,9 +25,41 @@ class Node {
     );
     this.attrs = new Map();
     this.classList = { toggle() {}, add() {}, remove() {} };
+    this.listeners = new Map();
   }
   get textContent() {
     return this._text;
+  }
+  get options() {
+    return this.children.filter((n) => n.tag === 'option');
+  }
+  get selectedIndex() {
+    return Math.max(
+      0,
+      this.options.findIndex((n) => n.value === this.value),
+    );
+  }
+  get text() {
+    return this.textContent;
+  }
+  contains(node) {
+    return this === node || this.children.some((n) => n.contains(node));
+  }
+  closest(tag) {
+    return this.tag === tag ? this : this.parent?.closest(tag) || null;
+  }
+  addEventListener(name, fn) {
+    this.listeners.set(name, fn);
+  }
+  focus() {
+    globalThis.document.activeElement = this;
+  }
+  showModal() {
+    this.open = true;
+  }
+  close() {
+    this.open = false;
+    this.listeners.get('close')?.();
   }
   set textContent(value) {
     textWrites++;
@@ -163,3 +196,109 @@ assert.notEqual(podium.children[0], card, 'A real podium winner change still red
 console.log(
   'Race refresh view: 100 × 35 learners create zero unchanged nodes/text; hidden podium skipped; records never inspected; real winner changes still update.',
 );
+
+const previousDocument = globalThis.document;
+globalThis.document = {
+  createElement: (tag) => new Node(tag),
+  activeElement: null,
+};
+try {
+  const section = new Node('details'),
+    root = new Node('div');
+  section.open = true;
+  section.append(root);
+  const records = createRaceRecords(root);
+  const participants = players.map((p) => ({ ...p, recordRevision: 1, history: [] }));
+  const frame = () => ({ race: { id: 'records-r1' }, players: participants });
+  records(frame());
+  const body = root.querySelector('tbody');
+  const firstRow = body.children[0];
+  const detail = firstRow.querySelector('button');
+  detail.focus();
+  created = textWrites = 0;
+  for (let i = 0; i < 100; i++) {
+    participants[34] = { ...participants[34], score: 5000 + i };
+    records(frame());
+  }
+  console.log(JSON.stringify({ recordRefreshes: 100, created, textWrites }));
+  assert.equal(body.children[0], firstRow, 'Updating another score preserves visible rows');
+  assert.equal(
+    body.children[0].querySelector('button'),
+    detail,
+    'A press target must survive polls',
+  );
+  assert.equal(globalThis.document.activeElement, detail);
+  assert.equal(created, 0, 'Score-only changes create no new record overview nodes');
+  assert.equal(textWrites, 0, 'Unchanged displayed record values need no writes');
+  const pagination = root.querySelector('.record-pagination');
+  const next = pagination.children[2];
+  next.onclick();
+  assert.equal(body.children[0].children[0].children[0].textContent, '13');
+  next.onclick();
+  assert.equal(body.children.length, 11, 'The last page only retains its visible records');
+  assert.equal(next.disabled, true);
+  pagination.children[0].onclick();
+  pagination.children[0].onclick();
+  assert.equal(body.children[0].children[0].children[0].textContent, '1');
+  const currentRow = body.children[0],
+    currentDetail = currentRow.querySelector('button');
+  participants[0] = {
+    ...participants[0],
+    recordRevision: 2,
+    history: [{ word: 'music', mode: 'text', correct: false, points: 0, station: 0 }],
+  };
+  records(frame());
+  assert.equal(body.children[0], currentRow);
+  assert.equal(currentRow.children[1].children[0].textContent, '0%');
+  assert.equal(currentRow.children[2].textContent, '0 / 1問');
+  currentDetail.onclick();
+  const dialog = root.querySelector('dialog');
+  assert.equal(dialog.open, true, 'The retained button still opens the latest answer snapshot');
+  const snapshotContent = dialog.querySelector('.record-dialog-content').children[0];
+  participants[0] = {
+    ...participants[0],
+    recordRevision: 3,
+    history: [
+      ...participants[0].history,
+      { word: 'math', mode: 'text', correct: true, points: 100, station: 0 },
+    ],
+  };
+  records(frame());
+  assert.equal(
+    dialog.querySelector('.record-dialog-content').children[0],
+    snapshotContent,
+    'An open detail keeps its reading snapshot',
+  );
+  dialog.close();
+  assert.equal(globalThis.document.activeElement, currentDetail);
+  const [stage, sort] = root.querySelectorAll('select');
+  stage.value = '1';
+  stage.onchange();
+  assert.equal(body.children[0], currentRow, 'Changing scope retains each visible student row');
+  assert.equal(currentRow.children[1].children[0].textContent, '—');
+  assert.equal(currentRow.children[2].textContent, '0 / 0問');
+  stage.value = 'all';
+  stage.onchange();
+  assert.equal(currentRow.children[1].children[0].textContent, '50%');
+  participants[20] = {
+    ...participants[20],
+    recordRevision: 2,
+    history: [{ word: 'food', mode: 'text', correct: false, station: 0 }],
+  };
+  records(frame());
+  sort.value = 'attention';
+  sort.onchange();
+  assert.equal(body.children[0].children[0].children[0].textContent, '21');
+  assert.equal(body.children[1], currentRow, 'Sorting moves an existing student row intact');
+  const search = root.querySelector('input');
+  search.value = '999';
+  search.oninput();
+  assert.equal(body.children.length, 1, 'Empty search retains its explanatory row');
+  search.value = '';
+  search.oninput();
+  assert.equal(body.children.length, 12);
+  records({ race: { id: 'records-r2' }, players: participants.slice(0, 1) });
+  assert.notEqual(body.children[0], firstRow, 'Different races never share row ownership');
+} finally {
+  globalThis.document = previousDocument;
+}

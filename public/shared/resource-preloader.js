@@ -43,7 +43,10 @@ export function createResourcePreloader({
     queue = [];
     if (timer !== null) host.clearTimeout(timer);
     timer = null;
-    active?.controller.abort();
+    if (active) {
+      active.cancelled = true;
+      active.controller.abort();
+    }
   }
   async function consume(response, controller) {
     if (!response.ok || Number(response.headers?.get('content-length') || 0) > 524288) {
@@ -73,7 +76,7 @@ export function createResourcePreloader({
     if (!enabled() || active) return;
     const url = queue.shift();
     if (!url) return;
-    const request = { url, controller: new AbortController() };
+    const request = { url, controller: new AbortController(), cancelled: false };
     active = request;
     const deadline = host.setTimeout(() => request.controller.abort(), 8000);
     try {
@@ -83,10 +86,12 @@ export function createResourcePreloader({
         priority: 'low',
         signal: request.controller.signal,
       });
-      if (await consume(response, request.controller)) remember(url);
-      else if (!request.controller.signal.aborted) remember(url, false);
+      const complete = await consume(response, request.controller);
+      if (!request.cancelled) remember(url, complete && !request.controller.signal.aborted);
     } catch {
-      if (!request.controller.signal.aborted) remember(url, false);
+      // A deadline/size abort is a failed speculative fetch; an explicit screen
+      // reset is cancellation and must not delay the next screen's preload.
+      if (!request.cancelled) remember(url, false);
     } finally {
       host.clearTimeout(deadline);
       if (active === request) active = null;
@@ -102,7 +107,7 @@ export function createResourcePreloader({
       return;
     }
     queue = [...new Set(urls.filter(allowed))]
-      .filter((url) => !(seen.get(url) > now()) && active?.url !== url)
+      .filter((url) => !(seen.get(url) > now()) && (active?.url !== url || active.cancelled))
       .slice(0, 2);
     schedule();
   }

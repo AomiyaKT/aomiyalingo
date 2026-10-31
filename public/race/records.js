@@ -1,4 +1,5 @@
 import { makeElement as make } from '../shared/dom.js';
+import { setUIText, setUIAttribute } from '../shared/i18n.js';
 import {
   recordModeNames,
   recordSummary,
@@ -95,6 +96,14 @@ export function createRaceRecords(root) {
   tools.append(stage.wrap, sort.wrap, search);
   const overview = make('div', undefined, 'record-overview'),
     weak = make('div', undefined, 'record-class-focus');
+  const metrics = [
+    metric('', '参加した生徒'),
+    metric('', '復習ポイントあり', 'needs'),
+    metric('', '平均の自力正解率'),
+  ];
+  overview.append(...metrics);
+  const weakValue = make('span');
+  weak.append(make('strong', 'みんなで復習するなら'), weakValue);
   const tableWrap = make('div', undefined, 'record-table-wrap'),
     table = make('table', undefined, 'record-table');
   table.append(make('caption', '生徒ごとの学習状況'));
@@ -107,6 +116,13 @@ export function createRaceRecords(root) {
   }
   head.append(hr);
   const body = make('tbody');
+  // Only the current page's rows are retained. Score updates must not detach
+  // the teacher's active pointer/focus target or rebuild unchanged classmates.
+  const rows = new Map();
+  const emptyRow = make('tr'),
+    emptyCell = make('td');
+  emptyCell.colSpan = 5;
+  emptyRow.append(emptyCell);
   table.append(head, body);
   tableWrap.append(table);
   const pages = make('div', undefined, 'record-pagination');
@@ -145,7 +161,7 @@ export function createRaceRecords(root) {
   function takeSnapshot() {
     snapshot = store.summary(selected, station);
     refresh.hidden = true;
-    note.textContent = '表示中の記録を保っています。';
+    setUIText(note, '表示中の記録を保っています。');
   }
   function open(id) {
     selected = id;
@@ -157,39 +173,60 @@ export function createRaceRecords(root) {
   }
   function paginate(target, current, total, change) {
     const count = Math.max(1, Math.ceil(total));
-    const prev = button('前へ', () => change(current - 1)),
-      next = button('次へ', () => change(current + 1));
-    prev.disabled = current === 0;
-    next.disabled = current >= count - 1;
-    target.replaceChildren(prev, make('span', current + 1 + ' / ' + count + ' ページ'), next);
-    target.hidden = count === 1;
+    if (!target.children.length)
+      target.append(
+        button('前へ', () => {}),
+        make('span'),
+        button('次へ', () => {}),
+      );
+    const [prev, label, next] = target.children;
+    prev.onclick = () => change(current - 1);
+    next.onclick = () => change(current + 1);
+    if (prev.disabled !== (current === 0)) prev.disabled = current === 0;
+    if (next.disabled !== current >= count - 1) next.disabled = current >= count - 1;
+    setUIText(label, current + 1 + ' / ' + count + ' ページ');
+    if (target.hidden !== (count === 1)) target.hidden = count === 1;
+  }
+  function rowFor(id) {
+    if (rows.has(id)) return rows.get(id);
+    const row = make('tr'),
+      name = make('th'),
+      label = make('strong'),
+      state = make('small');
+    name.scope = 'row';
+    name.append(label, state);
+    const accuracyCell = make('td'),
+      accuracy = make('strong', '', 'record-accuracy');
+    accuracyCell.append(accuracy);
+    const answered = make('td'),
+      needsCell = make('td'),
+      needs = make('span');
+    needsCell.append(needs);
+    const action = make('td'),
+      show = button('詳しく見る', () => open(id));
+    show.dataset.student = id;
+    action.append(show);
+    row.append(name, accuracyCell, answered, needsCell, action);
+    const view = { row, label, state, accuracy, answered, needs, show };
+    rows.set(id, view);
+    return view;
   }
   function render() {
     const all = sortRecordSummaries(store.summaries(station), order);
     const attempted = all.filter((s) => s.main.length);
-    overview.replaceChildren(
-      metric(String(all.length) + '人', '参加した生徒'),
-      metric(
-        String(attempted.filter((s) => s.needs > 0).length) + '人',
-        '復習ポイントあり',
-        'needs',
-      ),
-      metric(
-        attempted.length
-          ? percent(Math.round(attempted.reduce((n, s) => n + s.accuracy, 0) / attempted.length))
-          : '—',
-        '平均の自力正解率',
-      ),
-    );
+    [
+      String(all.length) + '人',
+      String(attempted.filter((s) => s.needs > 0).length) + '人',
+      attempted.length
+        ? percent(Math.round(attempted.reduce((n, s) => n + s.accuracy, 0) / attempted.length))
+        : '—',
+    ].forEach((value, index) => setUIText(metrics[index].children[0], value));
     const issues = commonDifficulties(all);
-    weak.replaceChildren(
-      make('strong', 'みんなで復習するなら'),
-      make(
-        'span',
-        issues.length
-          ? issues.map(([word, n]) => word + '（' + n + '人が不正解）').join('　・　')
-          : 'まだ不正解の記録はありません。',
-      ),
+    setUIText(
+      weakValue,
+      issues.length
+        ? issues.map(([word, n]) => word + '（' + n + '人が不正解）').join('　・　')
+        : 'まだ不正解の記録はありません。',
     );
     const filtered = all.filter(
       (s) => !query || String(s.player.label ?? s.player.alias).includes(query),
@@ -198,48 +235,42 @@ export function createRaceRecords(root) {
     const focused = body.contains(document.activeElement)
       ? document.activeElement.dataset.student
       : null;
-    body.replaceChildren();
-    for (const s of filtered.slice(page * 12, page * 12 + 12)) {
-      const tr = make('tr'),
-        name = make('th');
-      name.scope = 'row';
-      name.append(
-        make('strong', String(s.player.label ?? s.player.alias)),
-        make('small', s.main.length ? (s.player.done ? '回答終了' : '回答中') : 'まだ回答なし'),
+    const visible = filtered.slice(page * 12, page * 12 + 12);
+    const ids = new Set(visible.map((s) => s.player.id));
+    for (const [id, view] of rows)
+      if (!ids.has(id)) {
+        view.row.remove();
+        rows.delete(id);
+      }
+    if (visible.length) emptyRow.remove();
+    visible.forEach((s, index) => {
+      const view = rowFor(s.player.id);
+      setUIText(view.label, String(s.player.label ?? s.player.alias));
+      setUIText(
+        view.state,
+        s.main.length ? (s.player.done ? '回答終了' : '回答中') : 'まだ回答なし',
       );
-      const accuracy = make('td');
-      accuracy.append(make('strong', percent(s.accuracy), 'record-accuracy'));
-      const answered = make('td', s.independent + ' / ' + s.main.length + '問');
-      const needs = make('td');
-      needs.append(
-        make(
-          'span',
-          s.main.length ? (s.needs ? s.needs + '項目' : '今のところ順調') : '—',
-          s.needs ? 'record-pill needs' : 'record-pill',
-        ),
-      );
-      const action = make('td'),
-        show = button('詳しく見る', () => open(s.player.id));
-      show.dataset.student = s.player.id;
-      show.setAttribute(
+      setUIText(view.accuracy, percent(s.accuracy));
+      setUIText(view.answered, s.independent + ' / ' + s.main.length + '問');
+      setUIText(view.needs, s.main.length ? (s.needs ? s.needs + '項目' : '今のところ順調') : '—');
+      const className = s.needs ? 'record-pill needs' : 'record-pill';
+      if (view.needs.className !== className) view.needs.className = className;
+      setUIAttribute(
+        view.show,
         'aria-label',
         '出席番号 ' + (s.player.label ?? s.player.alias) + ' の成績を見る',
       );
-      action.append(show);
-      tr.append(name, accuracy, answered, needs, action);
-      body.append(tr);
-    }
+      if (body.children[index] !== view.row)
+        body.insertBefore(view.row, body.children[index] || null);
+    });
     if (!filtered.length) {
-      const tr = make('tr'),
-        td = make(
-          'td',
-          query ? '該当する生徒はいません。' : '生徒が参加すると成績を確認できます。',
-        );
-      td.colSpan = 5;
-      tr.append(td);
-      body.append(tr);
+      setUIText(
+        emptyCell,
+        query ? '該当する生徒はいません。' : '生徒が参加すると成績を確認できます。',
+      );
+      if (body.children[0] !== emptyRow) body.append(emptyRow);
     }
-    if (focused)
+    if (focused && document.activeElement?.dataset.student !== focused)
       [...body.querySelectorAll('button')]
         .find((b) => b.dataset.student === focused)
         ?.focus({ preventScroll: true });
@@ -343,6 +374,8 @@ export function createRaceRecords(root) {
     const update = store.update(result);
     if (update.raceChanged) {
       if (dialog.open) dialog.close();
+      rows.clear();
+      body.replaceChildren();
       page = 0;
       station = 'all';
       stage.el.value = 'all';
@@ -352,8 +385,8 @@ export function createRaceRecords(root) {
     if (!update.changed) return;
     if (!section || section.open) render();
     if (dialog.open && update.changedIds.has(selected)) {
-      refresh.hidden = false;
-      note.textContent = '新しい記録があります。読む位置はそのままです。';
+      if (refresh.hidden) refresh.hidden = false;
+      setUIText(note, '新しい記録があります。読む位置はそのままです。');
     }
   };
 }

@@ -10,6 +10,22 @@ serialized state and current room. Revision/authentication guards remain beside
 their database writes. Structural refactors do not change release numbers or
 teaching behavior.
 
+## Release 81 - stable record view and preload cancellation semantics
+
+`public/race/records.js` retains summary leaves, pagination controls and keyed
+student rows for the current page (at most 12). Only changed display values are
+written through the shared localization helpers; detached pages and race changes
+release their row references. `record-model.js` still owns revision-aware analysis,
+scoping and sorting. An open detail stays a snapshot until explicitly refreshed.
+
+`public/shared/resource-preloader.js` distinguishes owner cancellation from a
+failed speculative request. Timeout and streamed-size aborts enter the existing
+30-second cooldown. Screen reset, visibility changes and disposal cancel without
+failure cooldown; a new owner may queue the cancelled URL before it settles.
+The existing single in-flight request, two queued resources and 64 seen entries
+remain bounded. Foreground playback, authentication, scoring and storage formats
+are unchanged. See `docs/release-81.md` for evidence and limits.
+
 ## Release 80 - stable localized refreshes and coherent participant snapshots
 
 `public/shared/i18n.js` owns translation-aware UI text and attribute writes.

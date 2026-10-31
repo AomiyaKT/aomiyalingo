@@ -2,6 +2,14 @@
 
 **English** | [日本語](CHANGELOG.ja.md)
 
+## Release 81 - 2026-10-31
+
+- Retain visible race-record rows, summary cards and pagination controls during live refreshes. Score-only changes no longer detach detail buttons or create unchanged table elements; row retention is bounded to the current 12-person page.
+- Preserve open detail snapshots and shared Japanese/English presentation while updating actual answer values, course scopes, sort order and search results.
+- Apply the existing preload failure cooldown to deadline and streamed-size aborts. Explicit screen cancellation remains immediately retryable, including requeue before the cancelled request settles.
+
+Measurements and verification scope: [Release 81](docs/release-81.md).
+
 ## Release 80 - 2026-10-31
 
 - Stop rewriting translated standings, participant labels, practice rosters and accessibility copy on unchanged English polls. Both modes reuse one shared translation-aware writer; the practice helper remains a compatibility export.
