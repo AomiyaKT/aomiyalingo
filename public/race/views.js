@@ -1,5 +1,8 @@
 import { createTimingTower } from './timing-tower.js';
-import { setTextIfChanged, setAttributeIfChanged } from '../shared/dom.js';
+import {
+  setUIText as setTextIfChanged,
+  setUIAttribute as setAttributeIfChanged,
+} from '../shared/i18n.js';
 export function createRaceViews({ q, make, isTeacher, avatars, getData, appSettings }) {
   function avatarArt(id) {
     const a = avatars[id] || avatars.cat,

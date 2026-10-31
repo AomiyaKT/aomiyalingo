@@ -26,11 +26,11 @@ export function createRaceService({
   raceRacers,
 }) {
   async function raceSnapshot(env, r, privateView = false) {
-    const players = await raceRacers(env, r.id);
-    const byId = privateView ? new Map(players.map((p) => [p.id, p])) : null;
+    let players = await raceRacers(env, r.id);
     let ranked = raceRanking(players, r);
     if (r.status === 'running' && players.length && ranked.every((p) => p.done)) {
-      await stmt(
+      const station = r.station;
+      const transition = await stmt(
         env,
         "UPDATE races SET status=?,remaining_ms=?,elapsed_ms=?,started_at=NULL,revision=revision+1 WHERE id=? AND deleted_at=0 AND status='running' AND revision=?",
         courseEndStatus(r.station || 0, raceStations(r) ? 3 : 1),
@@ -40,10 +40,16 @@ export function createRaceService({
         r.revision,
       ).run();
       r = await raceRoom(env, r.id);
+      // A competing transition may already have advanced participant state to
+      // another course. Do not combine that room with the preceding roster.
+      if (!Number(transition.meta?.changes) || r.station !== station)
+        players = await raceRacers(env, r.id);
       ranked = raceRanking(players, r);
     }
+    const byId = privateView ? new Map(players.map((p) => [p.id, p])) : null;
     return {
       room: r,
+      players,
       board: {
         race: racePublic(r),
         stationResults: stationResults(players, r),
@@ -85,6 +91,9 @@ export function createRaceService({
   async function raceSession(env, p, r, receipt = null, known = null) {
     const snapshot = await raceSnapshot(env, r);
     r = snapshot.room;
+    // Authentication precedes the roster read. A committed answer/transition
+    // between those reads must be reflected in self and board consistently.
+    p = snapshot.players.find((player) => player.id === p.id) || p;
     const state = racePlayerState(p),
       total = raceTaskList(r).length,
       board = snapshot.board,

@@ -10,6 +10,23 @@ serialized state and current room. Revision/authentication guards remain beside
 their database writes. Structural refactors do not change release numbers or
 teaching behavior.
 
+## Release 80 - stable localized refreshes and coherent participant snapshots
+
+`public/shared/i18n.js` owns translation-aware UI text and attribute writes.
+Race towers, lanes, participant walls and ordinary-practice rosters compare the
+displayed translation before writing the Japanese source for the existing
+reversible observer. The former practice helper is a compatibility re-export,
+not another implementation. These writers are for interface copy, not answers
+or teacher-authored material. No additional cache or polling loop is introduced.
+
+`server/race/service.mjs` retains participant rows in its internal snapshot and
+uses the matching row for student self state. A lost automatic-close revision
+guard, or a course change during the close, reloads dependent participant rows
+before constructing either the teacher or student response. Normal reads still
+use one roster query; only a conflicting close needs a second. The snapshot rows
+are never included in public payloads. Authentication, guarded writes, scoring,
+receipts and persistence formats are unchanged. See `docs/release-80.md`.
+
 ## Release 79 - race lifecycle and request ownership
 
 `public/race/lifecycle.js` owns legal server command transitions, automatic

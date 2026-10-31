@@ -15,12 +15,52 @@ async function fixture(options = {}) {
     queries = [];
   let interrupted = false;
   const prepare = env.DB.prepare;
+  async function advanceCourse() {
+    await prepare("UPDATE races SET station=1,status='running',revision=revision+2 WHERE id=?")
+      .bind('room')
+      .run();
+    const rows = (await prepare('SELECT * FROM racers WHERE race_id=?').bind('room').all()).results;
+    for (const row of rows) {
+      const state = JSON.parse(row.state);
+      state.ready = false;
+      state.prepared = false;
+      await prepare('UPDATE racers SET state=?,revision=revision+1 WHERE id=?')
+        .bind(JSON.stringify(state), row.id)
+        .run();
+    }
+  }
   env.DB.prepare = (sql) => {
     const statement = prepare(sql);
     for (const method of ['first', 'all', 'run']) {
       const execute = statement[method];
       statement[method] = async (...args) => {
         queries.push({ sql, method });
+        if (
+          options.prepareOnRoster &&
+          !interrupted &&
+          method === 'all' &&
+          sql.startsWith('SELECT * FROM racers WHERE race_id=')
+        ) {
+          interrupted = true;
+          const row = await prepare('SELECT * FROM racers WHERE id=?').bind('player-0').first();
+          const state = JSON.parse(row.state);
+          state.ready = false;
+          state.prepared = false;
+          await prepare('UPDATE racers SET state=?,revision=revision+1 WHERE id=?')
+            .bind(JSON.stringify(state), row.id)
+            .run();
+        }
+        if (
+          options.advanceOnTransition &&
+          !interrupted &&
+          method === 'run' &&
+          sql.startsWith('UPDATE races SET status=?')
+        ) {
+          interrupted = true;
+          // Another request closes this course and the teacher starts the next
+          // before our compare-and-swap completes. Both room and racers move.
+          await advanceCourse();
+        }
         if (
           options.pauseOnTransition &&
           !interrupted &&
@@ -34,7 +74,17 @@ async function fixture(options = {}) {
             .bind('room')
             .run();
         }
-        return execute(...args);
+        const result = await execute(...args);
+        if (
+          options.advanceAfterTransition &&
+          !interrupted &&
+          method === 'run' &&
+          sql.startsWith('UPDATE races SET status=?')
+        ) {
+          interrupted = true;
+          await advanceCourse();
+        }
+        return result;
       };
     }
     return statement;
@@ -218,8 +268,64 @@ const interruptedSession = await (await interrupted.request('/api/race/me')).jso
 assert.equal(interruptedSession.race.status, 'paused');
 assert.equal(interruptedSession.self.task, null);
 assert.equal(interruptedSession.stationResults[0].closed, false);
-assert.equal(playerReads(interrupted.queries), 1);
+assert.equal(playerReads(interrupted.queries), 2, 'A competing write requires roster revalidation');
 assert.equal(count(interrupted.queries, /^UPDATE racers/), 0);
+
+const advanced = await fixture({ players: 2, index: 24, advanceOnTransition: true });
+const advancedSession = await (await advanced.request('/api/race/me')).json();
+assert.equal(advancedSession.race.station, 1);
+assert.equal(advancedSession.race.status, 'running');
+assert.equal(advancedSession.self.ready, false, 'Self uses the same course snapshot as the board');
+assert.equal(advancedSession.self.task, null, 'No old-course task after a concurrent transition');
+assert.equal(
+  advancedSession.board.every((p) => p.ready === false),
+  true,
+);
+assert.equal(playerReads(advanced.queries), 2, 'A lost transition refreshes dependent player rows');
+
+const wonThenAdvanced = await fixture({ players: 2, index: 24, advanceAfterTransition: true });
+const wonSession = await (await wonThenAdvanced.request('/api/race/me')).json();
+assert.equal(wonSession.race.station, 1);
+assert.equal(
+  wonSession.self.ready,
+  false,
+  'A successful close may still be followed by next-course',
+);
+assert.equal(wonSession.self.task, null);
+assert.equal(playerReads(wonThenAdvanced.queries), 2);
+
+const teacherAdvanced = await fixture({ players: 2, index: 24, advanceOnTransition: true });
+const teacherSession = await (
+  await teacherAdvanced.request('/api/teacher/race/board?race=room', 'teacher')
+).json();
+assert.equal(teacherSession.race.station, 1);
+assert.equal(
+  teacherSession.players.every((p) => p.ready === false && p.recordRevision === 1),
+  true,
+  'Private teacher histories and revisions use the refreshed roster too',
+);
+
+const prepared = await fixture({ players: 2, prepareOnRoster: true });
+const preparedSession = await (
+  await prepared.request('/api/race/me?known=room:player-0:0:0:running:0')
+).json();
+assert.equal(
+  preparedSession.self.ready,
+  false,
+  'A newer participant row supersedes the auth lookup',
+);
+assert.equal(preparedSession.self.task, null);
+assert.equal(preparedSession.self.syncKey, 'room:player-0:1:0:running:0');
+assert.equal(preparedSession.board.find((p) => p.id === 'player-0').ready, false);
+assert.ok(
+  Array.isArray(preparedSession.self.history),
+  'Old known revisions cannot omit new self data',
+);
+assert.equal(
+  playerReads(prepared.queries),
+  1,
+  'Reusing the roster needs no additional participant query',
+);
 
 // Byte-for-byte CSV reference copied from the v62 exporter, including its
 // historical index guard and spreadsheet-formula escaping.

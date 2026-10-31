@@ -27,10 +27,10 @@ Aomiyalingo is a Duolingo-style English learning web app tailored to **Blue Sky*
 
 Teachers and students can use any internet-connected device with a compatible web browser—including computers, tablets and smartphones. Students simply scan a QR code or open a link to join.
 
-**Current version: Release 79 · 30 October 2026**
-[Open the app](https://aomiyalingo.minamiyakk.chatgpt.site/) · [Changelog](CHANGELOG.md) · [Release 79 details](docs/release-79.md)
+**Current version: Release 80 · 31 October 2026**
+[Open the app](https://aomiyalingo.minamiyakk.chatgpt.site/) · [Changelog](CHANGELOG.md) · [Release 80 details](docs/release-80.md)
 
-**Source release:** this repository contains Release 79. The hosted website is deployed separately; a GitHub upload does not update the running classroom server.
+**Source release:** this repository contains Release 80. The hosted website is deployed separately; a GitHub upload does not update the running classroom server.
 
 [For teachers and ALTs](#for-teachers) · [For developers and future maintainers](#for-developers)
 
@@ -88,7 +88,7 @@ Both guides explain the classroom workflow step by step. The guide button inside
 
 ## Part 2 · For developers and future maintainers
 
-This section is the technical entry point for a successor maintaining Aomiyalingo after its original maintainer leaves. It describes the Release 79 implementation and its operating boundaries. Read [AGENTS.md](AGENTS.md), [ARCHITECTURE.md](ARCHITECTURE.md) and the [Release 79 notes](docs/release-79.md) before changing behavior. Architecture entries describe individual releases; older measurements and suite counts are historical, not current guarantees.
+This section is the technical entry point for a successor maintaining Aomiyalingo after its original maintainer leaves. It describes the Release 80 implementation and its operating boundaries. Read [AGENTS.md](AGENTS.md), [ARCHITECTURE.md](ARCHITECTURE.md) and the [Release 80 notes](docs/release-80.md) before changing behavior. Architecture entries describe individual releases; older measurements and suite counts are historical, not current guarantees.
 
 ### Product intent and engineering principles
 
@@ -170,7 +170,7 @@ node --expose-gc scripts/soak-classroom.mjs --output .sites-runtime/soak.json
 
 ### Verification and release discipline
 
-Release 79 has a recorded **92-suite regression pass**. Curriculum validation recorded **17 profiles / 387 configured entries**, including legacy overlaps; that is not a unique-word count. A previously recorded accelerated 35-learner, 30-minute simulation exercised 30,452 requests, 3,209 race submissions and 200 replays with no unexpected errors.
+Release 80 has a recorded **92-suite regression pass**, including concurrent course transitions and unchanged English refreshes. Curriculum validation recorded **17 profiles / 387 configured entries**, including legacy overlaps; that is not a unique-word count. A previously recorded accelerated 35-learner, 30-minute simulation exercised 30,452 requests, 3,209 race submissions and 200 replays with no unexpected errors.
 
 These are results for the documented snapshots and local harnesses. They do not certify arbitrary future commits, production load, physical devices, school Wi-Fi or rendering frame rates. Release 79 browser checks covered teacher boards at 1366×768 and 1920×1080 plus student portrait, landscape and short-height layouts; see the [measurements and limits](docs/release-79.md).
 

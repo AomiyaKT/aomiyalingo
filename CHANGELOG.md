@@ -2,6 +2,14 @@
 
 **English** | [日本語](CHANGELOG.ja.md)
 
+## Release 80 - 2026-10-31
+
+- Stop rewriting translated standings, participant labels, practice rosters and accessibility copy on unchanged English polls. Both modes reuse one shared translation-aware writer; the practice helper remains a compatibility export.
+- Keep the race room, board and student self state aligned when another request advances a course or updates readiness between database reads. Revalidate participant rows after conflicting automatic course closure.
+- Preserve scoring, stored records, authorization and pending-answer behavior. Regression coverage includes both successful and superseded course-close races, current readiness, and 100 unchanged English tower refreshes.
+
+Measurements and verification scope: [Release 80](docs/release-80.md).
+
 ## Release 79 - 2026-10-30
 
 - Unified start, pause/resume, course transition and end policies. Student lifecycle cleanup stops audio, feedback timers, roulette and transient presentation while preserving an answer during a pause.

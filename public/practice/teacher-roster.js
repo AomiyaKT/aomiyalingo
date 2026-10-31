@@ -1,4 +1,7 @@
-import { setAttributeIfChanged, setTextIfChanged } from '../shared/dom.js';
+import {
+  setUIText as setTextIfChanged,
+  setUIAttribute as setAttributeIfChanged,
+} from '../shared/i18n.js';
 
 // Keep controls attached while polling: rebuilding a row also discards keyboard focus.
 export function createTeacherRoster({ host, make, modeNames, onDetail, now = Date.now }) {

@@ -1,4 +1,5 @@
 import { englishUI } from './i18n-en.js';
+import { setTextIfChanged, setAttributeIfChanged } from './dom.js';
 
 export const LANGUAGE_KEY = 'aomiyalingo.uiLanguage';
 const normalize = (s) => s.replace(/\s+/g, ' ').trim();
@@ -121,6 +122,29 @@ export function createUITranslator({
   };
 }
 export const translateUI = createUITranslator();
+
+// Keep the Japanese source for reversible translation, but do not reset an
+// already translated label on every live refresh. These helpers are for UI
+// copy only, never learner answers or teacher-authored content.
+export function setUIText(
+  node,
+  value,
+  language = globalThis.document?.documentElement?.lang || 'ja',
+) {
+  const source = value == null ? '' : String(value);
+  if (node.textContent === translateUI(source, language)) return false;
+  return setTextIfChanged(node, source);
+}
+export function setUIAttribute(
+  node,
+  name,
+  value,
+  language = globalThis.document?.documentElement?.lang || 'ja',
+) {
+  const source = String(value);
+  if (node.getAttribute(name) === translateUI(source, language)) return false;
+  return setAttributeIfChanged(node, name, source);
+}
 
 // Content boundaries are deliberately explicit. This layer never reads/writes
 // form values, answer models, datasets used by scoring, storage records or APIs.

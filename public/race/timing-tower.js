@@ -1,5 +1,8 @@
 import { exerciseNames } from '../learning/exercises.js';
-import { setTextIfChanged, setAttributeIfChanged } from '../shared/dom.js';
+import {
+  setUIText as setTextIfChanged,
+  setUIAttribute as setAttributeIfChanged,
+} from '../shared/i18n.js';
 import { createTeacherClock } from './teacher-clock.js';
 
 export function createTimingTower({ make, avatarArt, getData, appSettings }) {

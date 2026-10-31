@@ -1,8 +1,10 @@
 import assert from 'node:assert/strict';
 import { createTimingTower } from '../public/race/timing-tower.js';
 import { setTextIfChanged, setAttributeIfChanged } from '../public/shared/dom.js';
+import { translateUI } from '../public/shared/i18n.js';
 
 let textWrites = 0,
+  attributeWrites = 0,
   rectReads = 0,
   animations = 0,
   events = [];
@@ -82,6 +84,7 @@ class Node {
           null;
   }
   setAttribute(name, value) {
+    attributeWrites++;
     this.attributes.set(name, String(value));
   }
   getAttribute(name) {
@@ -107,6 +110,7 @@ class Node {
   }
 }
 const original = globalThis.matchMedia;
+const originalDocument = globalThis.document;
 globalThis.matchMedia = () => ({ matches: false });
 try {
   const panel = new Node('div'),
@@ -147,6 +151,32 @@ try {
   assert.equal(rectReads, 0, 'An unchanged ranking reads no row geometry');
   assert.equal(textWrites, 0, 'An unchanged ranking rewrites no leaf text');
   assert.equal(panel.querySelectorAll('.timing-row')[0], first, 'Rows survive polling');
+  // Simulate the real reversible language observer after each poll. Previously
+  // every English row was rewritten to Japanese and translated back again.
+  function present(node, language) {
+    node._text = translateUI(node._text, language);
+    for (const [name, value] of node.attributes)
+      node.attributes.set(name, translateUI(value, language));
+    for (const child of node.children) present(child, language);
+  }
+  globalThis.document = { documentElement: { lang: 'en' } };
+  present(panel, 'en');
+  textWrites = attributeWrites = 0;
+  for (let i = 0; i < 100; i++) {
+    draw(panel, structuredClone(players));
+    present(panel, 'en');
+  }
+  console.log(JSON.stringify({ englishPolls: 100, learners: 35, textWrites, attributeWrites }));
+  assert.equal(textWrites, 0, 'English polls retain already translated row text');
+  assert.equal(
+    attributeWrites,
+    0,
+    'English polls retain translated accessibility labels and titles',
+  );
+  globalThis.document = originalDocument;
+  // The real observer restores captured Japanese sources on a language switch.
+  draw(panel, players);
+  textWrites = rectReads = animations = 0;
   const moved = [{ ...players[1], rank: 1 }, { ...players[0], rank: 2 }, ...players.slice(2)];
   events = [];
   draw(panel, moved);
@@ -193,4 +223,5 @@ try {
   );
 } finally {
   globalThis.matchMedia = original;
+  globalThis.document = originalDocument;
 }
