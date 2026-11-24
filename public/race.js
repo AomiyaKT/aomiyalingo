@@ -15,6 +15,7 @@ import { renderRaceBriefing } from './race/briefing.js';
 import { createTeacherRaceController } from './race/teacher-controller.js';
 import { createPollScheduler } from './shared/poll-scheduler.js';
 import { createResourcePreloader, taskResourceHints } from './shared/resource-preloader.js';
+import { createAudioPreparationPanel } from './shared/audio-preparation.js';
 (() => {
   const q = (s) => document.querySelector(s),
     isTeacher = document.body.classList.contains('race-teacher');
@@ -39,7 +40,20 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
     autoNext = null,
     lastStage = null,
     lastItem = null,
-    lastCelebration = null;
+    lastCelebration = null,
+    reconnectTarget = null;
+  const preparation = !isTeacher ? window.aomiAudioPreparation : null;
+  if (preparation)
+    createAudioPreparationPanel({
+      service: preparation,
+      loadingNote: '読み込み中も動物やルールを確認できます。',
+      before: q('#race-ready'),
+      onChange: (state) => {
+        q('#race-ready').disabled =
+          busy || !state.ready || (data?.race?.status === 'lobby' && !!data?.self?.prepared);
+        if (state.ready && data && session) drawStudent(data);
+      },
+    });
   const store = (key, value) => {
       try {
         const serialized = JSON.stringify(value);
@@ -136,7 +150,10 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
     : null;
   function syncJoinEntry() {
     const saved = raceSessionCache.find(data?.race?.id, q('#race-number').value);
-    q('#join-race').disabled = busy || (!data?.race?.accepting && !saved);
+    if (reconnectTarget?.raceId !== data?.race?.id) reconnectTarget = null;
+    q('#race-reconnect').hidden = !reconnectTarget;
+    q('#race-reconnect').disabled = busy;
+    q('#join-race').disabled = busy || !data?.race;
     q('#join-race').textContent = saved ? 'レースに戻る' : '参加する';
     if (saved)
       q('#entry-message').textContent = 'このiPadの参加記録が残っています。続きから戻れます。';
@@ -579,7 +596,10 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
     }
   }
   function drawAvatars() {
-    q('#race-ready').disabled = busy || (data?.race?.status === 'lobby' && !!data?.self?.prepared);
+    q('#race-ready').disabled =
+      busy ||
+      !preparation.state.ready ||
+      (data?.race?.status === 'lobby' && !!data?.self?.prepared);
     const shelf = q('#race-sticker-shelf'),
       collection = read('aomi.race.stickers.' + data?.self?.label) || [];
     shelf.hidden = !collection.length;
@@ -599,7 +619,7 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
       (data?.self?.ready === false && data.race.status !== 'finished');
     picker.hidden = !canChoose;
     const panel = q('#race-avatar-options'),
-      chosenId = data?.self.avatar || 'cat';
+      chosenId = data?.self?.avatar || 'cat';
     if (avatarPage === null)
       avatarPage = Math.max(
         0,
@@ -671,7 +691,13 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
   }
 
   function drawStudent(result) {
-    const phase = studentLifecycle.update(result, !!feedback);
+    let phase = studentLifecycle.update(result, !!feedback);
+    const audioState = preparation.prepare(
+      'race:' + result.race.id + ':' + result.self.id,
+      result.self.audioManifest || [],
+    );
+    if (!audioState.ready && !['finished', 'paused'].includes(result.race.status))
+      phase = 'prepare';
     if (data?.race?.id !== result.race.id || data?.race?.station !== result.race.station)
       preloader.reset();
     if (result.race.status === 'running' && result.self.ready !== false && !result.self.done)
@@ -749,7 +775,8 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
       ' pt';
     received = Date.now();
     session = { ...session, raceId: result.race.id, label: result.self.label };
-    store('aomi.race.session', session);
+    const cached = raceSessionCache.find(session.raceId, session.label);
+    if (!cached || cached.token === session.token) store('aomi.race.session', session);
     raceSessionCache.save({ ...session, pending });
     q('#race-entry').hidden = true;
     q('#race-play').hidden = false;
@@ -842,10 +869,10 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
     drawStationResults(q('#student-station-results'), result);
     drawResult(s);
     drawAvatars();
-    q('#race-briefing').hidden = phase !== 'ready';
+    q('#race-briefing').hidden = !['ready', 'prepare'].includes(phase);
     q('#briefing-avatar-change').hidden = phase !== 'ready';
-    if (phase === 'ready') {
-      q('#race-avatar-picker').hidden = true;
+    if (phase === 'ready' || phase === 'prepare') {
+      q('#race-avatar-picker').hidden = phase === 'ready';
       renderRaceBriefing(
         q('#race-briefing'),
         r,
@@ -855,8 +882,8 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
     }
     document.body.classList.toggle('race-lobby', r.status === 'lobby' || s.ready === false);
     q('#race-ready').hidden =
-      !(r.status === 'lobby' || s.ready === false) || r.status === 'finished';
-    q('#race-ready').disabled = busy || (r.status === 'lobby' && s.prepared);
+      !(r.status === 'lobby' || s.ready === false || !audioState.ready) || r.status === 'finished';
+    q('#race-ready').disabled = busy || !audioState.ready || (r.status === 'lobby' && s.prepared);
     q('#race-ready').textContent =
       r.status === 'lobby' ? (s.prepared ? '✓ 準備完了！' : '準備完了') : '準備完了・レースに参加';
     const waiting = phase !== 'question';
@@ -922,6 +949,7 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
     if (
       !waiting &&
       !feedback &&
+      !pending &&
       s.task &&
       (currentTask?.id !== s.task.id || currentTask?.hintStrength !== s.task.hintStrength)
     )
@@ -969,14 +997,15 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
                 : result.race.total + '問・制限時間' + result.race.settings.minutes + '分。') +
             '自分のペースで挑戦しよう。'
           : '先生のレースに参加しよう。';
-        q('#entry-message').textContent = result.race?.accepting
-          ? '「' +
-            result.race.title +
-            '」' +
-            (result.race.status === 'lobby'
-              ? '参加受付中'
-              : '途中参加できます。自分のペースで挑戦しよう！')
-          : '先生が参加受付を始めるまで、お待ちください。';
+        if (!reconnectTarget)
+          q('#entry-message').textContent = result.race?.accepting
+            ? '「' +
+              result.race.title +
+              '」' +
+              (result.race.status === 'lobby'
+                ? '参加受付中'
+                : '途中参加できます。自分のペースで挑戦しよう！')
+            : '先生が参加受付を始めるまで、お待ちください。';
         syncJoinEntry();
       }
     } catch (e) {
@@ -989,19 +1018,30 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
           studentLifecycle.leave();
           studentController.invalidate();
           lifecycle.epoch++;
+          const revoked = session;
+          q('#race-number').value = revoked?.label || q('#race-number').value;
+          reconnectTarget =
+            e.status === 401 && revoked
+              ? { raceId: revoked.raceId, label: String(revoked.label) }
+              : null;
+          q('#race-reconnect').hidden = !reconnectTarget;
           if (session) raceSessionCache.remove(session);
           session = null;
           currentTask = null;
           pending = null;
           feedback = null;
-          store('aomi.race.session', null);
-          store('aomi.race.pending', null);
+          if (read('aomi.race.session')?.token === revoked?.token) {
+            store('aomi.race.session', null);
+            store('aomi.race.pending', null);
+          }
           q('#race-play').hidden = true;
           q('#race-entry').hidden = false;
           q('#change-race').hidden = true;
         }
         q(session ? '#race-status' : '#entry-message').textContent =
-          e.message || '接続を確認してください。';
+          !session && e.status === 401
+            ? '別の画面で参加しています。この画面から戻るには再接続してください。'
+            : e.message || '接続を確認してください。';
       }
       return false;
     } finally {
@@ -1073,7 +1113,9 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
         onAccepted: showAnswerResult,
         onError: (error) => {
           q('#race-save-error').textContent =
-            error.message + ' 回答は保存待ちです。「答えを確認」で再送できます。';
+            !error.status || error.status >= 500
+              ? '回答をこの端末に保管しています。接続が戻ると自動で再送します。'
+              : error.message + ' 回答は保存待ちです。「答えを確認」で再送できます。';
           q('#race-save-error').hidden = false;
         },
         onSynchronized: (result, discardTask) => {
@@ -1141,13 +1183,16 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
       link.setAttribute('aria-label', 'Aomiyalingo 参加画面');
     }
     raceSessionCache.save({ ...session, pending });
-    q('#race-number').addEventListener('input', syncJoinEntry);
+    q('#race-number').addEventListener('input', () => {
+      reconnectTarget = null;
+      syncJoinEntry();
+    });
     if (targetRace) {
       q('#join-next-race').hidden = true;
       q('#next-race-message').textContent = '次のレースは先生の新しいQRを読み取ってね。';
     }
     q('#race-ready').onclick = async () => {
-      if (busy) return;
+      if (busy || !preparation.state.ready) return;
       lifecycle.epoch++;
       busy = true;
       q('#race-ready').disabled = true;
@@ -1178,18 +1223,28 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
         drawStudent(data);
       }
     };
-    q('#race-join').onsubmit = async (e) => {
-      e.preventDefault();
+    async function joinRace(takeover = false) {
       if (busy) return;
+      const label = q('#race-number').value;
+      if (takeover && reconnectTarget?.label !== label) return;
       lifecycle.epoch++;
       busy = true;
       q('#join-race').disabled = true;
+      let joiningRaceId = null;
       try {
         const current = await api(currentRacePath);
         if (!current.race) throw Error('先生の参加受付を待ってください。');
-        const joined = await raceSessionCache.join(api, current.race.id, q('#race-number').value);
+        joiningRaceId = current.race.id;
+        if (takeover && reconnectTarget?.raceId !== current.race.id) return;
+        const joined = await raceSessionCache.join(api, current.race.id, label, undefined, {
+          takeover,
+        });
+        reconnectTarget = null;
+        q('#race-reconnect').hidden = true;
         acceptJoined(joined);
       } catch (err) {
+        reconnectTarget = err.code === 'DUPLICATE' ? { raceId: joiningRaceId, label } : null;
+        q('#race-reconnect').hidden = !reconnectTarget;
         q('#entry-message').textContent = err.message;
       } finally {
         busy = false;
@@ -1198,7 +1253,12 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
         drawAvatars();
         poll();
       }
+    }
+    q('#race-join').onsubmit = (e) => {
+      e.preventDefault();
+      return joinRace();
     };
+    q('#race-reconnect').onclick = () => joinRace(true);
     q('#join-next-race').onclick = async () => {
       if (targetRace) {
         q('#next-race-message').textContent = '次のレースは先生の新しいQRを読み取ってね。';
@@ -1239,6 +1299,7 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
       raceSessionCache.save({ ...session, pending });
       q('#race-number').value = data?.self?.label || '';
       session = null;
+      preparation.dispose();
       currentTask = null;
       feedback = null;
       pending = null;
@@ -1342,7 +1403,8 @@ import { createResourcePreloader, taskResourceHints } from './shared/resource-pr
       stopAudio();
     }
   });
-  window.addEventListener('aomi-reconnect', () => poll());
+  window.addEventListener('aomi-reconnect', () => pollScheduler.refresh());
+  window.addEventListener('pageshow', () => pollScheduler.refresh());
   if (!isTeacher)
     document.addEventListener('keydown', (event) => {
       if (

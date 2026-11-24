@@ -45,8 +45,47 @@ export function createStudentRaceHandler({
       label = validLabel(data.label);
     if (!label) return json({ error: '出席番号を1〜999で入力してください。' }, 400);
     const r = await raceRoom(env, String(data.raceId || ''));
-    if (!r || !raceAccepting(r))
+    if (!r) return json({ error: '参加受付は終了しました。次のレースを待ってください。' }, 409);
+    const existing = await stmt(
+      env,
+      'SELECT * FROM racers WHERE race_id=? AND label=?',
+      r.id,
+      label,
+    ).first();
+    if (existing && data.takeover === true) {
+      const value = token();
+      const updated = await stmt(
+        env,
+        'UPDATE racers SET token_hash=?,revision=revision+1,last_seen=? WHERE id=? AND token_hash=? AND revision=? AND EXISTS (SELECT 1 FROM races WHERE id=? AND deleted_at=0)',
+        await hash(value),
+        now(),
+        existing.id,
+        existing.token_hash,
+        existing.revision,
+        r.id,
+      ).run();
+      if (!Number(updated.meta?.changes))
+        return json({ error: '参加情報が変わりました。もう一度再接続してください。' }, 409);
+      const saved = await stmt(env, 'SELECT * FROM racers WHERE id=?', existing.id).first();
+      return json({
+        token: value,
+        reconnected: true,
+        ...(await raceSession(env, saved, await raceRoom(env, r.id))),
+      });
+    }
+    if (existing)
+      return json(
+        {
+          error:
+            'この出席番号は参加済みです。自分の番号なら再接続できます。前の端末は接続が解除されます。',
+          code: 'DUPLICATE',
+        },
+        409,
+      );
+    if (!raceAccepting(r))
       return json({ error: '参加受付は終了しました。次のレースを待ってください。' }, 409);
+    if (data.takeover === true)
+      return json({ error: 'この番号はまだ参加していません。番号を確認してください。' }, 404);
     const id = crypto.randomUUID(),
       value = token(),
       state = {
@@ -104,7 +143,11 @@ export function createStudentRaceHandler({
     } catch (e) {
       if (String(e).includes('UNIQUE'))
         return json(
-          { error: 'この出席番号は参加済みです。同じiPad・同じブラウザーで開き直してください。' },
+          {
+            error:
+              'この出席番号は参加済みです。自分の番号なら再接続できます。前の端末は接続が解除されます。',
+            code: 'DUPLICATE',
+          },
           409,
         );
       throw e;

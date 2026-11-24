@@ -40,9 +40,10 @@ export function createClassroomStudent(runtime) {
     if (p === '/api/student/ping' && req.method === 'POST') {
       await stmt(
         env,
-        'UPDATE students SET last_seen=? WHERE id=? AND deleted_at=0',
+        'UPDATE students SET last_seen=? WHERE id=? AND deleted_at=0 AND token_hash=?',
         now(),
         s.id,
+        s.token_hash,
       ).run();
       return json({ ok: true });
     }
@@ -62,12 +63,15 @@ export function createClassroomStudent(runtime) {
       )
         return json({ error: 'この番号は別の生徒が使用しています。先生に相談してください。' }, 409);
       try {
-        await stmt(
+        const changed = await stmt(
           env,
-          'UPDATE students SET label=? WHERE id=? AND deleted_at=0',
+          'UPDATE students SET label=? WHERE id=? AND deleted_at=0 AND token_hash=?',
           label,
           s.id,
+          s.token_hash,
         ).run();
+        if (!Number(changed.meta?.changes))
+          return json({ error: 'もう一度参加してください。' }, 401);
       } catch {
         return json({ error: 'この番号は使用中です。' }, 409);
       }
@@ -104,10 +108,11 @@ export function createClassroomStudent(runtime) {
         }
         const changed = await stmt(
           env,
-          'UPDATE students SET lesson=?,revision=revision+1,last_seen=? WHERE id=? AND deleted_at=0 AND EXISTS (SELECT 1 FROM classrooms WHERE id=? AND active=1 AND paused=0 AND ended=0)',
+          'UPDATE students SET lesson=?,revision=revision+1,last_seen=? WHERE id=? AND deleted_at=0 AND token_hash=? AND EXISTS (SELECT 1 FROM classrooms WHERE id=? AND active=1 AND paused=0 AND ended=0)',
           JSON.stringify(l),
           now(),
           s.id,
+          s.token_hash,
           s.class_id,
         ).run();
         if (Number(changed.meta?.changes) === 0)
@@ -118,12 +123,15 @@ export function createClassroomStudent(runtime) {
       }
       if (l.lastRound) {
         l.lastRound = null;
-        await stmt(
+        const changed = await stmt(
           env,
-          'UPDATE students SET lesson=?,revision=revision+1 WHERE id=? AND deleted_at=0',
+          'UPDATE students SET lesson=?,revision=revision+1 WHERE id=? AND deleted_at=0 AND token_hash=?',
           JSON.stringify(l),
           s.id,
+          s.token_hash,
         ).run();
+        if (!Number(changed.meta?.changes))
+          return json({ error: 'もう一度参加してください。' }, 401);
       }
       return json({ lesson: l });
     }

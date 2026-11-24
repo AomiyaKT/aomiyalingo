@@ -27,10 +27,10 @@ Aomiyalingo is a Duolingo-style English learning web app tailored to **Blue Sky*
 
 Teachers and students can use any internet-connected device with a compatible web browser—including computers, tablets and smartphones. Students simply scan a QR code or open a link to join.
 
-**Current version: Release 81 · 31 October 2026**
-[Open the app](https://aomiyalingo.minamiyakk.chatgpt.site/) · [Changelog](CHANGELOG.md) · [Release 81 details](docs/release-81.md)
+**Current version: Release 87 · 24 November 2026**
+[Open the app](https://aomiyalingo.minamiyakk.chatgpt.site/) · [Changelog](CHANGELOG.md) · [Release 87 details](docs/content/blue-sky-media.md)
 
-**Source release:** this repository contains Release 81. The hosted website is deployed separately; a GitHub upload does not update the running classroom server.
+**Source release:** this repository contains Release 87. The hosted website is deployed separately; a GitHub upload does not update the running classroom server.
 
 [For teachers and ALTs](#for-teachers) · [For developers and future maintainers](#for-developers)
 
@@ -54,7 +54,7 @@ The included materials cover **Grade 5 Units 1–8** and **Grade 6 Pre Unit–Un
 
 Practice includes choosing meanings, listening, spelling with letter tiles, matching words, putting sentences in order and filling gaps. Some activities use pictures; others ask children to listen and build or type an answer. Later race courses introduce more demanding activities, with support adapting to each learner's recent answers.
 
-A standard race has **three courses, each with six minutes of unlimited questions**. Every child gets their own question order. Children choose an animal avatar, press Ready and read the game introduction while waiting for you to start. Late arrivals can still join while joining is open. The game introduces the selected unit, question types and items, and lets children know they may consult their textbook.
+A standard race has **three courses, each with six minutes of unlimited questions**. Every child gets their own question order. Children choose an animal avatar and read the game introduction while their recordings load. Ready becomes available after all assigned recordings finish loading. Late arrivals can still join while joining is open. The game introduces the selected unit, question types and items, and lets children know they may consult their textbook.
 
 **Race points are for classroom fun.** Correct answers, streaks and items can all affect points. For a closer look at learning, use the answer records and independent-correctness information rather than treating the game ranking as a test result.
 
@@ -62,7 +62,7 @@ A standard race has **three courses, each with six minutes of unlimited question
 
 1. Open the green button at the top of this page and sign in with your teacher password.
 2. Choose **Vocabulary Practice** or **Word Race**, then select the grade and unit. Adjust the material or rules inside that mode if needed.
-3. Show the QR code or share the student link. Children open it and enter their attendance number.
+3. Show the QR code or share the student link. Children enter their attendance number, then wait for the audio preparation bar to finish before pressing Ready or starting practice. Temporary recording failures retry automatically; you can also use Retry remaining audio. Keep the page open if the connection drops: pending answers retry when the connection returns.
 4. Start the activity when you are ready. You can pause or end it from the teacher screen.
 
 Computers, tablets and smartphones can join through a compatible web browser and an internet connection. You do not need to install the project or unpack a ZIP. If you would like the whole class to see your screen, use your usual projector, television connection or screen-sharing setup.
@@ -88,7 +88,7 @@ Both guides explain the classroom workflow step by step. The guide button inside
 
 ## Part 2 · For developers and future maintainers
 
-This section is the technical entry point for a successor maintaining Aomiyalingo after its original maintainer leaves. It describes the Release 81 implementation and its operating boundaries. Read [AGENTS.md](AGENTS.md), [ARCHITECTURE.md](ARCHITECTURE.md) and the [Release 81 notes](docs/release-81.md) before changing behavior. Architecture entries describe individual releases; older measurements and suite counts are historical, not current guarantees.
+This section is the technical entry point for a successor maintaining Aomiyalingo after its original maintainer leaves. Read [AGENTS.md](AGENTS.md), [ARCHITECTURE.md](ARCHITECTURE.md) and the [Release 87 notes](docs/content/blue-sky-media.md) before changing behavior. Architecture entries describe individual releases; older measurements and suite counts are historical, not current guarantees.
 
 ### Product intent and engineering principles
 
@@ -170,7 +170,7 @@ node --expose-gc scripts/soak-classroom.mjs --output .sites-runtime/soak.json
 
 ### Verification and release discipline
 
-Release 81 has a recorded **92-suite regression pass**, including stable record controls, preload retry cooldowns and the existing course-transition coverage. Curriculum validation recorded **17 profiles / 387 configured entries**, including legacy overlaps; that is not a unique-word count. A previously recorded accelerated 35-learner, 30-minute simulation exercised 30,452 requests, 3,209 race submissions and 200 replays with no unexpected errors.
+Release 86 has a recorded **96-suite regression pass**, including stable record controls, preload retry cooldowns and the existing course-transition coverage. Curriculum validation recorded **17 profiles / 387 configured entries**, including legacy overlaps; that is not a unique-word count. A previously recorded accelerated 35-learner, 30-minute simulation exercised 30,452 requests, 3,209 race submissions and 200 replays with no unexpected errors.
 
 These are results for the documented snapshots and local harnesses. They do not certify arbitrary future commits, production load, physical devices, school Wi-Fi or rendering frame rates. Release 79 browser checks covered teacher boards at 1366×768 and 1920×1080 plus student portrait, landscape and short-height layouts; see the [measurements and limits](docs/release-79.md).
 

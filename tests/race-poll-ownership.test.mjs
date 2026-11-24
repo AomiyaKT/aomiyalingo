@@ -6,6 +6,7 @@ import vm from 'node:vm';
 
 const noops = 'new Proxy({}, {get:()=>()=>{}})';
 const mocks = {
+  './shared/audio-preparation.js': 'export const createAudioPreparationPanel=()=>{};',
   './shared/resource-preloader.js': `export const createResourcePreloader=()=>${noops};export const taskResourceHints=()=>[];`,
   './shared/poll-scheduler.js':
     'export const createPollScheduler=({run})=>{__refresh=run;return {refresh:run};};',
@@ -135,7 +136,11 @@ const context = {
     querySelectorAll: () => [],
     querySelector: q,
   },
-  window: { addEventListener() {}, innerHeight: 768 },
+  window: {
+    addEventListener() {},
+    innerHeight: 768,
+    aomiAudioPreparation: { state: { ready: true }, prepare: () => ({ ready: true }) },
+  },
   location: { search: '', pathname: '/race' },
   localStorage: { getItem: (k) => saved.get(k) || null, setItem: (k, v) => saved.set(k, v) },
   Audio: class {
@@ -148,7 +153,12 @@ const context = {
   curriculumLabel: () => 'Grade 5 · Unit 1',
   appSettings: { values: {} },
   interactionEffects: new Proxy({}, { get: () => () => {} }),
-  raceSessionCache: { save() {} },
+  raceSessionCache: {
+    save() {},
+    find() {
+      return null;
+    },
+  },
   setInterval() {},
   setTimeout() {},
   clearTimeout() {},

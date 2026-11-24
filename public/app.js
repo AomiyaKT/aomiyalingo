@@ -1,5 +1,6 @@
 import { createPracticeAudio } from './practice/audio.js';
 import { createResourcePreloader, practiceResourceHints } from './shared/resource-preloader.js';
+import { createAudioPreparationPanel, vocabularyAudio } from './shared/audio-preparation.js';
 import { installStudentViewport } from './shared/student-viewport.js';
 import { createPracticeSpelling } from './practice/spelling.js';
 import { createPracticeChoices } from './practice/choices.js';
@@ -13,6 +14,20 @@ import { svgMarkup as svg } from './shared/dom.js';
 const $ = (s) => document.querySelector(s);
 installStudentViewport();
 const practicePreloader = createResourcePreloader();
+const preparation = window.aomiAudioPreparation;
+createAudioPreparationPanel({
+  service: preparation,
+  before: $('#course-continue'),
+  onChange: (state) => {
+    $('#course-continue').disabled = !state.ready || classroom.busy;
+  },
+});
+function preparePracticeAudio() {
+  return preparation.prepare(
+    'practice:' + classroom.current?.classId,
+    vocabularyAudio(assignedWords()),
+  );
+}
 const originalQuestion = 'ate';
 const textOptions = ['食べた', '飲んだ', '寝た', '行った'];
 let accessRole = null,
@@ -124,6 +139,7 @@ const {
   spellingAllowed,
   dueReviews,
   startVocabularyQuiz,
+  prepareAudio: preparePracticeAudio,
   stopAudio,
   clearAttempt,
   svg,
@@ -621,6 +637,11 @@ function showStudyCards() {
 }
 
 async function startVocabularyQuiz(practiceMode = null, reset = false, review = false) {
+  if (!preparePracticeAudio().ready) {
+    notify('音声の準備ができるまでお待ちください。');
+    showCourseHome();
+    return false;
+  }
   return practiceNavigation.start(practiceMode, reset, review);
 }
 function showVocabularyQuestion() {

@@ -1,5 +1,42 @@
 // UI strings only. Curriculum meanings and student answers are never translated.
 export const englishUI = {
+  '読み込み中も、下の単語を確認できます。':
+    'You can look through the words below while audio loads.',
+  残りの音声を再読み込み: 'Retry remaining audio',
+  'オフラインです。読み込み済みの音声は保持しています。接続が戻ると続けます。':
+    'You are offline. Loaded audio is kept. Loading will continue when you reconnect.',
+  '残り {{0}} 件を自動で再試行します。': 'Automatically retrying the remaining {{0}} recordings.',
+  '読み込めなかった音声：{{0}} 件。下のボタンでもう一度お試しください。':
+    '{{0}} recordings could not load. Use the button below to try again.',
+  '少し時間がかかっています。この画面のままお待ちください。':
+    'This is taking a little longer. Please keep this page open.',
+  '読み込み中も動物やルールを確認できます。':
+    'You can explore the avatars and rules while audio loads.',
+  '回答をこの端末に保管しています。接続が戻ると自動で再送します。':
+    'Your answer is kept on this device. It will be sent automatically when the connection returns.',
+  '接続を待っています。出席番号はそのままで、自動で再試行します。':
+    'Waiting for a connection. Your number is kept and we will retry automatically.',
+  '別の画面で参加しています。この画面から戻るには再接続してください。':
+    'Your number is active on another page. Reconnect to continue here.',
+  今すぐ再試行: 'Retry now',
+  この番号で再接続: 'Reconnect with this number',
+  'この出席番号は参加済みです。自分の番号なら再接続できます。前の端末は接続が解除されます。':
+    'This number has already joined. If it is yours, reconnect below. The previous device will be disconnected.',
+  '参加情報が変わりました。もう一度再接続してください。':
+    'The session changed. Please reconnect again.',
+  '新しい参加は締め切っています。参加済みの番号で戻れます。':
+    'New joining is closed. Students who already joined can reconnect with their number.',
+  'この番号はまだ参加していません。番号を確認してください。':
+    'This number has not joined yet. Please check your number.',
+  音声の準備: 'Audio preparation',
+  音声を再読み込み: 'Retry audio loading',
+  '文章の音声は端末の読み上げを使います。': 'Sentence audio uses your device’s text-to-speech.',
+  '✓ 音声の準備ができました': '✓ Audio is ready',
+  '音声の読み込みに失敗しました。通信を確認して再読み込みしてください。':
+    'Audio could not be loaded. Check your connection and retry.',
+  '音声を準備中：{{1}} / {{2}}': 'Loading audio: {{1}} / {{2}}',
+  '音声の準備ができるまでお待ちください。': 'Please wait until the audio is ready.',
+  '準備完了・練習を始める': 'Ready · Start practice',
   アプリの更新: 'App updates',
   この画面: 'This page',
   GitHubの公開版: 'Public GitHub version',

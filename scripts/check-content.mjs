@@ -44,6 +44,19 @@ const exists = (url) => {
       return false;
     }
   }
+  if (url.endsWith('.mp3') || url.endsWith('.webp')) {
+    const b = fs.readFileSync(file);
+    const valid = url.endsWith('.mp3')
+      ? b.length >= 16 &&
+        (b.toString('ascii', 0, 3) === 'ID3' || (b[0] === 255 && (b[1] & 224) === 224))
+      : b.length >= 16 &&
+        b.toString('ascii', 0, 4) === 'RIFF' &&
+        b.toString('ascii', 8, 12) === 'WEBP';
+    if (!valid) {
+      invalid.push(url);
+      return false;
+    }
+  }
   return true;
 };
 const report = {

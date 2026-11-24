@@ -122,13 +122,63 @@ export function createAssetResponder(
         return new Response(null, { status: 304, headers });
     }
     headers['content-length'] = String(asset.size);
+    // Safari probes media with bytes=0-1 before starting playback. Ranges refer
+    // to the original media, never the source bundle's compressed bytes.
+    let range = null;
+    if (asset.type.startsWith('audio/')) {
+      headers['accept-ranges'] = 'bytes';
+      const value = req.method === 'GET' && req.headers.get('range');
+      const validator = req.headers.get('if-range');
+      const match =
+        value && (!validator || validator === asset.etag) && /^bytes=(\d*)-(\d*)$/.exec(value);
+      if (match && (match[1] || match[2])) {
+        const start = match[1] ? Number(match[1]) : Math.max(0, asset.size - Number(match[2]));
+        const end =
+          match[1] && match[2] ? Math.min(Number(match[2]), asset.size - 1) : asset.size - 1;
+        if (
+          !Number.isSafeInteger(start) ||
+          !Number.isSafeInteger(end) ||
+          start > end ||
+          start >= asset.size
+        )
+          return new Response(null, {
+            status: 416,
+            headers: {
+              ...headers,
+              'content-range': `bytes */${asset.size}`,
+              'content-length': '0',
+            },
+          });
+        range = { start, end };
+        headers['content-range'] = `bytes ${start}-${end}/${asset.size}`;
+        headers['content-length'] = String(end - start + 1);
+      }
+    }
     // HEAD and unchanged browser requests never decode or allocate a response body.
     let body = null;
     if (req.method !== 'HEAD') {
-      // Compression is a source-bundle detail. Browsers receive the original WAV,
-      // including the same size/ETag, without an audio codec or playback change.
+      // Compression is a source-bundle detail. Browsers receive the original
+      // bytes with the original size and ETag.
       body = asset.encoding === 'gzip' ? packedBody(key, asset) : read(key, asset);
+      if (range) {
+        const { start, end } = range;
+        if (body instanceof Uint8Array) body = body.slice(start, end + 1);
+        else {
+          let offset = 0;
+          body = body.pipeThrough(
+            new TransformStream({
+              transform(chunk, controller) {
+                const from = Math.max(0, start - offset),
+                  to = Math.min(chunk.byteLength, end + 1 - offset);
+                offset += chunk.byteLength;
+                if (to > from) controller.enqueue(chunk.slice(from, to));
+                if (offset > end) controller.terminate();
+              },
+            }),
+          );
+        }
+      }
     }
-    return new Response(body, { headers });
+    return new Response(body, { headers, status: range ? 206 : 200 });
   };
 }

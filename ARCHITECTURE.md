@@ -10,6 +10,77 @@ serialized state and current room. Revision/authentication guards remain beside
 their database writes. Structural refactors do not change release numbers or
 teaching behavior.
 
+## Hosted cold-start boundary (13 November 2026)
+
+The build emits asset metadata eagerly and payload literals inside lazy getters.
+The roughly 49 MiB catalogue must not instantiate all base64 strings at module
+initialization. Health, catalogue checks and HEAD/304 paths need only metadata;
+the existing bounded responder decodes requested payloads. A fresh-process import
+test guards retained eager allocation, while hosted deployment remains the actual
+startup-limit validation. See `docs/incident-2026-11-13.md`.
+
+## Release 87 - publisher vocabulary media
+
+`server/editor/configuration.mjs` resolves old bundled media URLs through the
+Blue Sky map when loading a teaching profile. Practice and race use the resolved
+URLs in new activity snapshots. Saved snapshots can still serve the previous
+files, and editor defaults do not override uploaded audio or explicit omissions.
+The Worker packs non-HTML text losslessly to keep the expanded media bundle
+within the size budget. See `docs/content/blue-sky-media.md`.
+
+## Release 86 - recovery within existing owners
+
+The required-audio service owns one jittered retry timer and per-recording failure
+classification. It preserves complete downloads and generation cancellation, while
+network/foreground events resume missing work. Practice's existing status check
+also drains its durable answer slot after recovery. Race retains the visible task
+until the pending receipt arrives. Credential replacement remains explicit, with
+the number retained at the re-entry boundary. No alternate cache, session system
+or persistence schema was added. See `docs/release-86.md` for limits.
+
+## Release 85 - browser media compatibility
+
+The activity recording cache remembers unsupported native blob transports only
+for a matching cached recording. The shared classic `playWordAudio` helper retries
+its original recording URL once on NotSupportedError, preserving source ownership,
+explicit pauses, volume and playback rate. Permission failures are not codec failures.
+Classic practice now uses this helper as well; the TTS branch is unchanged.
+`scripts/check-browsers.mjs` checks Chrome/WebKit against local, isolated data.
+See `docs/browser-compatibility.md` for OS-specific media limits and device-test gaps.
+
+## Release 84 - explicit participant reconnection
+
+Both identity handlers rotate an existing participant bearer with a token/revision
+compare-and-swap after explicit confirmation. They preserve the participant ID and
+persisted lesson/race state, including race time origin, and allow existing students
+to return after admission closes. Old bearer writes remain excluded at persistence
+boundaries. Race credential storage rejects stale-token overwrites and removals;
+new successful joins explicitly replace credentials. See `docs/release-84.md`.
+
+## Release 83 - required audio preparation
+
+`public/shared/audio-preparation.js` owns complete activity recording downloads,
+progress, failed-only retries and a bounded blob cache. `network-entry.js` creates
+one instance per page; race and practice use it for readiness and actual playback.
+Recorded playback resolves through that instance, so Safari need not refetch
+media after readiness. The existing speculative preloader remains independent.
+
+The race service exposes only a recording-path manifest from its selected pool
+in full student snapshots; thin snapshots retain it through the existing merge.
+Both modes guard start/ready handlers as well as button presentation. Activity
+ownership changes cancel stale requests and release old object URLs. Device
+speech synthesis remains a separate, explicitly described path. See
+`docs/release-83.md` for resource limits and verification.
+
+## Release 82 - original-byte media ranges
+
+`server/assets.mjs` applies single audio byte ranges after source-bundle
+expansion, preserving bounded coalescing and streaming overflow. Safari probes,
+open-ended and suffix ranges receive 206 plus Content-Range; unsatisfiable
+positions receive 416. If-Range mismatches and unsupported multi-ranges use the
+full representation. No scoring, API authorization or persistence changes.
+See `docs/release-82.md` for the reproduced production defect and test limits.
+
 ## Release 81 - stable record view and preload cancellation semantics
 
 `public/race/records.js` retains summary leaves, pagination controls and keyed

@@ -5,6 +5,14 @@ import { installLanguageUI, translateUI, LANGUAGE_KEY } from '../public/shared/i
 
 assert.equal(translateUI('設定', 'ja'), '設定');
 assert.equal(translateUI('設定'), 'Settings');
+assert.equal(
+  translateUI('残り 3 件を自動で再試行します。'),
+  'Automatically retrying the remaining 3 recordings.',
+);
+assert.equal(
+  translateUI('読み込めなかった音声：2 件。下のボタンでもう一度お試しください。'),
+  '2 recordings could not load. Use the button below to try again.',
+);
 assert.equal(translateUI('  答えを確認  '), '  Check answer  ');
 assert.equal(translateUI('出席番号 999 で参加します。'), 'Join as student 999.');
 assert.equal(translateUI('正解：保存'), 'Correct answer: 保存', 'captured answer is opaque');

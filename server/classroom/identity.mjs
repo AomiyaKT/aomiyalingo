@@ -120,7 +120,7 @@ export function createClassroomIdentity({
       const room = data.classId
         ? await stmt(
             env,
-            'SELECT * FROM classrooms WHERE id=? AND active=1 AND accepting=1 AND ended=0',
+            'SELECT * FROM classrooms WHERE id=? AND deleted_at=0',
             data.classId,
           ).first()
         : await stmt(
@@ -128,21 +128,56 @@ export function createClassroomIdentity({
             'SELECT * FROM classrooms WHERE active=1 AND accepting=1 AND ended=0 ORDER BY created DESC LIMIT 1',
           ).first();
       if (!room) return json({ error: '先生がクラスを開始するまで、お待ちください。' }, 409);
-      if (
-        await stmt(
+      const existing = await stmt(
+        env,
+        'SELECT * FROM students WHERE class_id=? AND label=? AND deleted_at=0',
+        room.id,
+        normalized,
+      ).first();
+      if (existing && data.takeover === true) {
+        const value = token();
+        const updated = await stmt(
           env,
-          'SELECT id FROM students WHERE class_id=? AND label=? AND deleted_at=0',
+          'UPDATE students SET token_hash=?,revision=revision+1,last_seen=? WHERE id=? AND token_hash=? AND revision=? AND deleted_at=0 AND EXISTS (SELECT 1 FROM classrooms WHERE id=? AND deleted_at=0)',
+          await hash(value),
+          now(),
+          existing.id,
+          existing.token_hash,
+          existing.revision,
           room.id,
-          normalized,
-        ).first()
-      )
+        ).run();
+        if (!Number(updated.meta?.changes))
+          return json({ error: '参加情報が変わりました。もう一度再接続してください。' }, 409);
+        // Read after rotating: an answer accepted immediately before takeover stays saved.
+        const saved = await stmt(
+          env,
+          'SELECT * FROM students WHERE id=? AND deleted_at=0',
+          existing.id,
+        ).first();
+        return json({
+          id: saved.id,
+          token: value,
+          label: saved.label,
+          classId: room.id,
+          title: room.title,
+          lesson: JSON.parse(saved.lesson),
+          reconnected: true,
+          ...roomState(room),
+        });
+      }
+      if (existing)
         return json(
           {
-            error: 'この出席番号は参加済みです。引き継ぐには先生の許可が必要です。',
+            error:
+              'この出席番号は参加済みです。自分の番号なら再接続できます。前の端末は接続が解除されます。',
             code: 'DUPLICATE',
           },
           409,
         );
+      if (!room.active || !room.accepting || room.ended)
+        return json({ error: '新しい参加は締め切っています。参加済みの番号で戻れます。' }, 409);
+      if (data.takeover === true)
+        return json({ error: 'この番号はまだ参加していません。番号を確認してください。' }, 404);
       const id = crypto.randomUUID(),
         value = token(),
         lesson = newLesson(null, room);
@@ -163,7 +198,14 @@ export function createClassroomIdentity({
           return json({ error: '先生がクラスを閉じました。再開までお待ちください。' }, 409);
       } catch (error) {
         if (String(error).includes('UNIQUE'))
-          return json({ error: 'この出席番号は参加済みです。' }, 409);
+          return json(
+            {
+              error:
+                'この出席番号は参加済みです。自分の番号なら再接続できます。前の端末は接続が解除されます。',
+              code: 'DUPLICATE',
+            },
+            409,
+          );
         throw error;
       }
       return json({

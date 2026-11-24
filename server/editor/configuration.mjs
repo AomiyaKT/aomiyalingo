@@ -1,5 +1,6 @@
 import { gradeSixContent } from './grade6-content.mjs';
 import { gradeFiveContent } from './grade5-content.mjs';
+import { publisherPictures, publisherRecordings } from './blue-sky-media.mjs';
 import { allCurriculumProfiles, curriculumCatalog } from '../../public/shared/curriculum.js';
 import { raceItemIds } from '../../public/shared/race-items.js';
 
@@ -125,6 +126,13 @@ export function createConfigurationStore({
       config.race.itemVersion = 2;
     }
     for (const profile of allCurriculumProfiles(config)) {
+      for (const word of profile.words) {
+        const image = publisherPictures.get(word.image);
+        const audio = publisherRecordings.get(word.audio);
+        // Replace the bundled defaults. Teacher uploads and explicit omissions keep their values.
+        if (image) word.image = image;
+        if (audio) word.audio = audio;
+      }
       const previousItems = ['hint', 'boost', 'review', 'compass', 'double', 'lucky'];
       // Expand the previous full default only; a teacher's restricted selection stays intact.
       if ((profile.race.itemVersion || 0) < 3) {

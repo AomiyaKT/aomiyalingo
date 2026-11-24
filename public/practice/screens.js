@@ -9,6 +9,7 @@ export function createPracticeScreens({
   spellingAllowed,
   dueReviews,
   startVocabularyQuiz,
+  prepareAudio = () => {},
   stopAudio,
   clearAttempt,
   svg,
@@ -205,7 +206,7 @@ export function createPracticeScreens({
         : 'もう一度練習する'
       : lesson?.attempts || classroom.draft(lesson?.queue[0]?.id)
         ? '続きから始める'
-        : 'レッスンを始める';
+        : '準備完了・練習を始める';
     $('#course-continue').onclick = () => {
       document.body.classList.remove('on-path');
       startVocabularyQuiz(
@@ -213,6 +214,7 @@ export function createPracticeScreens({
         done,
       );
     };
+    prepareAudio();
     interactionEffects.enter($('#course-home'));
   }
   return { renderStudyCard, finishVocabularyQuiz, showCourseHome };

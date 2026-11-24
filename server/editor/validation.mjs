@@ -24,7 +24,8 @@ export function validateConfig(c) {
       w.image != null &&
       !(
         typeof w.image === 'string' &&
-        /^\/assets\/vocabulary\/g[56]-unit[1-8]\/[0-9]{2}_[a-z0-9_]+\.png$/.test(w.image)
+        (/^\/assets\/vocabulary\/g[56]-unit[1-8]\/[0-9]{2}_[a-z0-9_]+\.png$/.test(w.image) ||
+          /^\/assets\/vocabulary\/blue-sky\/[a-z0-9-]+\.webp$/.test(w.image))
       )
     )
       configError('単語の画像を確認してください。');
@@ -60,6 +61,7 @@ export function validateConfig(c) {
       !(
         typeof w.audio === 'string' &&
         (/^\/assets\/words\/[a-z]+(?:-[a-z]+)*\.wav$/.test(w.audio) ||
+          /^\/assets\/words\/blue-sky\/[a-z0-9-]+\.mp3$/.test(w.audio) ||
           /^\/api\/audio\/[0-9a-f-]{36}$/.test(w.audio))
       )
     )

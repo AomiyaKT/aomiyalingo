@@ -176,6 +176,13 @@ export function createRaceService({
         itemBox: state.itemBox || null,
         ...(!unchanged
           ? {
+              audioManifest: [
+                ...new Set(
+                  racePool(r)
+                    .filter((w) => w.audio !== null)
+                    .map((w) => w.audio || '/assets/words/' + w.word + '.wav'),
+                ),
+              ],
               task:
                 state.ready === false || (raceStations(r) && racePlayerDone(r, state))
                   ? null

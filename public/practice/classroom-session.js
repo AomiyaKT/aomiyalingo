@@ -24,7 +24,10 @@ export function createClassroomSession({
     watching = false,
     confirming = false,
     entryEpoch = 0,
-    joinRequest = null;
+    joinRequest = null,
+    duplicateJoin = null,
+    entryRetry = false,
+    entryLoading = false;
   const targetClass = new URLSearchParams(search).get('class');
   const key = 'aomiyalingo.classroom.session',
     recoveryKey = 'aomiyalingo.recovery';
@@ -68,6 +71,7 @@ export function createClassroomSession({
     }
   }
   function setState(value) {
+    q('#paused-reconnect').hidden = true;
     const wasPaused = paused;
     paused = !!(!value.active || value.paused || value.ended);
     if (paused && watching) {
@@ -107,6 +111,7 @@ export function createClassroomSession({
     setState(value);
   }
   function resetJoin() {
+    duplicateJoin = null;
     confirming = false;
     q('#join-confirmation').hidden = true;
     q('#attendance-number').readOnly = false;
@@ -114,14 +119,17 @@ export function createClassroomSession({
     q('#join-back').hidden = true;
     q('#recovery-request').hidden = true;
   }
-  async function openJoin() {
+  async function openJoin({ retry = false } = {}) {
     const epoch = ++entryEpoch;
     joinRequest = null;
+    entryLoading = true;
+    entryRetry = false;
+    q('#join-retry').hidden = true;
     resetJoin();
     q('#join-submit').disabled = true;
     error.hidden = true;
     if (!dialog.open) dialog.showModal();
-    q('#attendance-number').focus();
+    if (!retry) q('#attendance-number').focus();
     try {
       const current = await api(
         'class/current' + (targetClass ? '?class=' + encodeURIComponent(targetClass) : ''),
@@ -135,7 +143,7 @@ export function createClassroomSession({
         (targetClass
           ? 'この授業は見つかりません。先生の新しいQRを読み取ってください。'
           : '先生が授業を開始するまでお待ちください。');
-      q('#join-submit').disabled = !room?.accepting;
+      q('#join-submit').disabled = !room;
       let saved = read(key);
       if (!saved)
         try {
@@ -166,18 +174,25 @@ export function createClassroomSession({
       if (epoch !== entryEpoch) return;
       error.textContent = e.message;
       error.hidden = false;
+      entryRetry = !e.status || e.status >= 500;
+      if (entryRetry) {
+        error.textContent = '接続を待っています。出席番号はそのままで、自動で再試行します。';
+        q('#join-retry').hidden = false;
+      }
       if (e.status === 401) {
-        write(key, null);
+        if (read(key)?.token === session?.token) write(key, null);
         session = null;
       }
+    } finally {
+      if (epoch === entryEpoch) entryLoading = false;
     }
   }
-  form.onsubmit = async (event) => {
-    event.preventDefault();
+  async function joinRoom(takeover = false) {
     if (joinRequest) return;
     const label = q('#attendance-number').value.trim();
     error.hidden = true;
-    if (!room?.accepting) return;
+    if (!room) return;
+    if (takeover && (duplicateJoin?.roomId !== room.id || duplicateJoin?.label !== label)) return;
     if (!confirming) {
       confirming = true;
       q('#join-confirmation').hidden = false;
@@ -193,9 +208,22 @@ export function createClassroomSession({
     const joining = { epoch: entryEpoch, roomId: room.id };
     joinRequest = joining;
     try {
-      const value = await api('join', { label, classId: joining.roomId }, null);
+      const value = await api(
+        'join',
+        { label, classId: joining.roomId, ...(takeover ? { takeover: true } : {}) },
+        null,
+      );
       if (joining.epoch !== entryEpoch) return;
       dialog.close();
+      recovery = null;
+      write(recoveryKey, null);
+      if (value.reconnected) {
+        const pending = read('aomi.pending.' + value.id);
+        if (pending && pending.questionId !== value.lesson?.queue?.[0]?.id) {
+          write('aomi.pending.' + value.id, null);
+          write('aomi.draft.' + value.id, null);
+        }
+      }
       remember(value);
       enterStudent();
     } catch (e) {
@@ -203,12 +231,17 @@ export function createClassroomSession({
       error.textContent = e.message;
       error.hidden = false;
       q('#recovery-request').hidden = e.code !== 'DUPLICATE';
+      duplicateJoin = e.code === 'DUPLICATE' ? { roomId: joining.roomId, label } : null;
     } finally {
       if (joinRequest === joining) {
         joinRequest = null;
         q('#join-submit').disabled = false;
       }
     }
+  }
+  form.onsubmit = (event) => {
+    event.preventDefault();
+    return joinRoom();
   };
   q('#join-back').onclick = () => {
     resetJoin();
@@ -218,23 +251,28 @@ export function createClassroomSession({
     if (!session) event.preventDefault();
   });
   q('#join-close').onclick = () => dialog.close();
-  q('#recovery-request').onclick = async () => {
-    try {
-      recovery = await api(
-        'recovery/request',
-        { label: q('#attendance-number').value, classId: room.id },
-        null,
-      );
-      write(recoveryKey, recovery);
-      q('#recovery-request').hidden = true;
-      q('#join-submit').disabled = true;
-      q('#join-confirmation').textContent =
-        '先生に声をかけてください。許可後、保存された続きから再開します。';
-    } catch (e) {
-      error.textContent = e.message;
-      error.hidden = false;
-    }
+  q('#recovery-request').onclick = () => joinRoom(true);
+  q('#join-retry').onclick = () => openJoin();
+  q('#paused-reconnect').onclick = () => {
+    q('#attendance-number').value = session?.label || '';
+    if (read(key)?.token === session?.token) write(key, null);
+    session = null;
+    watching = false;
+    pauseDialog.close();
+    return openJoin();
   };
+  function revoked(owner) {
+    if (!owner || session !== owner) return;
+    watching = false;
+    paused = true;
+    stopAudio();
+    showStatus('別の画面で参加しています。この画面から戻るには再接続してください。', true);
+    q('#paused-title').textContent = '参加を確認してください';
+    q('#paused-message').textContent =
+      '別の画面で参加しています。この画面から戻るには再接続してください。';
+    q('#paused-reconnect').hidden = false;
+    if (!pauseDialog.open) pauseDialog.showModal();
+  }
   const transactions = createPracticeTransactions({
     getSession: () => session,
     isPaused: () => paused,
@@ -253,7 +291,14 @@ export function createClassroomSession({
       }
     },
     onError(e, kind) {
-      showStatus(e.message || '回答を保存できませんでした。', true);
+      if (e.status === 401) revoked(session);
+      else
+        showStatus(
+          kind === 'answer' && (!e.status || e.status >= 500)
+            ? '回答をこの端末に保管しています。接続が戻ると自動で再送します。'
+            : e.message || '回答を保存できませんでした。',
+          true,
+        );
       if (kind === 'answer') again.hidden = false;
     },
   });
@@ -263,9 +308,6 @@ export function createClassroomSession({
     return accepted;
   }
   again.onclick = transactions.flush;
-  events.addEventListener('online', () => {
-    if (transactions.unsent) transactions.flush();
-  });
   q('#number-change').onclick = () => {
     q('#new-number').value = session.label;
     q('#number-error').hidden = true;
@@ -290,8 +332,10 @@ export function createClassroomSession({
       button.disabled = false;
     }
   };
-  schedule(async () => {
+  async function checkConnection() {
     if (page.hidden || checking) return;
+    if (entryRetry && dialog.open && !entryLoading && !joinRequest)
+      return openJoin({ retry: true });
     checking = true;
     const owner = session,
       transfer = recovery;
@@ -315,22 +359,24 @@ export function createClassroomSession({
         }
       } else if (session && watching) {
         const result = await api('student/status', undefined, owner.token);
-        if (session === owner && watching) setState(result);
+        if (session === owner && watching) {
+          setState(result);
+          if (transactions.unsent && !paused) await transactions.flush();
+          else if (!transactions.busy) showStatus('出席番号 ' + session.label + ' · 保存済み');
+        }
       }
     } catch (e) {
-      if (e.status === 401 && session && session === owner) {
-        watching = false;
-        showStatus('この端末の参加は解除されました。先生に相談してください。', true);
-        paused = true;
-        q('#paused-title').textContent = '参加を確認してください';
-        q('#paused-message').textContent =
-          '別の端末へ引き継がれた可能性があります。先生に相談してください。';
-        if (!pauseDialog.open) pauseDialog.showModal();
-      }
+      if (e.status === 401) revoked(owner);
     } finally {
       checking = false;
     }
-  }, 3000);
+  }
+  schedule(checkConnection, 3000);
+  events.addEventListener('online', checkConnection);
+  events.addEventListener('pageshow', checkConnection);
+  page.addEventListener?.('visibilitychange', () => {
+    if (!page.hidden) void checkConnection();
+  });
   schedule(() => {
     if (session && watching && !page.hidden && !transactions.pending)
       api('student/ping', {}).catch(() =>

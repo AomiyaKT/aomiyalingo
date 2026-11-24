@@ -5,6 +5,7 @@ import { readFileSync } from 'node:fs';
 import vm from 'node:vm';
 
 const mocks = {
+  './shared/audio-preparation.js': 'export const createAudioPreparationPanel=()=>{};',
   './shared/resource-preloader.js':
     'export const createResourcePreloader=()=>({warm(){},reset(){}});export const taskResourceHints=()=>[];',
   './shared/poll-scheduler.js': 'export const createPollScheduler=({run})=>({refresh:run});',
@@ -78,7 +79,10 @@ for (const search of ['', '?race=classroom-specific']) {
   };
   const context = {
     document,
-    window: { addEventListener() {} },
+    window: {
+      addEventListener() {},
+      aomiAudioPreparation: { state: { ready: true }, prepare: () => ({ ready: true }) },
+    },
     location: { search, pathname: '/race' },
     localStorage: { getItem: () => null, setItem() {} },
     Audio: class {},
@@ -88,7 +92,12 @@ for (const search of ['', '?race=classroom-specific']) {
     raceAvatarCatalog: [],
     appSettings: { values: {} },
     interactionEffects: {},
-    raceSessionCache: { save() {} },
+    raceSessionCache: {
+      save() {},
+      find() {
+        return null;
+      },
+    },
     setInterval(fn, ms) {
       intervals.push({ fn, ms });
     },

@@ -2,6 +2,58 @@
 
 **English** | [日本語](CHANGELOG.ja.md)
 
+## Release 87 - 2026-11-24
+
+- Use Blue Sky flashcard illustrations and original Word List recordings for matching Grade 5 and Grade 6 vocabulary in practice and Word Race.
+- Apply the updated media to existing lesson settings while retaining teacher recordings, speech synthesis choices, and picture settings.
+
+Details: [Blue Sky classroom media](docs/content/blue-sky-media.md).
+
+## Release 86 cold-start hotfix - 2026-11-13
+
+- Fix a hosted startup-memory failure by keeping asset payload strings lazy while retaining eager metadata and the existing bounded responder.
+- Verify hosted startup and public page/media delivery; add a fresh-process eager-allocation regression guard. No database or teaching-behavior change.
+
+Details: [Startup incident](docs/incident-2026-11-13.md).
+
+## Release 86 - 2026-11-12
+
+- Keep recording progress visible; automatically retry temporary failures with backoff, without reloading successful downloads. Explain offline and slow preparation; keep readiness gated.
+- Retry practice answers after healthy status checks, even without an online event. Resume on foreground/page restoration; retain the attendance number after an entry failure.
+- Keep a race question visible while its answer acknowledgement is pending. Explain replaced credentials and provide explicit reconnection access.
+
+Details: [Release 86](docs/release-86.md).
+
+## Release 85 - 2026-11-12
+
+- Add repeatable Chrome/WebKit browser checks for student entry, saved answers, reconnect, layout and actual recording playback.
+- Retry the original recording URL once when native media rejects a preloaded blob. Reuse the same helper for classic practice, with stale-request, pause, permission and volume/rate guards.
+- Document Windows WebKit media limitations separately from real iPad Safari verification.
+
+Details: [Release 85](docs/release-85.md) · [Browser compatibility](docs/browser-compatibility.md).
+
+## Release 84 - 2026-11-12
+
+- Explicitly reconnect with the same attendance number in Vocabulary Practice and Word Race, even after admission closes. Keep saved progress, participant identity and race timing; disconnect the old bearer session.
+- Prevent stale tabs from removing or overwriting replacement race credentials. Keep server write guards effective across device replacement.
+
+Details: [Release 84](docs/release-84.md).
+
+## Release 83 - 2026-11-11
+
+- Download all assigned recordings during avatar selection or the practice overview. Readiness and practice-start actions stay locked until full audio preparation succeeds.
+- Show progress and failed-only retry in Japanese and English. Reuse activity-owned blob recordings for actual playback, with two concurrent downloads and bounded bytes/time. Changing activities cancels stale work.
+- Show race instructions before Ready, following the avatar section. Sentence audio still uses device speech synthesis, as stated in the panel.
+
+Details and verification limits: [Release 83](docs/release-83.md).
+
+## Release 82 - 2026-11-02
+
+- Fix a reproduced iPad media compatibility defect: static audio now supports byte-range probes and partial playback with HTTP 206, accurate original-byte ranges and 416 responses for unsatisfiable positions.
+- Preserve lazy HEAD/304, bounded decompression and byte-exact recordings. Test cold/warm/large media paths and every bundled word recording. Physical iPad confirmation remains separate.
+
+Details: [Release 82](docs/release-82.md).
+
 ## Release 81 - 2026-10-31
 
 - Retain visible race-record rows, summary cards and pagination controls during live refreshes. Score-only changes no longer detach detail buttons or create unchanged table elements; row retention is bounded to the current 12-person page.

@@ -328,3 +328,27 @@ select {
   white-space: normal;
   text-align: center;
 }
+.audio-preparation {
+  display: grid;
+  gap: 12px;
+  margin: 20px 0;
+  padding: 18px;
+  border: 2px solid #e5e5e5;
+  border-radius: 16px;
+  text-align: left;
+}
+.audio-preparation p {
+  margin: 0;
+  font-weight: 700;
+}
+.audio-preparation progress {
+  width: 100%;
+  height: 16px;
+  accent-color: #58cc02;
+}
+.audio-preparation small {
+  color: #777;
+}
+.audio-preparation button {
+  justify-self: start;
+}

@@ -6,8 +6,10 @@ import { build } from 'esbuild';
 import { versionAssetLinks } from './scripts/asset-versions.mjs';
 const assets = {};
 function assetRecord(type, bytes) {
-  // Speech WAVs compress losslessly; retain their exact public bytes and validators.
-  const compressed = type === 'audio/wav' ? gzipSync(bytes, { level: 9 }) : null;
+  // Pack speech WAVs and text losslessly. HTML is fingerprinted after collection.
+  const compressed = /^(audio\/wav|text\/(?!html))/.test(type)
+    ? gzipSync(bytes, { level: 9 })
+    : null;
   const packed = compressed && compressed.length + 32 < bytes.length * 0.9;
   return {
     type,
@@ -23,9 +25,11 @@ const mime = {
   '.css': 'text/css; charset=utf-8',
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
+  '.webp': 'image/webp',
   '.ttf': 'font/ttf',
   '.woff2': 'font/woff2',
   '.wav': 'audio/wav',
+  '.mp3': 'audio/mpeg',
   '.m4a': 'audio/mp4',
   '.txt': 'text/plain; charset=utf-8',
   '.pdf': 'application/pdf',
@@ -105,6 +109,9 @@ const vocabulary = fs
 fs.mkdirSync('dist/server', { recursive: true });
 // Adapt the four legacy browser catalogs once. Runtime services are ordinary ESM;
 // no application source or dependency wiring is concatenated into their scope.
+// Keep payload literals behind lazy functions: constructing every base64 string
+// at module initialization can exceed the hosted isolate's cold-start budget.
+// Metadata stays eager so health/HEAD/304 and content validation need no payload.
 const source =
   vocabulary +
   '\n' +
@@ -115,7 +122,19 @@ const source =
   fs.readFileSync('public/race-avatars.js', 'utf8') +
   '\n' +
   '\nconst assets=' +
-  JSON.stringify(assets) +
+  '{' +
+  Object.entries(assets)
+    .map(
+      ([key, { data, ...metadata }]) =>
+        JSON.stringify(key) +
+        ':{' +
+        JSON.stringify(metadata).slice(1, -1) +
+        ',get data(){return ' +
+        JSON.stringify(data) +
+        ';}}',
+    )
+    .join(',') +
+  '}' +
   ';\n';
 const entry =
   "import { createApplication } from './server/application.mjs';\n" +
@@ -147,5 +166,5 @@ console.log(
     Object.keys(assets).length +
     ' local assets (' +
     (workerBytes / 1024 / 1024).toFixed(1) +
-    ' MiB; lossless speech packing).',
+    ' MiB; lossless WAV and text packing).',
 );

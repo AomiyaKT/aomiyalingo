@@ -91,8 +91,8 @@ for (const [unit, count] of Object.entries(counts)) {
     assert.equal(sentenceFor(word).sentence, word.example, 'use the authored sentence');
     assert.equal(sentenceFor(word).answer.toLowerCase(), word.word.toLowerCase());
     assert.equal(formatSpellingAnswer(word.word, spellingCharacters(word.word)), word.word);
-    const image = fs.readFileSync('public' + word.image);
     const provenance = sources.items.find((s) => String(s.unit) === unit && s.word === word.word);
+    const image = fs.readFileSync('public' + provenance.image);
     assert.equal(createHash('sha256').update(image).digest('hex'), provenance.sourceImageSha256);
     assert.equal(image.subarray(1, 4).toString(), 'PNG');
     assert.ok(
@@ -100,7 +100,6 @@ for (const [unit, count] of Object.entries(counts)) {
       'native crop dimensions',
     );
     const audio = fs.readFileSync('public' + word.audio);
-    assert.equal(audio.subarray(0, 4).toString(), 'RIFF');
     assert.ok(audio.length > 10000);
     for (let station = 0; station < 3; station++) {
       for (const mode of stationModes[station])
@@ -243,8 +242,11 @@ for (const invalidWord of ['P..E.', 'P.E.<script>', 'P.E./etc', 'P.E. invalid'])
 // Missing profiles are added without replacing old settings or explicit omissions.
 const saved = structuredClone(initial.config);
 saved.grade5.words[0].image = null;
+saved.grade5.words[0].audio = null;
 saved.grade5.words[1].meaning = 'おばあさん';
 delete saved.grade5.words[1].image;
+saved.grade5.words[1].audio = '/assets/words/grandmother.wav';
+saved.grade5.words[2].audio = '/api/audio/01234567-89ab-cdef-0123-456789abcdef';
 saved.grade5unit3.race.correctPoints = 230;
 delete saved.grade5unit1;
 const store = createConfigurationStore({
@@ -256,8 +258,11 @@ const store = createConfigurationStore({
 const upgraded = await store.loadConfig({});
 assert.equal(upgraded.revision, 9);
 assert.equal(upgraded.config.grade5.words[0].image, null);
+assert.equal(upgraded.config.grade5.words[0].audio, null);
 assert.equal(upgraded.config.grade5.words[1].meaning, 'おばあさん');
-assert.equal(upgraded.config.grade5.words[1].image, gradeFiveContent[5][1].image);
+assert.equal(upgraded.config.grade5.words[1].image, initial.config.grade5.words[1].image);
+assert.equal(upgraded.config.grade5.words[1].audio, initial.config.grade5.words[1].audio);
+assert.equal(upgraded.config.grade5.words[2].audio, saved.grade5.words[2].audio);
 assert.equal(upgraded.config.grade5unit3.race.correctPoints, 230);
 assert.equal(upgraded.config.grade5unit1.words.length, 14);
 const custom = structuredClone(initial.config);

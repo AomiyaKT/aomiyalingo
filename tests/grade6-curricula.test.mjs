@@ -74,13 +74,23 @@ assert.deepEqual(
 );
 const sources = JSON.parse(fs.readFileSync('docs/content/grade6-image-sources.json')).items;
 for (const word of initial.config.unit1.words) {
-  const image = fs.readFileSync('public' + word.image);
   const source = sources.find((item) => item.unit === 1 && item.word === word.word);
   assert.ok(source, 'every picture has its own reference mapping');
+  const image = fs.readFileSync('public' + source.image);
   assert.equal(createHash('sha256').update(image).digest('hex'), source.sourceImageSha256);
   assert.equal(image.subarray(1, 4).toString(), 'PNG');
   assert.equal(image.readUInt32BE(16), 108, 'retain native reference pixels, not artificial HD');
 }
+assert.equal(
+  initial.config.unit4.words.find((word) => word.word === 'read').audio,
+  '/assets/words/blue-sky/14-read-o-c2d48965.mp3',
+  'the past-tense lesson uses the past-tense recording',
+);
+assert.equal(
+  initial.config.unit1.words.find((word) => word.word === 'a cat').audio,
+  '/assets/words/a-cat.wav',
+  'keep the article in listening prompts without a matching publisher recording',
+);
 assert.deepEqual(
   initial.config.unit1.words.filter((w) => w.pictureEnabled === false).map((w) => w.word),
   ['like', 'have', 'want'],
@@ -129,14 +139,21 @@ for (const [unit, count] of Object.entries(counts)) {
     );
     assert.equal(sentenceFor(word).answer.toLowerCase(), word.word.toLowerCase());
     assert.equal(formatSpellingAnswer(word.word, spellingCharacters(word.word)), word.word);
-    assert.match(word.audio, /^\/assets\/words\/[^/]+\.wav$/);
     const bytes = fs.readFileSync('public' + word.audio);
-    assert.equal(bytes.subarray(0, 4).toString(), 'RIFF');
-    assert.ok(bytes.length > 10000);
+    const recording = await req(word.audio, undefined, { range: 'bytes=0-15' });
+    assert.equal(recording.response.status, 206);
+    assert.equal(
+      recording.response.headers.get('content-type'),
+      word.audio.endsWith('.mp3') ? 'audio/mpeg' : 'audio/wav',
+    );
+    assert.deepEqual(Buffer.from(await recording.response.arrayBuffer()), bytes.subarray(0, 16));
     if (word.image) {
       const response = await req(word.image);
       assert.equal(response.response.status, 200);
-      assert.equal(response.response.headers.get('content-type'), 'image/png');
+      assert.equal(
+        response.response.headers.get('content-type'),
+        word.image.endsWith('.webp') ? 'image/webp' : 'image/png',
+      );
     }
     for (let station = 0; station < 3; station++)
       for (const mode of stationModes[station])

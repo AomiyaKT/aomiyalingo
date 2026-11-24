@@ -1,5 +1,5 @@
 'use strict';
-// Only this browser's bearer credentials can restore an existing racer.
+// Normal re-entry uses this browser's bearer; explicit takeover rotates it on the server.
 window.raceSessionCache = (() => {
   const key = 'aomi.race.sessions';
   const valid = (s) =>
@@ -28,10 +28,11 @@ window.raceSessionCache = (() => {
   };
   const label = (value) => String(Number(String(value).trim()));
   const id = (raceId, number) => raceId + ':' + label(number);
-  function save(session) {
+  function save(session, { replace = false } = {}) {
     if (!valid(session)) return;
     const all = read();
     const previous = all[id(session.raceId, session.label)];
+    if (previous && previous.token !== session.token && !replace) return;
     const { saved: ignored, ...content } = session;
     if (previous) {
       const { saved, ...priorContent } = previous;
@@ -53,12 +54,13 @@ window.raceSessionCache = (() => {
   function remove(session) {
     if (!valid(session)) return;
     const all = read();
+    if (all[id(session.raceId, session.label)]?.token !== session.token) return;
     delete all[id(session.raceId, session.label)];
     write(all);
   }
-  async function join(api, raceId, number, avatar) {
+  async function join(api, raceId, number, avatar, { takeover = false } = {}) {
     const saved = find(raceId, number);
-    if (saved) {
+    if (saved && !takeover) {
       try {
         const result = await api('/api/race/me', undefined, true, saved);
         if (result.race.id !== raceId || label(result.self.label) !== label(number))
@@ -73,10 +75,11 @@ window.raceSessionCache = (() => {
       raceId,
       label: number,
       waitForReady: true,
+      ...(takeover ? { takeover: true } : {}),
       ...(avatar ? { avatar } : {}),
     });
     const session = { token: result.token, raceId: result.race.id, label: result.self.label };
-    save(session);
+    save(session, { replace: true });
     return { session, result };
   }
   return { save, find, remove, join };

@@ -27,9 +27,21 @@ cache.save({ ...session, pending: { questionId: 'q1', answer: 'math' } });
 assert.equal(writes, 2);
 cache.save({ ...session, pending: null });
 assert.equal(writes, 3, 'An acknowledged answer is durably removed');
-cache.save({ ...session, token: 'rotated', pending: null });
+cache.save({ ...session, token: 'rotated', pending: null }, { replace: true });
 assert.equal(writes, 4);
 cache.remove(session);
+assert.equal(
+  cache.find('r1', '1').token,
+  'rotated',
+  'A revoked tab cannot erase the replacement token',
+);
+cache.save(session);
+assert.equal(
+  cache.find('r1', '1').token,
+  'rotated',
+  'A stale poll cannot overwrite the replacement token',
+);
+cache.remove({ ...session, token: 'rotated' });
 assert.equal(cache.find('r1', '1'), null);
 for (const corrupt of ['[]', '123', '"text"', 'null', '{bad']) {
   disk.set('aomi.race.sessions', corrupt);

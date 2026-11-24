@@ -38,7 +38,7 @@ export function createPracticeAudio({
     if (state.exerciseTask?.exercise) {
       const src = state.exerciseTask.exerciseAudio;
       if (src.audio === null) audio.removeAttribute('src');
-      else audio.src = src.audio;
+      else audio.src = window.aomiPreparedAudioURL?.(src.audio) || src.audio;
       audio.playbackRate = state.speed;
       $('#audio-progress').value = 0;
       $('#audio-time').textContent = '0:00';
@@ -47,12 +47,14 @@ export function createPracticeAudio({
     }
     const word = vocabulary.find((v) => v.word === state.question);
     if (word?.audio === null) audio.removeAttribute('src');
-    else
-      audio.src = word
-        ? word.audio || `assets/words/${state.question}.wav`
+    else {
+      const src = word
+        ? word.audio || `/assets/words/${state.question}.wav`
         : state.mode === 'picture'
           ? 'assets/apple.wav'
           : 'assets/ate.wav';
+      audio.src = window.aomiPreparedAudioURL?.(src) || src;
+    }
     audio.playbackRate = state.speed;
     $('#audio-progress').value = 0;
     $('#audio-time').textContent = '0:00';
@@ -116,15 +118,13 @@ export function createPracticeAudio({
       }
       return;
     }
-    const recorded = vocabulary.some((v) => v.word === state.question)
+    const word = vocabulary.find((v) => v.word === state.question);
+    const recorded = word
       ? state.question
       : state.mode === 'picture'
         ? 'Which picture shows an apple?'
         : originalQuestion;
-    if (
-      state.question.trim() !== recorded ||
-      vocabulary.find((v) => v.word === state.question)?.audio === null
-    ) {
+    if (state.question.trim() !== recorded || word?.audio === null) {
       if (!window.speechSynthesis) {
         notify('このブラウザーでは編集した文章の読み上げに対応していません');
         return;
@@ -158,7 +158,15 @@ export function createPracticeAudio({
     }
     if (audio.ended) audio.currentTime = 0;
     try {
-      await audio.play();
+      await playWordAudio(
+        audio,
+        {
+          word: recorded,
+          audio: word ? word.audio || '/assets/words/' + word.word + '.wav' : audio.src,
+        },
+        appSettings.values.voiceVolume / 100,
+        state.speed,
+      );
     } catch {
       if (current()) notify('音声を再生できませんでした。再生ボタンをもう一度押してください');
     }

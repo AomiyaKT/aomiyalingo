@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import fs from 'node:fs';
 import worker from '../dist/server/index.js';
 import { database } from './database.mjs';
 const env = { DB: database(), TEACHER_PASSWORD: 'test-password' };
@@ -53,10 +54,14 @@ assert.deepEqual(
 for (const word of five) {
   const r = await req(word.audio);
   assert.equal(r.status, 200);
-  assert.equal(r.response.headers.get('content-type'), 'audio/wav');
-  const bytes = new Uint8Array(await r.response.arrayBuffer());
-  assert.equal(new TextDecoder().decode(bytes.slice(0, 4)), 'RIFF');
-  assert.ok(bytes.length > 10000);
+  assert.equal(
+    r.response.headers.get('content-type'),
+    word.audio.endsWith('.mp3') ? 'audio/mpeg' : 'audio/wav',
+  );
+  assert.deepEqual(
+    Buffer.from(await r.response.arrayBuffer()),
+    fs.readFileSync('public' + word.audio),
+  );
 }
 assert.equal((await req('/api/teacher/classes', { grade: 4 }, auth)).status, 400);
 assert.equal((await req('/api/teacher/race/create', { grade: 7 }, auth)).status, 400);

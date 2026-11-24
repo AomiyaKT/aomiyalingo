@@ -357,7 +357,7 @@ export function createClassroomTeacher(runtime) {
       await db(env).batch([
         stmt(
           env,
-          'UPDATE students SET token_hash=? WHERE id=? AND deleted_at=0',
+          'UPDATE students SET token_hash=?,revision=revision+1 WHERE id=? AND deleted_at=0',
           r.token_hash,
           st.id,
         ),

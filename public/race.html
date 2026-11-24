@@ -79,6 +79,7 @@
           </div>
         </form>
         <p id="entry-message" role="status"></p>
+        <button id="race-reconnect" type="button" class="submit" hidden>この番号で再接続</button>
         <p class="race-entry-help">先生の案内に合わせて参加しよう。</p>
       </section>
       <section id="race-play" hidden>
@@ -175,8 +176,6 @@
           <img src="/assets/aomi-cat.svg" alt="レースの仲間" />
           <h1 id="wait-title"></h1>
           <p id="wait-caption"></p>
-          <section id="race-briefing" class="race-briefing" hidden></section>
-          <button id="briefing-avatar-change" class="home-button" hidden>アバターを変更</button>
           <section id="race-avatar-picker" hidden>
             <h2>アバターを選ぼう</h2>
             <p class="avatar-catalog-note">40種類から、好きななかまを選んでね。</p>
@@ -202,6 +201,8 @@
             <div id="race-sticker-shelf" class="sticker-shelf" hidden></div>
             <p id="race-avatar-status" role="status" aria-live="polite"></p>
           </section>
+          <section id="race-briefing" class="race-briefing" hidden></section>
+          <button id="briefing-avatar-change" class="home-button" hidden>アバターを変更</button>
           <section id="student-course-summary" class="course-summary" hidden></section>
           <section id="waiting-review" class="waiting-review" hidden>
             <h2>待っている間に、もう一度</h2>

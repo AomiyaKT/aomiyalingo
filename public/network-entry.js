@@ -1,4 +1,7 @@
 import { renderClassroomLink } from './shared/classroom-links.js';
+import { createAudioPreparation } from './shared/audio-preparation.js';
+window.aomiAudioPreparation = createAudioPreparation();
+window.aomiPreparedAudioURL = (url) => window.aomiAudioPreparation.resolve(url);
 window.aomiClassroomLink = renderClassroomLink;
 import { createRequest } from './shared/request.js';
 import { createRuntimeStatus } from './shared/runtime-status.js';
@@ -16,12 +19,18 @@ function connection(ok) {
 }
 window.addEventListener('offline', () => {
   window.aomiRuntimeStatus.online(false);
+  window.aomiAudioPreparation.resume();
   connection(false);
 });
 window.addEventListener('online', () => {
   window.aomiRuntimeStatus.online(true);
+  window.aomiAudioPreparation.resume();
   window.dispatchEvent(new CustomEvent('aomi-reconnect'));
 });
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden) window.aomiAudioPreparation.resume();
+});
+window.addEventListener('pageshow', () => window.aomiAudioPreparation.resume());
 window.aomiNetwork = { request: createRequest({ onConnection: connection }), connection };
 
 // Measure the actual action footer so large text and iPad rotation cannot cover answers.

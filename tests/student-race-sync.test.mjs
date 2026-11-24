@@ -36,6 +36,18 @@ const api = createRaceApi({
 const joined = await api('/api/race/join', { raceId, label: '23' });
 session = { token: joined.token };
 const initial = await api('/api/race/me', undefined, true);
+assert.ok(joined.self.audioManifest.length > 0);
+assert.deepEqual(
+  initial.self.audioManifest,
+  joined.self.audioManifest,
+  'Thin polls retain the assigned audio manifest',
+);
+assert.equal(new Set(initial.self.audioManifest).size, initial.self.audioManifest.length);
+assert.ok(
+  initial.self.audioManifest.every(
+    (url) => url.startsWith('/assets/words/') || url.startsWith('/api/audio/'),
+  ),
+);
 assert.equal(
   Object.hasOwn(frames.at(-1).data.self, 'history'),
   false,

@@ -446,19 +446,21 @@
           />
         </div>
         <p id="join-error" role="alert" hidden></p>
+        <button id="join-retry" type="button" class="home-button" hidden>今すぐ再試行</button>
         <p id="join-confirmation" hidden></p>
         <div class="student-entry-actions">
           <button id="join-back" type="button" class="home-button" hidden>番号を修正</button
           ><button id="join-submit" class="submit" type="submit">確認する</button>
         </div>
         <button id="recovery-request" type="button" class="home-button" hidden>
-          先生に引き継ぎを申請
+          この番号で再接続
         </button>
       </form>
     </dialog>
     <dialog id="class-paused" class="join-dialog" aria-labelledby="paused-title">
       <h2 id="paused-title">クラスは閉じられています</h2>
       <p id="paused-message">先生が再開するまで、お待ちください。</p>
+      <button id="paused-reconnect" hidden class="home-button">参加画面に戻る</button>
       <button id="paused-home" hidden class="home-button">レッスン一覧</button>
     </dialog>
     <dialog id="number-dialog" class="join-dialog" aria-labelledby="number-title">

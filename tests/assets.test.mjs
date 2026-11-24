@@ -127,6 +127,50 @@ for (let i = 0; i < 2; i++) {
 }
 assert.equal(speechDecodes, 1, 'packed bytes use the bounded immutable cache');
 
+// iOS media probes must receive original-byte ranges, including cold compressed
+// streams, warm decoded cache hits and large streaming-only recordings.
+for (const budget of [262144, 4]) {
+  const media = createAssetResponder({ '/speech.wav': packedSpeech }, { maxEntryBytes: budget });
+  const fetchRange = (range, extra = {}, method = 'GET') =>
+    media(
+      new Request('https://test/speech.wav', { method, headers: { range, ...extra } }),
+      '/speech.wav',
+    );
+  for (const [range, start, end] of [
+    ['bytes=0-1', 0, 1],
+    ['bytes=4-25', 4, 25],
+    ['bytes=-10', speechBytes.length - 10, speechBytes.length - 1],
+    ['bytes=32000-', 32000, speechBytes.length - 1],
+    ['bytes=32000-99999', 32000, speechBytes.length - 1],
+  ]) {
+    const response = fetchRange(range);
+    assert.equal(response.status, 206);
+    assert.equal(response.headers.get('accept-ranges'), 'bytes');
+    assert.equal(
+      response.headers.get('content-range'),
+      `bytes ${start}-${end}/${speechBytes.length}`,
+    );
+    assert.equal(response.headers.get('content-length'), String(end - start + 1));
+    assert.deepEqual(
+      Buffer.from(await response.arrayBuffer()),
+      speechBytes.subarray(start, end + 1),
+    );
+  }
+  for (const range of ['bytes=99999-', 'bytes=10-2', 'bytes=-0']) {
+    const response = fetchRange(range);
+    assert.equal(response.status, 416);
+    assert.equal(response.headers.get('content-range'), `bytes */${speechBytes.length}`);
+    assert.equal(await response.text(), '');
+  }
+  for (const range of ['bytes=0-1,4-5', 'nonsense']) assert.equal(fetchRange(range).status, 200);
+  assert.equal(fetchRange('bytes=0-1', { 'if-range': '"stale"' }).status, 200);
+  assert.equal(fetchRange('bytes=0-1', { 'if-range': packedSpeech.etag }).status, 206);
+  assert.equal(fetchRange('bytes=0-1', {}, 'HEAD').status, 200);
+}
+const plainProbe = request('/large.wav', 'GET', { range: 'bytes=0-1' });
+assert.equal(plainProbe.status, 206);
+assert.equal((await plainProbe.arrayBuffer()).byteLength, 2);
+
 // Verify metadata describes the final bundled CSS/JS, not their unbundled source.
 const env = { DB: database(), TEACHER_PASSWORD: 'test-password' };
 for (const path of [
@@ -152,6 +196,20 @@ for (const path of [
   if (path.startsWith('/assets/')) assert.deepEqual(bytes, fs.readFileSync('public' + path));
 }
 const home = await worker.fetch(new Request('https://classroom.test/'), env);
+let audioFiles = 0;
+for (const name of fs.readdirSync('public/assets/words').filter((name) => name.endsWith('.wav'))) {
+  const path = '/assets/words/' + name;
+  const original = fs.readFileSync('public' + path);
+  const response = await worker.fetch(
+    new Request('https://classroom.test' + path, { headers: { Range: 'bytes=0-1' } }),
+    env,
+  );
+  assert.equal(response.status, 206, path + ' iOS probe');
+  assert.equal(response.headers.get('content-range'), `bytes 0-1/${original.length}`);
+  assert.deepEqual(Buffer.from(await response.arrayBuffer()), original.subarray(0, 2), path);
+  audioFiles++;
+}
+console.log(`${audioFiles} bundled word recordings passed iOS byte probes.`);
 assert.equal(home.headers.get('cache-control'), 'no-store');
 assert.equal(home.headers.get('etag'), null);
 const health = await worker.fetch(

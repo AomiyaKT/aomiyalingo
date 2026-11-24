@@ -13,7 +13,8 @@ const nodes = new Map(),
   events = new Map(),
   disk = new Map(),
   statusCalls = [],
-  joinCalls = [];
+  joinCalls = [],
+  answerCalls = [];
 const q = (key) => {
   if (!nodes.has(key))
     nodes.set(key, {
@@ -45,7 +46,8 @@ const storage = {
 };
 let activeClass = 'a',
   focused = null,
-  entries = 0;
+  entries = 0,
+  entryOffline = false;
 const key = 'aomiyalingo.classroom.session';
 const saved = (id) => ({ id, token: 'token-' + id, classId: id, label: id === 'a' ? '1' : '2' });
 const vocabulary = [];
@@ -71,9 +73,11 @@ const session = createClassroomSession({
   },
   request(path, payload, options) {
     if (path.startsWith('/api/class/current'))
-      return Promise.resolve({
-        classroom: { id: activeClass, accepting: true, title: 'Class ' + activeClass },
-      });
+      return entryOffline
+        ? Promise.reject(Error('network unavailable'))
+        : Promise.resolve({
+            classroom: { id: activeClass, accepting: true, title: 'Class ' + activeClass },
+          });
     if (path === '/api/student/me') {
       const id = options.token.slice(6);
       return Promise.resolve({
@@ -91,6 +95,11 @@ const session = createClassroomSession({
     if (path === '/api/join') {
       const task = defer();
       joinCalls.push({ payload, ...task });
+      return task.promise;
+    }
+    if (path === '/api/student/answer') {
+      const task = defer();
+      answerCalls.push({ payload, ...task });
       return task.promise;
     }
     throw Error(path);
@@ -132,6 +141,46 @@ await joining;
 assert.equal(entries, before, 'an obsolete join does not replace the current screen/session');
 assert.equal(session.current.id, 'b');
 assert.equal(session.busy, false);
+storage.setItem(key, JSON.stringify(saved('b')));
+await session.openJoin();
+session.record('retry-question', 'cat');
+answerCalls[0].reject(Error('Wi-Fi still reports online'));
+await new Promise((resolve) => setImmediate(resolve));
+assert.equal(session.busy, true);
+assert.match(q('#sync-status').textContent, /自動で再送/);
+const healthyPoll = timers.find((t) => t.ms === 3000).fn();
+statusCalls.at(-1).resolve({ active: true, paused: false });
+await new Promise((resolve) => setImmediate(resolve));
+assert.equal(answerCalls.length, 2, 'A healthy poll retries without an online event');
+assert.deepEqual(answerCalls[1].payload, answerCalls[0].payload);
+answerCalls[1].resolve({ lesson: { queue: [], vocabulary: [] } });
+await healthyPoll;
+assert.equal(session.busy, false);
+assert.equal(storage.getItem('aomi.pending.b'), null);
+assert.equal(q('#join-dialog').open, false, 'Temporary loss never opens the join screen');
+const revokedPoll = timers.find((t) => t.ms === 3000).fn();
+statusCalls.at(-1).reject(Object.assign(Error('revoked'), { status: 401 }));
+await revokedPoll;
+assert.equal(q('#class-paused').open, true);
+assert.equal(q('#paused-reconnect').hidden, false);
+assert.equal(session.paused, true);
+await q('#paused-reconnect').onclick();
+assert.equal(q('#attendance-number').value, '2');
+assert.equal(q('#join-dialog').open, true);
+assert.equal(q('#class-paused').open, false);
+assert.equal(session.current, null, 'Invalid credentials are not silently reused');
+entryOffline = true;
+q('#attendance-number').value = '19';
+await session.openJoin();
+assert.equal(q('#join-retry').hidden, false);
+assert.equal(q('#join-submit').disabled, true);
+entryOffline = false;
+focused = null;
+await timers.find((t) => t.ms === 3000).fn();
+assert.equal(focused, null, 'Automatic entry recovery does not reopen the iPad keyboard');
+assert.equal(q('#join-retry').hidden, true);
+assert.equal(q('#join-submit').disabled, false);
+assert.equal(q('#attendance-number').value, '19', 'Entry recovery preserves the typed number');
 console.log(
   'Practice classroom session: saved-session recovery, scoped vocabulary, old-token/status isolation, duplicate joins and stale entry responses passed.',
 );
