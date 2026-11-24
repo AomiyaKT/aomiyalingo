@@ -19,6 +19,13 @@ the existing bounded responder decodes requested payloads. A fresh-process impor
 test guards retained eager allocation, while hosted deployment remains the actual
 startup-limit validation. See `docs/incident-2026-11-13.md`.
 
+## Release 88 - student race animation
+
+`public/race/showtime.js` uses the existing course, countdown and receipt events
+for race motion. The track uses each learner's progress and keeps the flag visible
+after an authoritative finish. `spectacle.js` owns the rank cue. Animations are
+bounded and respect both the app preference and the OS reduced-motion setting.
+
 ## Release 87 - publisher vocabulary media
 
 `server/editor/configuration.mjs` resolves old bundled media URLs through the

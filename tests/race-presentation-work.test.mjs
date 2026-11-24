@@ -65,6 +65,7 @@ class Node {
   }
   animate() {
     const animation = {
+      element: this,
       cancel() {
         active.delete(this);
         this.oncancel?.();
@@ -134,7 +135,7 @@ const view = createRaceShowtime({
 });
 const result = {
   race: { id: 'r', station: 0, status: 'running', endless: true, settings: { minutes: 6 } },
-  board: [{ id: 'p', rank: 1 }],
+  board: [{ id: 'p', rank: 2 }],
   self: { id: 'p', ready: true, done: false, remaining: 300000, stationIndex: 4, avatar: 'cat' },
 };
 view.update(result);
@@ -147,7 +148,15 @@ for (let i = 0; i < 1000; i++) {
 // Countdowns may update their internal number, but the normal/final visual state
 // should not be rewritten 1,000 times. This workload stays above 30 seconds.
 assert.deepEqual(counts, { text: 0, attributes: 0, style: 0, dataset: 0, hidden: 0, media: 0 });
+view.update({ ...result, board: [{ id: 'p', rank: 1 }] });
+assert.ok([...active].some((effect) => effect.element === q('#self-rank')));
+view.receipt({ id: 'assisted', correct: true, hinted: true, streak: 3 });
+assert.equal(
+  [...active].some((effect) => effect.element.className === 'scene-wind'),
+  false,
+);
 view.receipt({ id: 'answer1', correct: true, streak: 3 });
+assert.ok([...active].some((effect) => effect.element.className === 'scene-wind'));
 assert.ok(timers.size > 0);
 assert.ok(active.size > 0);
 assert.equal(
@@ -161,6 +170,20 @@ assert.equal(
   document.body.children.filter((node) => node.className === 'race-spark-layer').length,
   0,
 );
+view.update(result);
+const completed = { ...result, self: { ...result.self, done: true, remaining: 0 } };
+view.update(completed);
+const track = q('#race-scene');
+assert.equal(track.hidden, false);
+assert.equal(track.dataset.trackState, 'finish');
+assert.equal(
+  track.children[1].children.find((node) => node.className === 'scene-racer').style.left,
+  '100%',
+);
+const finish = [...active].find((effect) => effect.element.className === 'scene-finish');
+assert.ok(finish);
+view.update(completed);
+assert.ok(active.has(finish), 'unchanged results must not restart the finish animation');
 view.update(result);
 view.receipt({ id: 'answer2', correct: true });
 document.hidden = true;

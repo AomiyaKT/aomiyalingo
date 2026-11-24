@@ -21,6 +21,16 @@
 .race-highlight[hidden] {
   display: none;
 }
+/* The student's rank and streak are already visible above the question. Keep
+   their live announcements without laying a second card over the answers. */
+.race-student .race-highlight:is([data-kind='pass'], [data-kind='combo']):not([hidden]) {
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  border: 0;
+  clip-path: inset(50%);
+  overflow: hidden;
+}
 .race-teacher .race-highlight {
   top: 96px;
   bottom: auto;
@@ -85,9 +95,6 @@
 .race-student[data-race-time='final'] #race-clock {
   color: #c56816;
   background: #fff1e5;
-}
-.race-student .race-scene {
-  isolation: isolate;
 }
 .race-page[data-race-effect] .race-scene::after {
   content: '';

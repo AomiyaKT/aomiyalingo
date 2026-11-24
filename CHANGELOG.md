@@ -2,6 +2,11 @@
 
 **English** | [日本語](CHANGELOG.ja.md)
 
+## Release 88 - 2026-11-24
+
+- Give students three distinct course palettes, a start-light sequence, and a checkered finish.
+- Add a brief acceleration on independent correct answers, a visible streak badge, and a pulse when the live ranking rises. Brief motion stops when the page is hidden, the race is paused, or reduced motion is enabled.
+
 ## Release 87 - 2026-11-24
 
 - Use Blue Sky flashcard illustrations and original Word List recordings for matching Grade 5 and Grade 6 vocabulary in practice and Word Race.

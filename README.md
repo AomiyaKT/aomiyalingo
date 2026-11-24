@@ -27,10 +27,10 @@ Aomiyalingo is a Duolingo-style English learning web app tailored to **Blue Sky*
 
 Teachers and students can use any internet-connected device with a compatible web browser—including computers, tablets and smartphones. Students simply scan a QR code or open a link to join.
 
-**Current version: Release 87 · 24 November 2026**
-[Open the app](https://aomiyalingo.minamiyakk.chatgpt.site/) · [Changelog](CHANGELOG.md) · [Release 87 details](docs/content/blue-sky-media.md)
+**Current version: Release 88 · 24 November 2026**
+[Open the app](https://aomiyalingo.minamiyakk.chatgpt.site/) · [Changelog](CHANGELOG.md) · [Blue Sky classroom media](docs/content/blue-sky-media.md)
 
-**Source release:** this repository contains Release 87. The hosted website is deployed separately; a GitHub upload does not update the running classroom server.
+**Source release:** this repository contains Release 88. The hosted website is deployed separately; a GitHub upload does not update the running classroom server.
 
 [For teachers and ALTs](#for-teachers) · [For developers and future maintainers](#for-developers)
 

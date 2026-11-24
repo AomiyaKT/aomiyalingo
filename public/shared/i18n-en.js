@@ -970,6 +970,7 @@ export const englishUI = {
   '✨ みんなの目標、達成！': '✨ Team goal reached!',
   今回の得点: 'Your score',
   最大連続正解: 'Best streak',
+  連続正解: 'Streak',
   ひとりで正解: 'Correct without help',
   正解できた単語: 'Words answered correctly',
   'ひとりで正解：': 'Correct without help: ',

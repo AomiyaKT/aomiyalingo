@@ -1079,12 +1079,6 @@
   background: var(--green-soft);
   padding: 7px 16px;
 }
-.race-scene {
-  border: 0;
-  border-radius: 16px;
-  background: var(--scene-soft);
-  padding: 12px 20px 8px;
-}
 .race-student .race-question {
   max-width: 820px;
   margin: 20px auto 0;

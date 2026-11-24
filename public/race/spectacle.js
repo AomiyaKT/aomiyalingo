@@ -2,7 +2,14 @@ import { createMotion } from '../effects/motion.js';
 import { raceItemCatalog } from '../shared/race-items.js';
 import { isCourseClear } from './lifecycle.js';
 // Event-driven presentation only. No score, clock or saved state is changed here.
-export function createRaceSpectacle({ make, isTeacher, settings, effects, host = globalThis }) {
+export function createRaceSpectacle({
+  make,
+  isTeacher,
+  settings,
+  effects,
+  rankDisplay,
+  host = globalThis,
+}) {
   const { document } = host;
   const notice = make('aside', undefined, 'race-highlight');
   notice.hidden = true;
@@ -97,7 +104,16 @@ export function createRaceSpectacle({ make, isTeacher, settings, effects, host =
     const first = isTeacher && players.find((player) => player.rank === 1);
     const running = race.status === 'running';
     if (!fresh && !sync && visible() && running && status === 'running') {
-      if (!isTeacher && rank && nextRank && nextRank < rank)
+      if (!isTeacher && rank && nextRank && nextRank < rank) {
+        animation.animate(
+          rankDisplay,
+          [
+            { translate: '0 5px', scale: '.96' },
+            { translate: '0 -5px', scale: '1.08', offset: 0.48 },
+            { translate: '0 0', scale: '1' },
+          ],
+          { duration: 480 },
+        );
         announce(
           'pass',
           '↗',
@@ -105,7 +121,7 @@ export function createRaceSpectacle({ make, isTeacher, settings, effects, host =
           rank - nextRank + 'つ順位を上げたよ！',
           'overtake',
         );
-      else if (isTeacher && leader && first && first.id !== leader)
+      } else if (isTeacher && leader && first && first.id !== leader)
         announce(
           'pass',
           '🏁',
@@ -212,6 +228,7 @@ export function createRaceSpectacle({ make, isTeacher, settings, effects, host =
   }
   document.addEventListener('visibilitychange', visibilityChanged);
   host.addEventListener?.('aomiyalingo-settings', settingsChanged);
+  media.addEventListener?.('change', settingsChanged);
   function dispose() {
     clear();
     receipts.clear();
@@ -219,6 +236,7 @@ export function createRaceSpectacle({ make, isTeacher, settings, effects, host =
     notice.remove();
     document.removeEventListener?.('visibilitychange', visibilityChanged);
     host.removeEventListener?.('aomiyalingo-settings', settingsChanged);
+    media.removeEventListener?.('change', settingsChanged);
   }
   return { update, clock, receipt, item, clear, dispose };
 }

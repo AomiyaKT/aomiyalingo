@@ -27,10 +27,10 @@ Aomiyalingoは、青森県の小学校で使用されている英語教科書 **
 
 先生も児童も、インターネットにつながり、対応するWebブラウザーが使えるパソコン・タブレット・スマートフォンなどから利用できます。児童はQRコードを読み取るか、リンクを開くだけで参加できます。
 
-**現在のバージョン：Release 87 · 2026年11月24日**
-[アプリを開く](https://aomiyalingo.minamiyakk.chatgpt.site/) · [更新履歴](CHANGELOG.ja.md) · [Release 87の教材情報（日英）](docs/content/blue-sky-media.md)
+**現在のバージョン：Release 88 · 2026年11月24日**
+[アプリを開く](https://aomiyalingo.minamiyakk.chatgpt.site/) · [更新履歴](CHANGELOG.ja.md) · [Blue Sky 教材情報（日英）](docs/content/blue-sky-media.md)
 
-**ソースの版：** このリポジトリはRelease 87です。公開サイトへの反映は別作業です。GitHubへのアップロードだけでは、稼働中の授業サーバーは更新されません。
+**ソースの版：** このリポジトリはRelease 88です。公開サイトへの反映は別作業です。GitHubへのアップロードだけでは、稼働中の授業サーバーは更新されません。
 
 [先生・ALTのみなさんへ](#for-teachers) · [開発者・保守を引き継ぐ方へ](#for-developers)
 
